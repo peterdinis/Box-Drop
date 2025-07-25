@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Button } from "../ui/button";
 import { Cloud } from "lucide-react";
+import { ModeToggle } from "./ModeToggle";
 
 const Navigation: FC = () => {
     return (
@@ -24,6 +25,7 @@ const Navigation: FC = () => {
                         >
                             Get Started
                         </Button>
+                        <ModeToggle />
                     </div>
                 </div>
             </div>
