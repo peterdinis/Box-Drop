@@ -8,9 +8,7 @@ import {
     MoreHorizontal,
     Download,
     Share2,
-    Trash2,
     Star,
-    Clock,
     HardDrive,
     Zap,
     Shield,
@@ -29,7 +27,6 @@ import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
 import SettingsModal from "../modals/SettingsModal";
 import NotificationPanel from "../notifications/NotificationsPanel";
-import DashboardHeader from "./DashboardHeader";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
@@ -106,8 +103,6 @@ const DashboardWrapper: FC = () => {
                 fileName={shareModal.fileName}
                 fileType={shareModal.fileType}
             />
-
-            <DashboardHeader />
 
             <div className="container mx-auto px-6 py-6">
                 <div className="grid lg:grid-cols-4 gap-6">
