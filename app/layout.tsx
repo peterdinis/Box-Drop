@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import AppClerkProvider from "@/components/providers/AppClerkProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { NotificationProvider } from "@/context/NotificationContext";
+import { TeamProvider } from "@/context/TeamContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,9 +42,11 @@ export default function RootLayout({
           >
             <AppClerkProvider>
               <NotificationProvider>
-                <Navigation />
-                {children}
-                <Toaster />
+                <TeamProvider>
+                  <Navigation />
+                  {children}
+                  <Toaster />
+                </TeamProvider>
               </NotificationProvider>
             </AppClerkProvider>
           </ThemeProvider>
