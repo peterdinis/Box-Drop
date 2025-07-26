@@ -6,6 +6,7 @@ import { Cloud } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
 import { useUser } from "@clerk/nextjs";
 import UserProfileDropdown from "../auth/ProfileDropdown";
+import Link from "next/link";
 
 const Navigation: FC = () => {
     const { user } = useUser()
@@ -25,12 +26,16 @@ const Navigation: FC = () => {
                                 <Button
                                     variant="ghost"
                                 >
-                                    Sign In
+                                    <Link href="/sign-in">
+                                        Sign In
+                                    </Link>
                                 </Button>
                                 <Button
                                     className="bg-gradient-primary hover:opacity-90 transition-opacity"
                                 >
-                                    Get Started
+                                    <Link href="/sign-up">
+                                        Get Started
+                                    </Link>
                                 </Button>
                             </>
                         ) : (

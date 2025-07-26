@@ -1,5 +1,6 @@
 "use client"
-import { useUser } from '@clerk/nextjs';
+import { useClerk, useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useRef, ReactNode } from 'react';
 
 // Icons
@@ -111,59 +112,27 @@ const DropdownMenuSeparator = () => (
 
 export default function UserProfileDropdown() {
     const {user} = useUser()
+    const {signOut} = useClerk()
+    const router = useRouter()
     return (
-        <div className="flex items-center justify-center font-sans p-8">
+        <div className="flex items-center justify-center font-sans">
             <DropdownMenu 
                 trigger={
-                    <button className="flex items-center space-x-3 p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+                    <button className="flex items-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                            JD
-                        </div>
-                        <div className="text-left">
-                            <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">John Doe</div>
-                            <div className="text-xs text-zinc-500 dark:text-zinc-400">john@example.com</div>
+                            {user?.firstName?.charAt(0) + user?.lastName?.charAt(0)}
                         </div>
                     </button>
                 }
             >
-                {/* User Info Header */}
-                <div className="px-3 py-3 border-b border-zinc-200 dark:border-zinc-700">
-                    <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                            JD
-                        </div>
-                        <div>
-                            <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">John Doe</div>
-                            <div className="text-xs text-zinc-500 dark:text-zinc-400">john@example.com</div>
-                            <div className="text-xs text-blue-600 dark:text-blue-400 font-medium">Pro Plan</div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Menu Items */}
                 <div className="py-1">
-                    <DropdownMenuItem onClick={() => console.log('Profile')}>
-                        <User className="mr-3 h-4 w-4 text-zinc-500" />
-                        Your Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => console.log('Settings')}>
-                        <Settings className="mr-3 h-4 w-4 text-zinc-500" />
-                        Settings
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => console.log('Billing')}>
-                        <CreditCard className="mr-3 h-4 w-4 text-zinc-500" />
-                        Billing & Plans
-                    </DropdownMenuItem>
-                </div>
-
-                <DropdownMenuSeparator />
-
-                <div className="py-1">
-                    <DropdownMenuItem onClick={() => console.log('Help')}>
+                    <DropdownMenuItem onClick={() => {
+                        router.push("/dashboard")
+                    }}>
                         <HelpCircle className="mr-3 h-4 w-4 text-zinc-500" />
-                        Help & Support
+                        Dashboard
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => console.log('Sign out')}>
+                    <DropdownMenuItem onClick={() => signOut()}>
                         <LogOut className="mr-3 h-4 w-4 text-zinc-500" />
                         Sign Out
                     </DropdownMenuItem>
