@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "@/components/shared/Navigation";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import AppClerkProvider from "@/components/providers/AppClerkProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
             <AppClerkProvider>
               <Navigation />
               {children}
+              <Toaster />
             </AppClerkProvider>
           </ThemeProvider>
         </div>
