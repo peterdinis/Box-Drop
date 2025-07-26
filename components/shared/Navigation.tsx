@@ -1,9 +1,15 @@
+"use client"
+
 import { FC } from "react";
 import { Button } from "../ui/button";
 import { Cloud } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
+import { useUser } from "@clerk/nextjs";
+import UserProfileDropdown from "../auth/ProfileDropdown";
+import Link from "next/link";
 
 const Navigation: FC = () => {
+    const { user } = useUser()
     return (
         <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
             <div className="container mx-auto px-4 py-4">
@@ -15,16 +21,26 @@ const Navigation: FC = () => {
                         <span className="text-xl font-bold">Box-Drop</span>
                     </div>
                     <div className="flex items-center gap-4">
-                        <Button
-                            variant="ghost"
-                        >
-                            Sign In
-                        </Button>
-                        <Button
-                            className="bg-gradient-primary hover:opacity-90 transition-opacity"
-                        >
-                            Get Started
-                        </Button>
+                        {!user ? (
+                            <>
+                                <Button
+                                    variant="ghost"
+                                >
+                                    <Link href="/sign-in">
+                                        Sign In
+                                    </Link>
+                                </Button>
+                                <Button
+                                    className="bg-gradient-primary hover:opacity-90 transition-opacity"
+                                >
+                                    <Link href="/sign-up">
+                                        Get Started
+                                    </Link>
+                                </Button>
+                            </>
+                        ) : (
+                            <UserProfileDropdown />
+                        )}
                         <ModeToggle />
                     </div>
                 </div>
