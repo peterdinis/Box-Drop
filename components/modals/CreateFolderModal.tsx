@@ -1,0 +1,79 @@
+"use client"
+
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
+import { FolderPlus } from 'lucide-react';
+import { useNotifications } from '@/context/NotificationContext';
+
+interface CreateFolderModalProps {
+  onFolderCreate?: (folderName: string) => void;
+}
+
+const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ onFolderCreate }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [folderName, setFolderName] = useState('');
+  const { addNotification } = useNotifications();
+  const { toast } = useToast();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!folderName.trim()) return;
+
+    // Simulate folder creation
+    onFolderCreate?.(folderName);
+    
+    addNotification({
+      title: 'Folder Created',
+      message: `"${folderName}" folder has been created successfully.`,
+      type: 'success'
+    });
+
+    toast({
+      title: "Folder created",
+      description: `"${folderName}" has been added to your files.`
+    });
+
+    setFolderName('');
+    setIsOpen(false);
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" className="gap-2">
+          <FolderPlus className="w-4 h-4" />
+          New Folder
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Create New Folder</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="text-sm font-medium mb-2 block">Folder Name</label>
+            <Input
+              placeholder="Enter folder name"
+              value={folderName}
+              onChange={(e) => setFolderName(e.target.value)}
+              autoFocus
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={!folderName.trim()}>
+              Create Folder
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default CreateFolderModal;
