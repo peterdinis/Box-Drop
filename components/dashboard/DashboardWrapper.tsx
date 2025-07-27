@@ -194,16 +194,7 @@ const DashboardWrapper: FC = () => {
                         </Card>
 
                         {/* Quick Actions */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div className="animate-scale-in">
-                                <FileUploadModal />
-                            </div>
-                            <div
-                                className="animate-scale-in"
-                                style={{ animationDelay: "0.1s" }}
-                            >
-                                <CreateFolderModal />
-                            </div>
+                        <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
                             {quickActions.slice(2).map((action, index) => (
                                 <Card
                                     key={index + 2}
