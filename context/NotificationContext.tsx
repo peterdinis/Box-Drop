@@ -48,7 +48,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 	const [notifications, setNotifications] = useState<NotificationItem[]>([
 		{
 			id: "1",
-			title: "Welcome to Cloud Chest!",
+			title: "Welcome to Box-Drop!",
 			message:
 				"Your account has been successfully created. Start uploading your files.",
 			type: "success",

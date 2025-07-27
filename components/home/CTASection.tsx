@@ -10,7 +10,7 @@ const CTASection: FC = () => {
 						Ready to get started?
 					</h2>
 					<p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-						Join millions of users who trust Cloud Chest with their most
+						Join millions of users who trust Box-Drop with their most
 						important files. Start your free trial today.
 					</p>
 					<div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
