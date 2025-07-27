@@ -18,7 +18,7 @@ const HeroWrapper: FC = () => {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                         <Button
                             size="lg"
-                            className="bg-gradient-primary hover:opacity-90 transition-all duration-300 transform hover:scale-105 animate-glow"
+                            className="transition-all duration-300 transform hover:scale-105 animate-glow"
                         >
                             Start Free Trial
                             <ChevronRight className="w-4 h-4 ml-2" />
