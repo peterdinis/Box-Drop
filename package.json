@@ -7,7 +7,9 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"format": "pnpm exec biome check --write ."
+		"format": "pnpm exec biome check --write .",
+		"db:generate": "npx drizzle-kit generate",
+		"db:migrate": "npx drizzle-kit migrate"
 	},
 	"dependencies": {
 		"@clerk/nextjs": "^6.27.1",
