@@ -33,11 +33,13 @@ import NotificationPanel from "../notifications/NotificationsPanel";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import { useFolders } from "@/hooks/folders/useFolders";
 
 const DashboardWrapper: FC = () => {
 	const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 	const [showNotifications, setShowNotifications] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
+	const {data: folderData} = useFolders()
 
 	const [shareModal, setShareModal] = useState<{
 		isOpen: boolean;
@@ -329,7 +331,7 @@ const DashboardWrapper: FC = () => {
 
 						<Card className="p-6">
 							<div className="flex items-center justify-between mb-6">
-								<h3 className="text-lg font-semibold">Recent Files</h3>
+								<h3 className="text-lg font-semibold">Recent Folders</h3>
 								<div className="flex items-center gap-2">
 									<Button
 										variant="outline"
