@@ -19,7 +19,6 @@ import {
     TrendingUp,
     User,
     Video,
-    Zap,
 } from "lucide-react";
 import { type FC, useState } from "react";
 import { useTeam } from "@/context/TeamContext";
@@ -31,6 +30,7 @@ import NotificationPanel from "../notifications/NotificationsPanel";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import GlobalSearchModal from "../modals/GlobalSearchModal";
 
@@ -149,6 +149,8 @@ const DashboardWrapper: FC = () => {
 
     const [showGlobalSearch, setShowGlobalSearch] = useState(false);
 
+    const {user} = useUser()
+
     return (
         <div className="min-h-screen bg-background">
             <NotificationPanel
@@ -174,7 +176,7 @@ const DashboardWrapper: FC = () => {
                         <Card className="p-6 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-primary/20">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h2 className="text-2xl font-bold mb-2">Welcome back! 👋</h2>
+                                    <h2 className="text-2xl font-bold mb-2">Welcome back! {user?.emailAddresses[0]?.emailAddress}👋</h2>
                                     <p className="text-muted-foreground">
                                         You have {recentFiles.length} recent files and{" "}
                                         {storageData.used} GB of storage used.
