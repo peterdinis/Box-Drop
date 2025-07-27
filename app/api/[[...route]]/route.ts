@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { handle } from 'hono/vercel'
+import folder from '../folders/route'
 
 export const runtime = 'edge'
 
@@ -11,5 +12,10 @@ app.get('/hello', (c) => {
   })
 })
 
+app.route("/folders", folder)
+
 export const GET = handle(app)
 export const POST = handle(app)
+export const PUT = handle(app)
+export const PATCH = handle(app)
+export const DELETE = handle(app)
