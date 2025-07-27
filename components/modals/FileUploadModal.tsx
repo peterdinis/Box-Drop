@@ -87,7 +87,7 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ onFilesUpload }) => {
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
-				<Button className="bg-gradient-primary gap-2">
+				<Button className="gap-2">
 					<Upload className="w-4 h-4" />
 					Upload Files
 				</Button>
