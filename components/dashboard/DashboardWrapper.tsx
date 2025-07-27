@@ -31,6 +31,7 @@ import NotificationPanel from "../notifications/NotificationsPanel";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import Link from "next/link";
 
 const DashboardWrapper: FC = () => {
 	const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -233,7 +234,9 @@ const DashboardWrapper: FC = () => {
 										)}
 									</Button>
 									<Button variant="outline" size="sm">
-										View All
+										<Link href="/files">
+                                            View All
+                                        </Link>
 									</Button>
 								</div>
 							</div>
