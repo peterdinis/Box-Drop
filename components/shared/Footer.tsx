@@ -11,7 +11,7 @@ const Footer: FC = () => {
 							<div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
 								<Cloud className="w-5 h-5 text-white" />
 							</div>
-							<span className="text-xl font-bold">Cloud Chest</span>
+							<span className="text-xl font-bold">Box-Drop</span>
 						</div>
 						<p className="text-muted-foreground mb-4">
 							The most secure and reliable cloud storage solution for

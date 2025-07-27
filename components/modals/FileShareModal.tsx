@@ -59,7 +59,7 @@ const FileShareModal: React.FC<FileShareModalProps> = ({
 
 	const generateShareLink = () => {
 		const randomId = Math.random().toString(36).substr(2, 12);
-		const link = `https://cloudchest.app/share/${randomId}`;
+		const link = `https://box-drop.app/share/${randomId}`;
 		setShareLink(link);
 		setLinkGenerated(true);
 
