@@ -236,7 +236,7 @@ const FileManager = () => {
 						</Button>
 						<Button
 							onClick={() => fileInputRef.current?.click()}
-							className="gap-2 bg-gradient-primary"
+							className="gap-2"
 						>
 							<Upload className="w-4 h-4" />
 							Upload Files
