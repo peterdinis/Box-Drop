@@ -180,9 +180,7 @@ const FileManager = () => {
 			<div className="border-b bg-card">
 				<div className="container mx-auto px-4 py-4">
 					<div className="flex items-center justify-between mb-4">
-						<h1 className="text-2xl font-semibold text-foreground">
-							Box-Drop
-						</h1>
+						<h1 className="text-2xl font-semibold text-foreground">Box-Drop</h1>
 						<div className="flex items-center gap-2">
 							<Button
 								variant="outline"

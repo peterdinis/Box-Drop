@@ -1,10 +1,16 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileText, Folder, Search, User } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "../ui/button";
 
 interface GlobalSearchModalProps {
@@ -21,7 +27,10 @@ const mockResults = [
 	{ type: "user", name: "John Smith" },
 ];
 
-const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose }) => {
+const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
+	isOpen,
+	onClose,
+}) => {
 	const [query, setQuery] = useState("");
 
 	useEffect(() => {
@@ -51,12 +60,12 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose }
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogTrigger>
-                <Button className="gap-2">
+			<DialogTrigger>
+				<Button className="gap-2">
 					<Search className="w-4 h-4" />
 					Search for files
 				</Button>
-            </DialogTrigger>
+			</DialogTrigger>
 			<DialogContent className="sm:max-w-md">
 				<DialogHeader>
 					<DialogTitle>Global Search</DialogTitle>
@@ -69,7 +78,9 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose }
 				/>
 				<ScrollArea className="mt-4 max-h-60 space-y-2">
 					{filteredResults.length === 0 ? (
-						<p className="text-sm text-muted-foreground px-1">No results found.</p>
+						<p className="text-sm text-muted-foreground px-1">
+							No results found.
+						</p>
 					) : (
 						filteredResults.map((item, index) => (
 							<div
