@@ -1,8 +1,8 @@
+import type { NextPage } from "next";
 import FileManager from "@/components/files/FileManager";
-import { NextPage } from "next";
 
 const FilesPage: NextPage = () => {
-    return <FileManager />
-}
+	return <FileManager />;
+};
 
-export default FilesPage
+export default FilesPage;
