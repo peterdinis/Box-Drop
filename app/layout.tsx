@@ -7,6 +7,7 @@ import Navigation from "@/components/shared/Navigation";
 import { Toaster } from "@/components/ui/toaster";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { TeamProvider } from "@/context/TeamContext";
+import QueryProvider from "@/components/providers/QueryProvider";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -43,9 +44,11 @@ export default function RootLayout({
 						<AppClerkProvider>
 							<NotificationProvider>
 								<TeamProvider>
-									<Navigation />
-									{children}
-									<Toaster />
+									<QueryProvider>
+										<Navigation />
+										{children}
+										<Toaster />
+									</QueryProvider>
 								</TeamProvider>
 							</NotificationProvider>
 						</AppClerkProvider>
