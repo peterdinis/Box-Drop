@@ -1,6 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
+import { format } from "date-fns";
 import {
 	Archive,
 	Download,
@@ -23,8 +24,17 @@ import {
 	Video,
 } from "lucide-react";
 import Link from "next/link";
-import { type FC, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
+import {
+	type FC,
+	type JSXElementConstructor,
+	type Key,
+	type ReactElement,
+	type ReactNode,
+	type ReactPortal,
+	useState,
+} from "react";
 import { useTeam } from "@/context/TeamContext";
+import { useFolders } from "@/hooks/folders/useFolders";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
 import FileUploadModal from "../modals/FileUploadModal";
@@ -33,17 +43,15 @@ import SettingsModal from "../modals/SettingsModal";
 import NotificationPanel from "../notifications/NotificationsPanel";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { format } from "date-fns"
 import { Card } from "../ui/card";
-import { useFolders } from "@/hooks/folders/useFolders";
 
 const DashboardWrapper: FC = () => {
 	const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-	const [folderViewMode, setFolderViewMode] = useState<"grid" | "list">("grid")
+	const [folderViewMode, setFolderViewMode] = useState<"grid" | "list">("grid");
 
 	const [showNotifications, setShowNotifications] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
-	const { data: folderData } = useFolders()
+	const { data: folderData } = useFolders();
 
 	const [shareModal, setShareModal] = useState<{
 		isOpen: boolean;
@@ -255,8 +263,9 @@ const DashboardWrapper: FC = () => {
 								{recentFiles.map((file, index) => (
 									<Card
 										key={file.id}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${viewMode === "grid" ? "p-4" : "p-3"
-											}`}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+											viewMode === "grid" ? "p-4" : "p-3"
+										}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
 										{viewMode === "grid" ? (
@@ -340,7 +349,9 @@ const DashboardWrapper: FC = () => {
 										variant="outline"
 										size="sm"
 										onClick={() =>
-											setFolderViewMode(folderViewMode === "grid" ? "list" : "grid")
+											setFolderViewMode(
+												folderViewMode === "grid" ? "list" : "grid",
+											)
 										}
 									>
 										{folderViewMode === "grid" ? (
@@ -359,47 +370,86 @@ const DashboardWrapper: FC = () => {
 										: "space-y-2"
 								}
 							>
-								{folderData?.map((folder: { id: Key | null | undefined; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; createdAt: string | number | Date; }, index: number) => (
-									<Card
-										key={folder.id}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+								{folderData?.map(
+									(
+										folder: {
+											id: Key | null | undefined;
+											name:
+												| string
+												| number
+												| bigint
+												| boolean
+												| ReactElement<
+														unknown,
+														string | JSXElementConstructor<any>
+												  >
+												| Iterable<ReactNode>
+												| Promise<
+														| string
+														| number
+														| bigint
+														| boolean
+														| ReactPortal
+														| ReactElement<
+																unknown,
+																string | JSXElementConstructor<any>
+														  >
+														| Iterable<ReactNode>
+														| null
+														| undefined
+												  >
+												| null
+												| undefined;
+											createdAt: string | number | Date;
+										},
+										index: number,
+									) => (
+										<Card
+											key={folder.id}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+												folderViewMode === "grid" ? "p-4" : "p-3"
 											}`}
-										style={{ animationDelay: `${index * 0.1}s` }}
-									>
-										{folderViewMode === "grid" ? (
-											<div className="text-center">
-												<div className="flex justify-center mb-3">
-													<FolderIcon className="w-5 h-5 text-yellow-500" />
+											style={{ animationDelay: `${index * 0.1}s` }}
+										>
+											{folderViewMode === "grid" ? (
+												<div className="text-center">
+													<div className="flex justify-center mb-3">
+														<FolderIcon className="w-5 h-5 text-yellow-500" />
+													</div>
+													<h4 className="font-medium text-sm truncate mb-1">
+														{folder.name}
+													</h4>
+													<p className="text-xs text-muted-foreground mb-1">
+														{folder.createdAt
+															? format(new Date(folder.createdAt), "PPP") // e.g. "Jul 28, 2025"
+															: "—"}
+													</p>
 												</div>
-												<h4 className="font-medium text-sm truncate mb-1">{folder.name}</h4>
-												<p className="text-xs text-muted-foreground mb-1">
-													{folder.createdAt
-														? format(new Date(folder.createdAt), "PPP") // e.g. "Jul 28, 2025"
-														: "—"}
-												</p>
-											</div>
-										) : (
-											<div className="flex items-center justify-between">
-												<div className="flex items-center gap-3 flex-1 min-w-0">
-													<FolderIcon className="w-5 h-5 text-yellow-500" />
-													<div className="min-w-0 flex-1">
-														<h4 className="font-medium truncate">{folder.name}</h4>
-														<p className="text-xs text-muted-foreground mb-1">
-															{folder.createdAt
-																? format(new Date(folder.createdAt), "PPP") // e.g. "Jul 28, 2025"
-																: "—"}
-														</p>
+											) : (
+												<div className="flex items-center justify-between">
+													<div className="flex items-center gap-3 flex-1 min-w-0">
+														<FolderIcon className="w-5 h-5 text-yellow-500" />
+														<div className="min-w-0 flex-1">
+															<h4 className="font-medium truncate">
+																{folder.name}
+															</h4>
+															<p className="text-xs text-muted-foreground mb-1">
+																{folder.createdAt
+																	? format(new Date(folder.createdAt), "PPP") // e.g. "Jul 28, 2025"
+																	: "—"}
+															</p>
+														</div>
+													</div>
+													<div className="flex items-center gap-2">
+														<Button size="sm" variant="ghost">
+															<MoreHorizontal className="w-4 h-4" />
+														</Button>
 													</div>
 												</div>
-												<div className="flex items-center gap-2">
-													<Button size="sm" variant="ghost">
-														<MoreHorizontal className="w-4 h-4" />
-													</Button>
-												</div>
-											</div>
-										)}
-									</Card>
-								))}
+											)}
+										</Card>
+									),
+								)}
 							</div>
 						</Card>
 					</div>
@@ -472,12 +522,13 @@ const DashboardWrapper: FC = () => {
 												<User className="w-4 h-4 text-primary" />
 											</div>
 											<div
-												className={`absolute -bottom-1 -right-1 w-3 h-3 ${member.status === "online"
-													? "bg-green-500"
-													: member.status === "away"
-														? "bg-yellow-500"
-														: "bg-gray-400"
-													} rounded-full border-2 border-background`}
+												className={`absolute -bottom-1 -right-1 w-3 h-3 ${
+													member.status === "online"
+														? "bg-green-500"
+														: member.status === "away"
+															? "bg-yellow-500"
+															: "bg-gray-400"
+												} rounded-full border-2 border-background`}
 											/>
 										</div>
 										<div className="flex-1 min-w-0">
