@@ -3,9 +3,11 @@ import { eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 import { db } from '@/db';
 import { folders } from '@/db/schema';
+import { auth } from '@clerk/nextjs/server';
 
 export async function GET(req: Request) {
-  const userId = req.headers.get('x-user-id');
+  const authSession = await auth();
+  const userId = authSession.userId;
   if (!userId) return new Response('Unauthorized', { status: 401 });
 
   const allFolders = await db.select().from(folders).where(eq(folders.userId, userId)).all();
@@ -16,7 +18,8 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const userId = req.headers.get('x-user-id');
+  const authSession = await auth();
+  const userId = authSession.userId;
   if (!userId) return new Response('Unauthorized', { status: 401 });
 
   const body = await req.json();
