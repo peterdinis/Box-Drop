@@ -6,7 +6,6 @@ const nextConfig: NextConfig = {
 		viewTransition: true,
 		browserDebugInfoInTerminal: true,
 		devtoolSegmentExplorer: true,
-		turbopackPersistentCaching: true,
 	}
 };
 
