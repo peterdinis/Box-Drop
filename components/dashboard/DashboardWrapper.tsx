@@ -8,6 +8,7 @@ import {
 	Eye,
 	File,
 	FileText,
+	FolderIcon,
 	Grid3X3,
 	HardDrive,
 	Image,
@@ -22,7 +23,7 @@ import {
 	Video,
 } from "lucide-react";
 import Link from "next/link";
-import { type FC, useState } from "react";
+import { type FC, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
 import { useTeam } from "@/context/TeamContext";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
@@ -32,14 +33,17 @@ import SettingsModal from "../modals/SettingsModal";
 import NotificationPanel from "../notifications/NotificationsPanel";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { format } from "date-fns"
 import { Card } from "../ui/card";
 import { useFolders } from "@/hooks/folders/useFolders";
 
 const DashboardWrapper: FC = () => {
 	const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+	const [folderViewMode, setFolderViewMode] = useState<"grid" | "list">("grid")
+
 	const [showNotifications, setShowNotifications] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
-	const {data: folderData} = useFolders()
+	const { data: folderData } = useFolders()
 
 	const [shareModal, setShareModal] = useState<{
 		isOpen: boolean;
@@ -251,9 +255,8 @@ const DashboardWrapper: FC = () => {
 								{recentFiles.map((file, index) => (
 									<Card
 										key={file.id}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-											viewMode === "grid" ? "p-4" : "p-3"
-										}`}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${viewMode === "grid" ? "p-4" : "p-3"
+											}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
 										{viewMode === "grid" ? (
@@ -337,98 +340,58 @@ const DashboardWrapper: FC = () => {
 										variant="outline"
 										size="sm"
 										onClick={() =>
-											setViewMode(viewMode === "grid" ? "list" : "grid")
+											setFolderViewMode(folderViewMode === "grid" ? "list" : "grid")
 										}
 									>
-										{viewMode === "grid" ? (
+										{folderViewMode === "grid" ? (
 											<List className="w-4 h-4" />
 										) : (
 											<Grid3X3 className="w-4 h-4" />
 										)}
-									</Button>
-									<Button variant="outline" size="sm">
-										<Link href="/files">View All</Link>
 									</Button>
 								</div>
 							</div>
 
 							<div
 								className={
-									viewMode === "grid"
+									folderViewMode === "grid"
 										? "grid md:grid-cols-2 lg:grid-cols-3 gap-4"
 										: "space-y-2"
 								}
 							>
-								{recentFiles.map((file, index) => (
+								{folderData?.map((folder: { id: Key | null | undefined; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; createdAt: string | number | Date; }, index: number) => (
 									<Card
-										key={file.id}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-											viewMode === "grid" ? "p-4" : "p-3"
-										}`}
+										key={folder.id}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+											}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
-										{viewMode === "grid" ? (
+										{folderViewMode === "grid" ? (
 											<div className="text-center">
 												<div className="flex justify-center mb-3">
-													{getFileIcon(file.type)}
+													<FolderIcon className="w-5 h-5 text-yellow-500" />
 												</div>
-												<h4 className="font-medium text-sm truncate mb-1">
-													{file.name}
-												</h4>
+												<h4 className="font-medium text-sm truncate mb-1">{folder.name}</h4>
 												<p className="text-xs text-muted-foreground mb-1">
-													{file.size}
+													{folder.createdAt
+														? format(new Date(folder.createdAt), "PPP") // e.g. "Jul 28, 2025"
+														: "—"}
 												</p>
-												<p className="text-xs text-muted-foreground">
-													{file.modified}
-												</p>
-												<div className="flex justify-center gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-													<Button size="sm" variant="ghost">
-														<Download className="w-3 h-3" />
-													</Button>
-													<Button
-														size="sm"
-														variant="ghost"
-														onClick={() =>
-															handleShareFile(file.name, file.type)
-														}
-													>
-														<Share2 className="w-3 h-3" />
-													</Button>
-													<Button size="sm" variant="ghost">
-														<Star
-															className={`w-3 h-3 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
-														/>
-													</Button>
-												</div>
 											</div>
 										) : (
 											<div className="flex items-center justify-between">
 												<div className="flex items-center gap-3 flex-1 min-w-0">
-													{getFileIcon(file.type)}
+													<FolderIcon className="w-5 h-5 text-yellow-500" />
 													<div className="min-w-0 flex-1">
-														<h4 className="font-medium truncate">
-															{file.name}
-														</h4>
-														<p className="text-sm text-muted-foreground">
-															{file.modified} • {file.size}
+														<h4 className="font-medium truncate">{folder.name}</h4>
+														<p className="text-xs text-muted-foreground mb-1">
+															{folder.createdAt
+																? format(new Date(folder.createdAt), "PPP") // e.g. "Jul 28, 2025"
+																: "—"}
 														</p>
 													</div>
 												</div>
 												<div className="flex items-center gap-2">
-													<Button
-														size="sm"
-														variant="ghost"
-														onClick={() =>
-															handleShareFile(file.name, file.type)
-														}
-													>
-														<Share2 className="w-4 h-4" />
-													</Button>
-													<Button size="sm" variant="ghost">
-														<Star
-															className={`w-4 h-4 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
-														/>
-													</Button>
 													<Button size="sm" variant="ghost">
 														<MoreHorizontal className="w-4 h-4" />
 													</Button>
@@ -513,13 +476,12 @@ const DashboardWrapper: FC = () => {
 												<User className="w-4 h-4 text-primary" />
 											</div>
 											<div
-												className={`absolute -bottom-1 -right-1 w-3 h-3 ${
-													member.status === "online"
-														? "bg-green-500"
-														: member.status === "away"
-															? "bg-yellow-500"
-															: "bg-gray-400"
-												} rounded-full border-2 border-background`}
+												className={`absolute -bottom-1 -right-1 w-3 h-3 ${member.status === "online"
+													? "bg-green-500"
+													: member.status === "away"
+														? "bg-yellow-500"
+														: "bg-gray-400"
+													} rounded-full border-2 border-background`}
 											/>
 										</div>
 										<div className="flex-1 min-w-0">
