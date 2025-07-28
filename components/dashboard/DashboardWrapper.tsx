@@ -426,10 +426,6 @@ const DashboardWrapper: FC = () => {
 										/>
 									</div>
 								</div>
-
-								<Button variant="outline" className="w-full">
-									Upgrade Storage
-								</Button>
 							</div>
 						</Card>
 
@@ -507,31 +503,6 @@ const DashboardWrapper: FC = () => {
 								<Button variant="outline" size="sm" className="w-full mt-3">
 									View All Members
 								</Button>
-							</div>
-						</Card>
-
-						{/* Recent Activity */}
-						<Card className="p-6">
-							<h3 className="font-semibold mb-4">Recent Activity</h3>
-							<div className="space-y-3">
-								{activityData.map((activity, index) => (
-									<div
-										key={index}
-										className="flex items-start gap-3 animate-fade-in"
-										style={{ animationDelay: `${index * 0.1}s` }}
-									>
-										<div className="w-2 h-2 bg-primary rounded-full mt-2" />
-										<div className="flex-1 min-w-0">
-											<p className="text-sm">
-												<span className="font-medium">{activity.action}</span>{" "}
-												{activity.file}
-											</p>
-											<p className="text-xs text-muted-foreground">
-												{activity.time}
-											</p>
-										</div>
-									</div>
-								))}
 							</div>
 						</Card>
 					</div>
