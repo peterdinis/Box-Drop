@@ -1,44 +1,44 @@
-"use client"
+"use client";
 
-import * as React from 'react';
-import { Button } from '@/components/ui/button'; // adjust path to your ShadCN UI button
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp } from "lucide-react";
+import * as React from "react";
+import { Button } from "@/components/ui/button"; // adjust path to your ShadCN UI button
 
 export function ScrollToTop() {
-  const [visible, setVisible] = React.useState(false);
+	const [visible, setVisible] = React.useState(false);
 
-  React.useEffect(() => {
-    const handleScroll = () => {
-      if (window.pageYOffset > 300) {
-        setVisible(true);
-      } else {
-        setVisible(false);
-      }
-    };
+	React.useEffect(() => {
+		const handleScroll = () => {
+			if (window.pageYOffset > 300) {
+				setVisible(true);
+			} else {
+				setVisible(false);
+			}
+		};
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+		window.addEventListener("scroll", handleScroll, { passive: true });
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  };
+	const scrollToTop = () => {
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth",
+		});
+	};
 
-  if (!visible) return null;
+	if (!visible) return null;
 
-  return (
-    <div className="fixed bottom-8 right-8">
-      <Button 
-        variant="default" 
-        size="icon" 
-        onClick={scrollToTop}
-        className="rounded-full p-3 shadow-lg"
-      >
-        <ArrowUp />
-      </Button>
-    </div>
-  );
+	return (
+		<div className="fixed bottom-8 right-8">
+			<Button
+				variant="default"
+				size="icon"
+				onClick={scrollToTop}
+				className="rounded-full p-3 shadow-lg"
+			>
+				<ArrowUp />
+			</Button>
+		</div>
+	);
 }

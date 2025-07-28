@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AppClerkProvider from "@/components/providers/AppClerkProvider";
+import QueryProvider from "@/components/providers/QueryProvider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import Navigation from "@/components/shared/Navigation";
+import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { Toaster } from "@/components/ui/toaster";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { TeamProvider } from "@/context/TeamContext";
-import QueryProvider from "@/components/providers/QueryProvider";
-import { ScrollToTop } from "@/components/shared/ScrollToTop";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",

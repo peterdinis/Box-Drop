@@ -1,79 +1,79 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-const BASE_URL = '/api/folders';
+const BASE_URL = "/api/folders";
 
 export function useFolders() {
-  return useQuery({
-    queryKey: ['folders'],
-    queryFn: async () => {
-      const res = await fetch(BASE_URL);
-      if (!res.ok) throw new Error('Failed to fetch folders');
-      return res.json();
-    },
-  });
+	return useQuery({
+		queryKey: ["folders"],
+		queryFn: async () => {
+			const res = await fetch(BASE_URL);
+			if (!res.ok) throw new Error("Failed to fetch folders");
+			return res.json();
+		},
+	});
 }
 
 export function useFolder(folderId: string) {
-  return useQuery({
-    queryKey: ['folders', folderId],
-    queryFn: async () => {
-      const res = await fetch(`${BASE_URL}/${folderId}`);
-      if (!res.ok) throw new Error('Folder not found');
-      return res.json();
-    },
-    enabled: !!folderId,
-  });
+	return useQuery({
+		queryKey: ["folders", folderId],
+		queryFn: async () => {
+			const res = await fetch(`${BASE_URL}/${folderId}`);
+			if (!res.ok) throw new Error("Folder not found");
+			return res.json();
+		},
+		enabled: !!folderId,
+	});
 }
 
 export function useCreateFolder() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (name: string) => {
-      const res = await fetch("http://localhost:3000/api/folders", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }),
-      });
-      if (!res.ok) throw new Error('Failed to create folder');
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['folders'] });
-    },
-  });
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: async (name: string) => {
+			const res = await fetch(BASE_URL, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ name }),
+			});
+			if (!res.ok) throw new Error("Failed to create folder");
+			return res.json();
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["folders"] });
+		},
+	});
 }
 
 export function useUpdateFolder() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ id, name }: { id: string; name: string }) => {
-      const res = await fetch(`${BASE_URL}/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }),
-      });
-      if (!res.ok) throw new Error('Failed to update folder');
-      return res.json();
-    },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['folders'] });
-      queryClient.invalidateQueries({ queryKey: ['folders', variables.id] });
-    },
-  });
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: async ({ id, name }: { id: string; name: string }) => {
+			const res = await fetch(`${BASE_URL}/${id}`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ name }),
+			});
+			if (!res.ok) throw new Error("Failed to update folder");
+			return res.json();
+		},
+		onSuccess: (_, variables) => {
+			queryClient.invalidateQueries({ queryKey: ["folders"] });
+			queryClient.invalidateQueries({ queryKey: ["folders", variables.id] });
+		},
+	});
 }
 
 export function useDeleteFolder() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (id: string) => {
-      const res = await fetch(`${BASE_URL}/${id}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) throw new Error('Failed to delete folder');
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['folders'] });
-    },
-  });
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: async (id: string) => {
+			const res = await fetch(`${BASE_URL}/${id}`, {
+				method: "DELETE",
+			});
+			if (!res.ok) throw new Error("Failed to delete folder");
+			return res.json();
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["folders"] });
+		},
+	});
 }
