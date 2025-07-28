@@ -51,6 +51,10 @@ export const permissionsRelations = relations(permissions, ({ one }) => ({
 		fields: [permissions.folderId],
 		references: [folders.id],
 	}),
+	user: one(members, {
+		fields: [permissions.userId],
+		references: [members.id],
+	}),
 }));
 
 
