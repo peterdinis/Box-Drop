@@ -38,7 +38,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       headers: { 'Content-Type': 'application/json' },
     });
 
-  const result = await db
+  await db
     .update(folders)
     .set({ name: parsed.data.name })
     .where(and(eq(folders.id, id), eq(folders.userId, userId)))
