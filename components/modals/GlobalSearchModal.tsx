@@ -1,17 +1,15 @@
 "use client";
 
-import { FileText, Folder, Search, User } from "lucide-react";
+import { FileText, Folder, User } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "../ui/button";
 
 interface GlobalSearchModalProps {
 	isOpen: boolean;
@@ -34,9 +32,7 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
 	const [query, setQuery] = useState("");
 
 	useEffect(() => {
-		if (!isOpen) {
-			setQuery("");
-		}
+		if (!isOpen) setQuery("");
 	}, [isOpen]);
 
 	const filteredResults = useMemo(() => {
@@ -60,12 +56,6 @@ const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogTrigger>
-				<Button className="gap-2">
-					<Search className="w-4 h-4" />
-					Search for files
-				</Button>
-			</DialogTrigger>
 			<DialogContent className="sm:max-w-md">
 				<DialogHeader>
 					<DialogTitle>Global Search</DialogTitle>

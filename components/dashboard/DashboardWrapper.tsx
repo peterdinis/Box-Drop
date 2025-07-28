@@ -26,11 +26,7 @@ import {
 import Link from "next/link";
 import {
 	type FC,
-	type JSXElementConstructor,
 	type Key,
-	type ReactElement,
-	type ReactNode,
-	type ReactPortal,
 	useState,
 } from "react";
 import { useTeam } from "@/context/TeamContext";
@@ -46,7 +42,7 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 
 const DashboardWrapper: FC = () => {
-	const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
 	const [folderViewMode, setFolderViewMode] = useState<"grid" | "list">("grid");
 
 	const [showNotifications, setShowNotifications] = useState(false);
@@ -130,13 +126,6 @@ const DashboardWrapper: FC = () => {
 		total: 100,
 		percentage: 15.6,
 	};
-
-	const activityData = [
-		{ action: "Uploaded", file: "Project Files.zip", time: "10 minutes ago" },
-		{ action: "Shared", file: "Q4 Report.pdf", time: "2 hours ago" },
-		{ action: "Created", file: "Marketing Folder", time: "1 day ago" },
-		{ action: "Downloaded", file: "Image Gallery.zip", time: "2 days ago" },
-	];
 
 	const { teamMembers } = useTeam();
 
@@ -238,10 +227,10 @@ const DashboardWrapper: FC = () => {
 										variant="outline"
 										size="sm"
 										onClick={() =>
-											setViewMode(viewMode === "grid" ? "list" : "grid")
+											setFileViewMode(fileViewMode === "grid" ? "list" : "grid")
 										}
 									>
-										{viewMode === "grid" ? (
+										{fileViewMode === "grid" ? (
 											<List className="w-4 h-4" />
 										) : (
 											<Grid3X3 className="w-4 h-4" />
@@ -255,7 +244,7 @@ const DashboardWrapper: FC = () => {
 
 							<div
 								className={
-									viewMode === "grid"
+									fileViewMode === "grid"
 										? "grid md:grid-cols-2 lg:grid-cols-3 gap-4"
 										: "space-y-2"
 								}
@@ -264,11 +253,11 @@ const DashboardWrapper: FC = () => {
 									<Card
 										key={file.id}
 										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-											viewMode === "grid" ? "p-4" : "p-3"
+											fileViewMode === "grid" ? "p-4" : "p-3"
 										}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
-										{viewMode === "grid" ? (
+										{fileViewMode === "grid" ? (
 											<div className="text-center">
 												<div className="flex justify-center mb-3">
 													{getFileIcon(file.type)}
@@ -374,32 +363,7 @@ const DashboardWrapper: FC = () => {
 									(
 										folder: {
 											id: Key | null | undefined;
-											name:
-												| string
-												| number
-												| bigint
-												| boolean
-												| ReactElement<
-														unknown,
-														string | JSXElementConstructor<any>
-												  >
-												| Iterable<ReactNode>
-												| Promise<
-														| string
-														| number
-														| bigint
-														| boolean
-														| ReactPortal
-														| ReactElement<
-																unknown,
-																string | JSXElementConstructor<any>
-														  >
-														| Iterable<ReactNode>
-														| null
-														| undefined
-												  >
-												| null
-												| undefined;
+											name:string
 											createdAt: string | number | Date;
 										},
 										index: number,
