@@ -51,4 +51,20 @@ export const permissionsRelations = relations(permissions, ({ one }) => ({
 		fields: [permissions.folderId],
 		references: [folders.id],
 	}),
+	user: one(members, {
+		fields: [permissions.userId],
+		references: [members.id],
+	}),
+}));
+
+
+export const members = sqliteTable("members", {
+	id: text("id").primaryKey().notNull(), // Clerk user ID
+	email: text("email").notNull(),
+	name: text("name").notNull(),
+	isAdmin: integer("is_admin", { mode: "boolean" }).default(false).notNull(),
+});
+
+export const membersRelations = relations(members, ({ many }) => ({
+	permissions: many(permissions),
 }));

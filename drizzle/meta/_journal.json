@@ -1,13 +1,20 @@
 {
-	"version": "7",
-	"dialect": "sqlite",
-	"entries": [
-		{
-			"idx": 0,
-			"version": "6",
-			"when": 1753624357863,
-			"tag": "0000_pretty_firebrand",
-			"breakpoints": true
-		}
-	]
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1753624357863,
+      "tag": "0000_pretty_firebrand",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1753724481621,
+      "tag": "0001_fixed_zaladane",
+      "breakpoints": true
+    }
+  ]
 }
