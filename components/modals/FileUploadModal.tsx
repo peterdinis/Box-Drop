@@ -12,7 +12,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { useNotifications } from "@/context/NotificationContext";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/shared/use-toast";
 
 interface FileUploadModalProps {
 	onFilesUpload?: (files: File[]) => void;
