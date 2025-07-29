@@ -32,7 +32,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNotifications } from "@/context/NotificationContext";
 import { type TeamMember, useTeam } from "@/context/TeamContext";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/shared/use-toast";
 
 interface FileShareModalProps {
 	isOpen: boolean;

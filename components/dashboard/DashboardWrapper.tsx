@@ -24,22 +24,18 @@ import {
 	Video,
 } from "lucide-react";
 import Link from "next/link";
-import {
-	type FC,
-	type Key,
-	useState,
-} from "react";
+import { type FC, type Key, useState } from "react";
 import { useTeam } from "@/context/TeamContext";
 import { useFolders } from "@/hooks/folders/useFolders";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
 import FileUploadModal from "../modals/FileUploadModal";
+import GlobalSearchModal from "../modals/GlobalSearchModal";
 import SettingsModal from "../modals/SettingsModal";
 import NotificationPanel from "../notifications/NotificationsPanel";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import GlobalSearchModal from "../modals/GlobalSearchModal";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -246,8 +242,9 @@ const DashboardWrapper: FC = () => {
 								{recentFiles.map((file, index) => (
 									<Card
 										key={file.id}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
-											}`}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+											fileViewMode === "grid" ? "p-4" : "p-3"
+										}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
 										{fileViewMode === "grid" ? (
@@ -356,15 +353,16 @@ const DashboardWrapper: FC = () => {
 									(
 										folder: {
 											id: Key | null | undefined;
-											name: string
+											name: string;
 											createdAt: string | number | Date;
 										},
 										index: number,
 									) => (
 										<Card
 											key={folder.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
-												}`}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+												folderViewMode === "grid" ? "p-4" : "p-3"
+											}`}
 											style={{ animationDelay: `${index * 0.1}s` }}
 										>
 											{folderViewMode === "grid" ? (
@@ -478,12 +476,13 @@ const DashboardWrapper: FC = () => {
 												<User className="w-4 h-4 text-primary" />
 											</div>
 											<div
-												className={`absolute -bottom-1 -right-1 w-3 h-3 ${member.status === "online"
+												className={`absolute -bottom-1 -right-1 w-3 h-3 ${
+													member.status === "online"
 														? "bg-green-500"
 														: member.status === "away"
 															? "bg-yellow-500"
 															: "bg-gray-400"
-													} rounded-full border-2 border-background`}
+												} rounded-full border-2 border-background`}
 											/>
 										</div>
 										<div className="flex-1 min-w-0">
