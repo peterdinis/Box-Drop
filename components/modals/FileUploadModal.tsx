@@ -74,15 +74,11 @@ const FileUploadModal: React.FC = () => {
 				</DialogHeader>
 
 				<div className="space-y-6">
-					{/* UploadThing Dropzone */}
-					<Card className="p-4 border-2 border-dashed border-upload-zone-border bg-gradient-upload hover:border-primary/50">
-						<UploadDropzone
-							endpoint="imageUploader"
-							className="ut-uploading:text-primary ut-button:bg-muted ut-button:hover:bg-muted/80 ut-label:text-muted-foreground"
-						/>
-					</Card>
-
-					{/* Supported File Types */}
+					<UploadDropzone
+						endpoint="imageUploader"
+						className="ut-uploading:text-primary ut-button:bg-muted ut-button:hover:bg-muted/80 ut-label:text-muted-foreground"
+					/>
+					
 					<div>
 						<h4 className="font-medium mb-3">Supported file types:</h4>
 						<div className="grid grid-cols-2 gap-3">
