@@ -5,8 +5,6 @@ import { format } from "date-fns";
 import {
 	Archive,
 	Download,
-	Edit,
-	Eye,
 	File,
 	FileText,
 	FolderIcon,
@@ -14,18 +12,17 @@ import {
 	HardDrive,
 	Image,
 	List,
+	Loader2,
 	MoreHorizontal,
 	Music,
 	Share2,
 	Shield,
 	Star,
 	TrendingUp,
-	User,
 	Video,
 } from "lucide-react";
 import Link from "next/link";
 import { type FC, type Key, useState } from "react";
-import { useTeam } from "@/context/TeamContext";
 import { useFolders } from "@/hooks/folders/useFolders";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
@@ -33,7 +30,6 @@ import FileUploadModal from "../modals/FileUploadModal";
 import GlobalSearchModal from "../modals/GlobalSearchModal";
 import SettingsModal from "../modals/SettingsModal";
 import NotificationPanel from "../notifications/NotificationsPanel";
-import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { useFiles } from "@/hooks/files/useFiles";
@@ -53,8 +49,8 @@ const DashboardWrapper: FC = () => {
 	const [folderViewMode, setFolderViewMode] = useState<"grid" | "list">("grid");
 	const [showNotifications, setShowNotifications] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
-	const { data: folderData } = useFolders();
-	const { data: filesData } = useFiles()
+	const { data: folderData, isLoading: folderLoading } = useFolders();
+	const { data: filesData, isLoading: fileLoading } = useFiles()
 
 	const [shareModal, setShareModal] = useState<{
 		isOpen: boolean;
@@ -65,8 +61,6 @@ const DashboardWrapper: FC = () => {
 		fileName: "",
 		fileType: "",
 	});
-
-	const { teamMembers } = useTeam();
 
 	const getFileIcon = (type: string) => {
 		switch (type) {
@@ -90,6 +84,8 @@ const DashboardWrapper: FC = () => {
 	};
 
 	const { user } = useUser();
+
+	if(fileLoading || folderLoading) return <Loader2 className="animate-spin w-8 h-8" />
 
 	return (
 		<div className="min-h-screen bg-background">
@@ -448,45 +444,7 @@ const DashboardWrapper: FC = () => {
 						<Card className="p-6">
 							<h3 className="font-semibold mb-4">Team Members</h3>
 							<div className="space-y-3">
-								{teamMembers.slice(0, 4).map((member, index) => (
-									<div
-										key={member.id}
-										className="flex items-center gap-3 animate-fade-in"
-										style={{ animationDelay: `${index * 0.1}s` }}
-									>
-										<div className="relative">
-											<div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-												<User className="w-4 h-4 text-primary" />
-											</div>
-											<div
-												className={`absolute -bottom-1 -right-1 w-3 h-3 ${member.status === "online"
-													? "bg-green-500"
-													: member.status === "away"
-														? "bg-yellow-500"
-														: "bg-gray-400"
-													} rounded-full border-2 border-background`}
-											/>
-										</div>
-										<div className="flex-1 min-w-0">
-											<p className="text-sm font-medium truncate">
-												{member.name}
-											</p>
-											<div className="flex items-center gap-1">
-												<Badge variant="outline" className="text-xs">
-													{member.role}
-												</Badge>
-												<div className="flex gap-1 ml-1">
-													{member.permissions.canView && (
-														<Eye className="w-3 h-3 text-green-500" />
-													)}
-													{member.permissions.canEdit && (
-														<Edit className="w-3 h-3 text-purple-500" />
-													)}
-												</div>
-											</div>
-										</div>
-									</div>
-								))}
+								TODO TEAMS
 								<Button variant="outline" size="sm" className="w-full mt-3">
 									View All Members
 								</Button>

@@ -12,10 +12,6 @@ import {
 	Mail,
 	Share2,
 	Shield,
-	Trash2,
-	User,
-	Users,
-	X,
 } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
@@ -31,7 +27,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNotifications } from "@/context/NotificationContext";
-import { type TeamMember, useTeam } from "@/context/TeamContext";
 import { useToast } from "@/hooks/shared/use-toast";
 
 interface FileShareModalProps {
@@ -53,7 +48,6 @@ const FileShareModal: React.FC<FileShareModalProps> = ({
 	const [selectedPermission, setSelectedPermission] = useState<
 		"view" | "download" | "edit"
 	>("view");
-	const { teamMembers } = useTeam();
 	const { addNotification } = useNotifications();
 	const { toast } = useToast();
 
@@ -94,7 +88,7 @@ const FileShareModal: React.FC<FileShareModalProps> = ({
 		setShareEmail("");
 	};
 
-	const getRoleIcon = (role: TeamMember["role"]) => {
+	const getRoleIcon = (role: string) => {
 		switch (role) {
 			case "owner":
 				return <Crown className="w-4 h-4 text-yellow-500" />;
@@ -107,7 +101,7 @@ const FileShareModal: React.FC<FileShareModalProps> = ({
 		}
 	};
 
-	const getStatusColor = (status: TeamMember["status"]) => {
+	const getStatusColor = (status: string) => {
 		switch (status) {
 			case "online":
 				return "bg-green-500";
@@ -161,50 +155,7 @@ const FileShareModal: React.FC<FileShareModalProps> = ({
 						<div>
 							<h3 className="font-medium mb-3">Team Members with Access</h3>
 							<div className="space-y-2 max-h-64 overflow-y-auto">
-								{teamMembers.map((member) => (
-									<Card key={member.id} className="p-3">
-										<div className="flex items-center justify-between">
-											<div className="flex items-center gap-3">
-												<div className="relative">
-													<div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-														<User className="w-4 h-4 text-primary" />
-													</div>
-													<div
-														className={`absolute -bottom-1 -right-1 w-3 h-3 ${getStatusColor(member.status)} rounded-full border-2 border-background`}
-													/>
-												</div>
-												<div>
-													<div className="flex items-center gap-2">
-														<p className="font-medium text-sm">{member.name}</p>
-														{getRoleIcon(member.role)}
-														<Badge variant="outline" className="text-xs">
-															{member.role}
-														</Badge>
-													</div>
-													<p className="text-xs text-muted-foreground">
-														{member.email}
-													</p>
-												</div>
-											</div>
-											<div className="flex items-center gap-2">
-												<div className="flex gap-1">
-													{member.permissions.canView && (
-														<Eye className="w-3 h-3 text-green-500" />
-													)}
-													{member.permissions.canDownload && (
-														<Download className="w-3 h-3 text-blue-500" />
-													)}
-													{member.permissions.canEdit && (
-														<Edit className="w-3 h-3 text-purple-500" />
-													)}
-												</div>
-												<Button variant="ghost" size="sm">
-													<Trash2 className="w-3 h-3" />
-												</Button>
-											</div>
-										</div>
-									</Card>
-								))}
+								TODO TEAMS
 							</div>
 						</div>
 					</TabsContent>

@@ -44,14 +44,12 @@ export default function RootLayout({
 					>
 						<AppClerkProvider>
 							<NotificationProvider>
-								<TeamProvider>
-									<QueryProvider>
-										<Navigation />
-										{children}
-										<Toaster />
-										<ScrollToTop />
-									</QueryProvider>
-								</TeamProvider>
+								<QueryProvider>
+									<Navigation />
+									{children}
+									<Toaster />
+									<ScrollToTop />
+								</QueryProvider>
 							</NotificationProvider>
 						</AppClerkProvider>
 					</ThemeProvider>
