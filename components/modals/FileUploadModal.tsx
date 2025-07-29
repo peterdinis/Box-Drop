@@ -2,15 +2,13 @@
 
 import {
 	FileText,
-	FileUp,
 	Image,
 	Music,
 	Upload,
 	Video,
 } from "lucide-react";
-import React from "react";
+import { FC, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import {
 	Dialog,
 	DialogContent,
@@ -18,39 +16,10 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { useNotifications } from "@/context/NotificationContext";
-import { useToast } from "@/hooks/shared/use-toast";
 import { UploadDropzone } from "@/lib/uploadthing";
 
-const FileUploadModal: React.FC = () => {
-	const [isOpen, setIsOpen] = React.useState(false);
-	const { addNotification } = useNotifications();
-	const { toast } = useToast();
-
-	const handleUploadComplete = (res: any) => {
-		if (!res) return;
-
-		addNotification({
-			title: "Files Uploaded",
-			message: `${res.length} file(s) uploaded successfully.`,
-			type: "success",
-		});
-
-		toast({
-			title: "Upload complete",
-			description: `${res.length} file(s) added to your storage.`,
-		});
-
-		setIsOpen(false);
-	};
-
-	const handleUploadError = (error: Error) => {
-		toast({
-			title: "Upload failed",
-			description: error.message,
-			variant: "destructive",
-		});
-	};
+const FileUploadModal: FC = () => {
+	const [isOpen, setIsOpen] = useState(false);
 
 	const fileTypes = [
 		{ icon: <Image className="w-6 h-6" />, label: "Images", types: ".jpg, .png, .gif, .svg" },
@@ -78,7 +47,7 @@ const FileUploadModal: React.FC = () => {
 						endpoint="imageUploader"
 						className="ut-uploading:text-primary ut-button:bg-muted ut-button:hover:bg-muted/80 ut-label:text-muted-foreground"
 					/>
-					
+
 					<div>
 						<h4 className="font-medium mb-3">Supported file types:</h4>
 						<div className="grid grid-cols-2 gap-3">
