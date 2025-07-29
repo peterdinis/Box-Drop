@@ -36,6 +36,8 @@ import NotificationPanel from "../notifications/NotificationsPanel";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import { useFiles } from "@/hooks/files/useFiles";
+import { quickActions, storageData } from "./DashboardActions";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -43,6 +45,7 @@ const DashboardWrapper: FC = () => {
 	const [showNotifications, setShowNotifications] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
 	const { data: folderData } = useFolders();
+	const {data: filesData} = useFiles()
 
 	const [shareModal, setShareModal] = useState<{
 		isOpen: boolean;
@@ -53,74 +56,6 @@ const DashboardWrapper: FC = () => {
 		fileName: "",
 		fileType: "",
 	});
-
-	const recentFiles = [
-		{
-			id: "1",
-			name: "Project Proposal.pdf",
-			type: "document",
-			size: "2.4 MB",
-			modified: "2 hours ago",
-			starred: true,
-		},
-		{
-			id: "2",
-			name: "Team Photo.jpg",
-			type: "image",
-			size: "5.1 MB",
-			modified: "1 day ago",
-			starred: false,
-		},
-		{
-			id: "3",
-			name: "Budget 2024.xlsx",
-			type: "document",
-			size: "1.2 MB",
-			modified: "3 days ago",
-			starred: true,
-		},
-		{
-			id: "4",
-			name: "Demo Video.mp4",
-			type: "video",
-			size: "25.8 MB",
-			modified: "1 week ago",
-			starred: false,
-		},
-	];
-
-	const quickActions = [
-		{
-			icon: <FileUploadModal />,
-			label: "Upload Files",
-			color: "text-blue-500",
-			component: true,
-		},
-		{
-			icon: <CreateFolderModal />,
-			label: "New Folder",
-			color: "text-green-500",
-			component: true,
-		},
-		{
-			icon: <Share2 className="w-5 h-5" />,
-			label: "Share",
-			color: "text-purple-500",
-			component: false,
-		},
-		{
-			icon: <Star className="w-5 h-5" />,
-			label: "Starred",
-			color: "text-yellow-500",
-			component: false,
-		},
-	];
-
-	const storageData = {
-		used: 15.6,
-		total: 100,
-		percentage: 15.6,
-	};
 
 	const { teamMembers } = useTeam();
 
@@ -176,7 +111,7 @@ const DashboardWrapper: FC = () => {
 										Welcome back! {user?.emailAddresses[0]?.emailAddress}👋
 									</h2>
 									<p className="text-muted-foreground">
-										You have {recentFiles.length} recent files and{" "}
+										You have {filesData.length} recent files and{" "}
 										{storageData.used} GB of storage used.
 									</p>
 								</div>
@@ -239,7 +174,7 @@ const DashboardWrapper: FC = () => {
 										: "space-y-2"
 								}
 							>
-								{recentFiles.map((file, index) => (
+								{filesData && filesData.map((file, index) => (
 									<Card
 										key={file.id}
 										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
