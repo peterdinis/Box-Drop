@@ -174,7 +174,14 @@ const DashboardWrapper: FC = () => {
 										: "space-y-2"
 								}
 							>
-								{filesData && filesData.map((file, index) => (
+								{filesData && filesData.map((file: {
+									id: string,
+									type: string,
+									name: string,
+									size: string,
+									modified: boolean,
+									starred: boolean
+								}, index: number) => (
 									<Card
 										key={file.id}
 										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
