@@ -39,17 +39,11 @@ import NotificationPanel from "../notifications/NotificationsPanel";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip"
 import GlobalSearchModal from "../modals/GlobalSearchModal";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
 	const [folderViewMode, setFolderViewMode] = useState<"grid" | "list">("grid");
-
 	const [showNotifications, setShowNotifications] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
 	const { data: folderData } = useFolders();
@@ -154,8 +148,6 @@ const DashboardWrapper: FC = () => {
 	const handleShareFile = (fileName: string, fileType: string) => {
 		setShareModal({ isOpen: true, fileName, fileType });
 	};
-
-	const [showGlobalSearch, setShowGlobalSearch] = useState(false);
 
 	const { user } = useUser();
 

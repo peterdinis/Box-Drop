@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import { FC, useState } from "react";
 
-
 const GlobalSearchModal: FC = () => {
 	const [isOpen, setIsOpen] = useState(false);
 
