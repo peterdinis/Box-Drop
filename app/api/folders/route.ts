@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 import { db } from "@/db";
@@ -10,16 +10,31 @@ export async function GET(req: Request) {
 	const userId = authSession.userId;
 	if (!userId) return new Response("Unauthorized", { status: 401 });
 
+	const { searchParams } = new URL(req.url);
+	const limit = Number(searchParams.get("limit") || 10);
+	const offset = Number(searchParams.get("offset") || 0);
+
 	const allFolders = await db
 		.select()
 		.from(folders)
 		.where(eq(folders.userId, userId))
-		.all();
-	return new Response(JSON.stringify(allFolders), {
-		status: 200,
-		headers: { "Content-Type": "application/json" },
-	});
+		.limit(limit)
+		.offset(offset);
+		
+	const totalResult = await db.get<{ count: number }>(
+		sql`SELECT COUNT(*) as count FROM folders WHERE userId = ${userId}`
+	);
+	const total = totalResult?.count ?? 0;
+
+	return new Response(
+		JSON.stringify({
+			items: allFolders,
+			total,
+		}),
+		{ status: 200, headers: { "Content-Type": "application/json" } },
+	);
 }
+
 
 export async function POST(req: Request) {
 	const authSession = await auth();

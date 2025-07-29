@@ -38,6 +38,15 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { useFiles } from "@/hooks/files/useFiles";
 import { quickActions, storageData } from "./DashboardActions";
+import {
+	Pagination,
+	PaginationContent,
+	PaginationEllipsis,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
+} from "@/components/ui/pagination"
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -45,7 +54,7 @@ const DashboardWrapper: FC = () => {
 	const [showNotifications, setShowNotifications] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
 	const { data: folderData } = useFolders();
-	const {data: filesData} = useFiles()
+	const { data: filesData } = useFiles()
 
 	const [shareModal, setShareModal] = useState<{
 		isOpen: boolean;
@@ -111,7 +120,7 @@ const DashboardWrapper: FC = () => {
 										Welcome back! {user?.emailAddresses[0]?.emailAddress}👋
 									</h2>
 									<p className="text-muted-foreground">
-										You have {filesData.length} recent files and{" "}
+										You have {filesData && filesData.length} recent files and{" "}
 										{storageData.used} GB of storage used.
 									</p>
 								</div>
@@ -174,12 +183,18 @@ const DashboardWrapper: FC = () => {
 										: "space-y-2"
 								}
 							>
-								{filesData && filesData.map((file, index) => (
+								{filesData && filesData.map((file: {
+									id: string,
+									type: string,
+									name: string,
+									size: string,
+									modified: boolean,
+									starred: boolean
+								}, index: number) => (
 									<Card
 										key={file.id}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-											fileViewMode === "grid" ? "p-4" : "p-3"
-										}`}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
+											}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
 										{fileViewMode === "grid" ? (
@@ -253,6 +268,23 @@ const DashboardWrapper: FC = () => {
 									</Card>
 								))}
 							</div>
+
+							<Pagination>
+								<PaginationContent>
+									<PaginationItem>
+										<PaginationPrevious href="#" />
+									</PaginationItem>
+									<PaginationItem>
+										<PaginationLink href="#">1</PaginationLink>
+									</PaginationItem>
+									<PaginationItem>
+										<PaginationEllipsis />
+									</PaginationItem>
+									<PaginationItem>
+										<PaginationNext href="#" />
+									</PaginationItem>
+								</PaginationContent>
+							</Pagination>
 						</Card>
 
 						<Card className="p-6">
@@ -295,9 +327,8 @@ const DashboardWrapper: FC = () => {
 									) => (
 										<Card
 											key={folder.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-												folderViewMode === "grid" ? "p-4" : "p-3"
-											}`}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+												}`}
 											style={{ animationDelay: `${index * 0.1}s` }}
 										>
 											{folderViewMode === "grid" ? (
@@ -340,6 +371,23 @@ const DashboardWrapper: FC = () => {
 									),
 								)}
 							</div>
+
+							<Pagination>
+								<PaginationContent>
+									<PaginationItem>
+										<PaginationPrevious href="#" />
+									</PaginationItem>
+									<PaginationItem>
+										<PaginationLink href="#">1</PaginationLink>
+									</PaginationItem>
+									<PaginationItem>
+										<PaginationEllipsis />
+									</PaginationItem>
+									<PaginationItem>
+										<PaginationNext href="#" />
+									</PaginationItem>
+								</PaginationContent>
+							</Pagination>
 						</Card>
 					</div>
 
@@ -411,13 +459,12 @@ const DashboardWrapper: FC = () => {
 												<User className="w-4 h-4 text-primary" />
 											</div>
 											<div
-												className={`absolute -bottom-1 -right-1 w-3 h-3 ${
-													member.status === "online"
-														? "bg-green-500"
-														: member.status === "away"
-															? "bg-yellow-500"
-															: "bg-gray-400"
-												} rounded-full border-2 border-background`}
+												className={`absolute -bottom-1 -right-1 w-3 h-3 ${member.status === "online"
+													? "bg-green-500"
+													: member.status === "away"
+														? "bg-yellow-500"
+														: "bg-gray-400"
+													} rounded-full border-2 border-background`}
 											/>
 										</div>
 										<div className="flex-1 min-w-0">
