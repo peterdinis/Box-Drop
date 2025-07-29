@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
 		viewTransition: true,
 		browserDebugInfoInTerminal: true,
 		devtoolSegmentExplorer: true,
-	}
+	},
 };
 
 export default nextConfig;
