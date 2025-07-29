@@ -2,11 +2,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const BASE_URL = "/api/folders";
 
-export function useFolders() {
+export function useFolders(page = 0, limit = 10) {
 	return useQuery({
-		queryKey: ["folders"],
+		queryKey: ["folders", page, limit],
 		queryFn: async () => {
-			const res = await fetch(BASE_URL);
+			const res = await fetch(`/api/folders?limit=${limit}&offset=${page * limit}`);
 			if (!res.ok) throw new Error("Failed to fetch folders");
 			return res.json();
 		},
