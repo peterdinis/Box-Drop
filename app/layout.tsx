@@ -8,7 +8,6 @@ import Navigation from "@/components/shared/Navigation";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { Toaster } from "@/components/ui/toaster";
 import { NotificationProvider } from "@/context/NotificationContext";
-import { TeamProvider } from "@/context/TeamContext";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
