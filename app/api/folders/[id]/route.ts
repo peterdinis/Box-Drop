@@ -2,12 +2,14 @@ import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { folders } from "@/db/schema";
+import { auth } from "@clerk/nextjs/server";
 
 export async function GET(
 	req: Request,
 	{ params }: { params: { id: string } },
 ) {
-	const userId = req.headers.get("x-user-id");
+	const authSession = await auth();
+	const userId = authSession.userId;
 	if (!userId) return new Response("Unauthorized", { status: 401 });
 
 	const { id } = params;
@@ -30,7 +32,8 @@ export async function PUT(
 	req: Request,
 	{ params }: { params: { id: string } },
 ) {
-	const userId = req.headers.get("x-user-id");
+	const authSession = await auth();
+	const userId = authSession.userId;
 	if (!userId) return new Response("Unauthorized", { status: 401 });
 
 	const { id } = params;
@@ -61,7 +64,8 @@ export async function DELETE(
 	req: Request,
 	{ params }: { params: { id: string } },
 ) {
-	const userId = req.headers.get("x-user-id");
+	const authSession = await auth();
+	const userId = authSession.userId;
 	if (!userId) return new Response("Unauthorized", { status: 401 });
 
 	const { id } = params;
