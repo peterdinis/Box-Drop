@@ -23,6 +23,7 @@ export const files = sqliteTable("files", {
 	folderId: text("folder_id").notNull(),
 	name: text("name").notNull(),
 	url: text("url").notNull(),
+	size: integer("size").notNull(), 
 	uploadedAt: integer("uploaded_at", { mode: "timestamp" }).defaultNow(),
 });
 

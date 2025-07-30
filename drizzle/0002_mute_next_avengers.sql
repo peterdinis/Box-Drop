@@ -1,0 +1,1 @@
+ALTER TABLE `files` ADD `size` integer NOT NULL;
