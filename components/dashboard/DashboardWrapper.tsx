@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/pagination";
 import { useFiles } from "@/hooks/files/useFiles";
 import { useFolders } from "@/hooks/folders/useFolders";
+import { useStorageUsage } from "@/hooks/storage/useStorage";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
 import FileUploadModal from "../modals/FileUploadModal";
@@ -51,6 +52,12 @@ const DashboardWrapper: FC = () => {
 	const [showSettings, setShowSettings] = useState(false);
 	const { data: folderData, isLoading: folderLoading } = useFolders();
 	const { data: filesData, isLoading: fileLoading } = useFiles();
+	const { user } = useUser();
+	const { data: storageUsage } = useStorageUsage(user?.id!);
+
+	const usedFormatted = storageUsage?.usedFormatted;
+	const limitFormatted = storageUsage?.limitFormatted;
+	const percentage = storageUsage?.percentage;
 
 	const [shareModal, setShareModal] = useState<{
 		isOpen: boolean;
@@ -82,8 +89,6 @@ const DashboardWrapper: FC = () => {
 	const handleShareFile = (fileName: string, fileType: string) => {
 		setShareModal({ isOpen: true, fileName, fileType });
 	};
-
-	const { user } = useUser();
 
 	if (fileLoading || folderLoading)
 		return <Loader2 className="animate-spin w-8 h-8" />;
@@ -409,14 +414,8 @@ const DashboardWrapper: FC = () => {
 							<div className="space-y-4">
 								<div>
 									<div className="flex justify-between text-sm mb-2">
-										<span>{storageData.used} GB used</span>
-										<span>{storageData.total} GB total</span>
-									</div>
-									<div className="w-full bg-muted rounded-full h-2">
-										<div
-											className="bg-gradient-primary h-2 rounded-full transition-all duration-500"
-											style={{ width: `${storageData.percentage}%` }}
-										/>
+										<span>{usedFormatted} GB used</span>
+										<span>{limitFormatted} GB total</span>
 									</div>
 								</div>
 							</div>
