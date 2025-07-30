@@ -1,13 +1,7 @@
 "use client";
 
-import {
-	FileText,
-	Image,
-	Music,
-	Upload,
-	Video,
-} from "lucide-react";
-import { FC, useState } from "react";
+import { FileText, Image, Music, Upload, Video } from "lucide-react";
+import { type FC, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -22,10 +16,26 @@ const FileUploadModal: FC = () => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const fileTypes = [
-		{ icon: <Image className="w-6 h-6" />, label: "Images", types: ".jpg, .png, .gif, .svg" },
-		{ icon: <FileText className="w-6 h-6" />, label: "Documents", types: ".pdf, .doc, .txt" },
-		{ icon: <Video className="w-6 h-6" />, label: "Videos", types: ".mp4, .avi, .mkv" },
-		{ icon: <Music className="w-6 h-6" />, label: "Audio", types: ".mp3, .wav, .flac" },
+		{
+			icon: <Image className="w-6 h-6" />,
+			label: "Images",
+			types: ".jpg, .png, .gif, .svg",
+		},
+		{
+			icon: <FileText className="w-6 h-6" />,
+			label: "Documents",
+			types: ".pdf, .doc, .txt",
+		},
+		{
+			icon: <Video className="w-6 h-6" />,
+			label: "Videos",
+			types: ".mp4, .avi, .mkv",
+		},
+		{
+			icon: <Music className="w-6 h-6" />,
+			label: "Audio",
+			types: ".mp3, .wav, .flac",
+		},
 	];
 
 	return (

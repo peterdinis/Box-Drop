@@ -20,9 +20,9 @@ export async function GET(req: Request) {
 		.where(eq(folders.userId, userId))
 		.limit(limit)
 		.offset(offset);
-		
+
 	const totalResult = await db.get<{ count: number }>(
-		sql`SELECT COUNT(*) as count FROM folders WHERE userId = ${userId}`
+		sql`SELECT COUNT(*) as count FROM folders WHERE user_id = ${userId}`,
 	);
 	const total = totalResult?.count ?? 0;
 
@@ -34,7 +34,6 @@ export async function GET(req: Request) {
 		{ status: 200, headers: { "Content-Type": "application/json" } },
 	);
 }
-
 
 export async function POST(req: Request) {
 	const authSession = await auth();
