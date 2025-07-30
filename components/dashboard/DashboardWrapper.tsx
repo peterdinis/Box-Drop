@@ -52,11 +52,10 @@ const DashboardWrapper: FC = () => {
 	const { data: folderData, isLoading: folderLoading } = useFolders();
 	const { data: filesData, isLoading: fileLoading } = useFiles();
 	const { user } = useUser();
-	const { data: storageUsage } = useStorageUsage(user?.id!);
+	const { data: storageUsage } = useStorageUsage();
 
 	const usedFormatted = storageUsage?.usedFormatted;
 	const limitFormatted = storageUsage?.limitFormatted;
-	const percentage = storageUsage?.percentage;
 
 	const [shareModal, setShareModal] = useState({
 		isOpen: false,
@@ -325,8 +324,8 @@ const DashboardWrapper: FC = () => {
 							<div className="space-y-4">
 								<div>
 									<div className="flex justify-between text-sm mb-2">
-										<span>{usedFormatted} GB used</span>
-										<span>{limitFormatted} GB total</span>
+										<span>{usedFormatted} used</span>
+										<span>{limitFormatted} total</span>
 									</div>
 								</div>
 							</div>
