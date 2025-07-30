@@ -1,22 +1,25 @@
 import { and, eq } from "drizzle-orm";
-import { z } from "zod";
 import { db } from "@/db";
 import { folders } from "@/db/schema";
+import { auth } from "@clerk/nextjs/server";
+import z from "zod";
 
 export async function GET(
 	req: Request,
 	{ params }: { params: { id: string } },
 ) {
-	const userId = req.headers.get("x-user-id");
+	const authSession = await auth();
+	const userId = authSession.userId;
 	if (!userId) return new Response("Unauthorized", { status: 401 });
 
 	const { id } = params;
 
-	const folder = await db
-		.select()
-		.from(folders)
-		.where(and(eq(folders.id, id), eq(folders.userId, userId)))
-		.get();
+	const folder = await db.query.folders.findFirst({
+		where: and(eq(folders.id, id), eq(folders.userId, userId)),
+		with: {
+			files: true,
+		},
+	});
 
 	if (!folder) return new Response("Not found", { status: 404 });
 
@@ -30,7 +33,8 @@ export async function PUT(
 	req: Request,
 	{ params }: { params: { id: string } },
 ) {
-	const userId = req.headers.get("x-user-id");
+	const authSession = await auth();
+	const userId = authSession.userId;
 	if (!userId) return new Response("Unauthorized", { status: 401 });
 
 	const { id } = params;
@@ -61,7 +65,8 @@ export async function DELETE(
 	req: Request,
 	{ params }: { params: { id: string } },
 ) {
-	const userId = req.headers.get("x-user-id");
+	const authSession = await auth();
+	const userId = authSession.userId;
 	if (!userId) return new Response("Unauthorized", { status: 401 });
 
 	const { id } = params;

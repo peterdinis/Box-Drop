@@ -28,9 +28,3 @@ export const quickActions = [
 		component: false,
 	},
 ];
-
-export const storageData = {
-	used: 15.6,
-	total: 100,
-	percentage: 15.6,
-};
