@@ -19,29 +19,39 @@ export const ourFileRouter = {
 		.onUploadComplete(async ({ metadata, file: uploadedFile }) => {
 			const { userId } = metadata;
 
-			const [emptyFolder] = await db
+			// Skús nájsť existujúci "Empty" folder
+			let [folder] = await db
 				.select({ id: folders.id })
 				.from(folders)
 				.where(and(eq(folders.name, "Empty"), eq(folders.userId, userId)))
 				.limit(1);
 
-			if (!emptyFolder) {
-				throw new UploadThingError(
-					`Folder "Empty" not found for user ${userId}`,
-				);
+			// Ak priečinok neexistuje, vytvor ho
+			if (!folder) {
+				const newFolderId = crypto.randomUUID();
+
+				await db.insert(folders).values({
+					id: newFolderId,
+					name: "Empty",
+					userId,
+					createdAt: new Date(),
+				});
+
+				folder = { id: newFolderId };
 			}
 
+			// Ulož súbor do databázy
 			await db.insert(files).values({
 				id: crypto.randomUUID(),
 				name: uploadedFile.name,
 				url: uploadedFile.ufsUrl,
-				folderId: emptyFolder.id,
+				folderId: folder.id,
 				uploadedAt: new Date(),
 				size: uploadedFile.size,
 			});
 
 			return { uploadedBy: userId };
-		}),
+		})
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
