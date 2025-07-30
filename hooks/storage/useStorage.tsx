@@ -3,11 +3,11 @@ import { formatBytes } from "@/lib/format-bytes";
 
 const STORAGE_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
 
-export function useStorageUsage(userId: string) {
+export function useStorageUsage() {
 	return useQuery({
-		queryKey: ["storage-usage", userId],
+		queryKey: ["storage-usage"],
 		queryFn: async () => {
-			const res = await fetch(`/api/storage-usage?userId=${userId}`);
+			const res = await fetch(`/api/storage`);
 			if (!res.ok) throw new Error("Failed to fetch storage usage");
 			return res.json(); // { usedBytes: number }
 		},
