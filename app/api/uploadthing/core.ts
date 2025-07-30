@@ -18,15 +18,12 @@ export const ourFileRouter = {
 		})
 		.onUploadComplete(async ({ metadata, file: uploadedFile }) => {
 			const { userId } = metadata;
-
-			// Skús nájsť existujúci "Empty" folder
 			let [folder] = await db
 				.select({ id: folders.id })
 				.from(folders)
 				.where(and(eq(folders.name, "Empty"), eq(folders.userId, userId)))
 				.limit(1);
 
-			// Ak priečinok neexistuje, vytvor ho
 			if (!folder) {
 				const newFolderId = crypto.randomUUID();
 
@@ -40,7 +37,6 @@ export const ourFileRouter = {
 				folder = { id: newFolderId };
 			}
 
-			// Ulož súbor do databázy
 			await db.insert(files).values({
 				id: crypto.randomUUID(),
 				name: uploadedFile.name,

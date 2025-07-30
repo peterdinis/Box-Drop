@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
-import { z } from "zod";
 import { db } from "@/db";
 import { folders } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
+import z from "zod";
 
 export async function GET(
 	req: Request,
@@ -14,11 +14,12 @@ export async function GET(
 
 	const { id } = params;
 
-	const folder = await db
-		.select()
-		.from(folders)
-		.where(and(eq(folders.id, id), eq(folders.userId, userId)))
-		.get();
+	const folder = await db.query.folders.findFirst({
+		where: and(eq(folders.id, id), eq(folders.userId, userId)),
+		with: {
+			files: true,
+		},
+	});
 
 	if (!folder) return new Response("Not found", { status: 404 });
 
