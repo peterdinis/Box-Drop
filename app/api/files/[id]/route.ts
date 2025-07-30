@@ -9,7 +9,7 @@ export async function GET(
 	const userId = req.headers.get("x-user-id");
 	if (!userId) return new Response("Unauthorized", { status: 401 });
 
-	const file = await db
+	const file = db
 		.select()
 		.from(files)
 		.where(eq(files.id, params.id!))

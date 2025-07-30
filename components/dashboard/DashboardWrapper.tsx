@@ -1,7 +1,6 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { format } from "date-fns";
 import {
 	Archive,
 	Download,
@@ -22,18 +21,12 @@ import {
 	Video,
 } from "lucide-react";
 import Link from "next/link";
-import { type FC, type Key, useState } from "react";
-import {
-	Pagination,
-	PaginationContent,
-	PaginationEllipsis,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
-} from "@/components/ui/pagination";
+import { type FC, useState } from "react";
 import { useFiles } from "@/hooks/files/useFiles";
-import { useFolders } from "@/hooks/folders/useFolders";
+import {
+	useFolders,
+	useFolder,
+} from "@/hooks/folders/useFolders";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
 import FileUploadModal from "../modals/FileUploadModal";
@@ -42,7 +35,13 @@ import SettingsModal from "../modals/SettingsModal";
 import NotificationPanel from "../notifications/NotificationsPanel";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import { quickActions, storageData } from "./DashboardActions";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import { storageData } from "./DashboardActions";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -51,16 +50,19 @@ const DashboardWrapper: FC = () => {
 	const [showSettings, setShowSettings] = useState(false);
 	const { data: folderData, isLoading: folderLoading } = useFolders();
 	const { data: filesData, isLoading: fileLoading } = useFiles();
+	const { user } = useUser();
 
-	const [shareModal, setShareModal] = useState<{
-		isOpen: boolean;
-		fileName: string;
-		fileType: string;
-	}>({
+	const [shareModal, setShareModal] = useState({
 		isOpen: false,
 		fileName: "",
 		fileType: "",
 	});
+
+	const [openFolderId, setOpenFolderId] = useState<string | null>(null);
+	const {
+		data: selectedFolder,
+		isLoading: folderDetailLoading,
+	} = useFolder(openFolderId ?? "");
 
 	const getFileIcon = (type: string) => {
 		switch (type) {
@@ -83,8 +85,6 @@ const DashboardWrapper: FC = () => {
 		setShareModal({ isOpen: true, fileName, fileType });
 	};
 
-	const { user } = useUser();
-
 	if (fileLoading || folderLoading)
 		return <Loader2 className="animate-spin w-8 h-8" />;
 
@@ -106,6 +106,31 @@ const DashboardWrapper: FC = () => {
 				fileName={shareModal.fileName}
 				fileType={shareModal.fileType}
 			/>
+			
+			<Dialog open={!!openFolderId} onOpenChange={() => setOpenFolderId(null)}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Folder Details</DialogTitle>
+					</DialogHeader>
+					{folderDetailLoading ? (
+						<Loader2 className="w-5 h-5 animate-spin" />
+					) : selectedFolder ? (
+						<div className="space-y-2">
+							<p><strong>Name:</strong> {selectedFolder.name}</p>
+							<p><strong>Created:</strong> {new Date(selectedFolder.createdAt).toLocaleString()}</p>
+							<p><strong>Files:</strong> {selectedFolder.files?.length ?? 0}</p>
+
+							{selectedFolder.files?.map((file: any) => (
+								<div key={file.id} className="text-sm border rounded px-2 py-1 text-muted-foreground">
+									{file.name} ({file.size})
+								</div>
+							))}
+						</div>
+					) : (
+						<p className="text-sm text-muted-foreground">Folder not found.</p>
+					)}
+				</DialogContent>
+			</Dialog>
 
 			<div className="container mx-auto px-6 py-6">
 				<div className="grid lg:grid-cols-4 gap-6">
@@ -114,10 +139,10 @@ const DashboardWrapper: FC = () => {
 							<div className="flex items-center justify-between">
 								<div>
 									<h2 className="text-2xl font-bold mb-2">
-										Welcome back! {user?.emailAddresses[0]?.emailAddress}👋
+										Welcome back! {user?.emailAddresses[0]?.emailAddress} 👋
 									</h2>
 									<p className="text-muted-foreground">
-										You have {filesData && filesData.length} recent files and{" "}
+										You have {filesData?.length ?? 0} recent files and{" "}
 										{storageData.used} GB of storage used.
 									</p>
 								</div>
@@ -129,27 +154,7 @@ const DashboardWrapper: FC = () => {
 							</div>
 						</Card>
 
-						{/* Quick Actions */}
-						<div className="grid grid-cols-2 md:grid-cols-2 gap-4">
-							{quickActions.slice(2).map((action, index) => (
-								<Card
-									key={index + 2}
-									className="p-4 hover:shadow-hover transition-all duration-200 cursor-pointer group animate-scale-in"
-									style={{ animationDelay: `${(index + 2) * 0.1}s` }}
-								>
-									<div className="text-center">
-										<div
-											className={`${action.color} mb-3 flex justify-center group-hover:scale-110 transition-transform`}
-										>
-											{action.icon}
-										</div>
-										<p className="text-sm font-medium">{action.label}</p>
-									</div>
-								</Card>
-							))}
-						</div>
-
-						{/* Recent Files */}
+						{/* Files Section */}
 						<Card className="p-6">
 							<div className="flex items-center justify-between mb-6">
 								<h3 className="text-lg font-semibold">Recent Files</h3>
@@ -161,11 +166,7 @@ const DashboardWrapper: FC = () => {
 											setFileViewMode(fileViewMode === "grid" ? "list" : "grid")
 										}
 									>
-										{fileViewMode === "grid" ? (
-											<List className="w-4 h-4" />
-										) : (
-											<Grid3X3 className="w-4 h-4" />
-										)}
+										{fileViewMode === "grid" ? <List className="w-4 h-4" /> : <Grid3X3 className="w-4 h-4" />}
 									</Button>
 									<Button variant="outline" size="sm">
 										<Link href="/files">View All</Link>
@@ -180,232 +181,141 @@ const DashboardWrapper: FC = () => {
 										: "space-y-2"
 								}
 							>
-								{filesData &&
-									filesData.map(
-										(
-											file: {
-												id: string;
-												type: string;
-												name: string;
-												size: string;
-												modified: boolean;
-												starred: boolean;
-											},
-											index: number,
-										) => (
-											<Card
-												key={file.id}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-													fileViewMode === "grid" ? "p-4" : "p-3"
-												}`}
-												style={{ animationDelay: `${index * 0.1}s` }}
-											>
-												{fileViewMode === "grid" ? (
-													<div className="text-center">
-														<div className="flex justify-center mb-3">
-															{getFileIcon(file.type)}
-														</div>
-														<h4 className="font-medium text-sm truncate mb-1">
-															{file.name}
-														</h4>
-														<p className="text-xs text-muted-foreground mb-1">
-															{file.size}
+								{filesData?.map((file, index) => (
+									<Card
+										key={file.id}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+											fileViewMode === "grid" ? "p-4" : "p-3"
+										}`}
+										style={{ animationDelay: `${index * 0.1}s` }}
+									>
+										{fileViewMode === "grid" ? (
+											<div className="text-center">
+												<div className="flex justify-center mb-3">
+													{getFileIcon(file.type)}
+												</div>
+												<h4 className="font-medium text-sm truncate mb-1">
+													{file.name}
+												</h4>
+												<p className="text-xs text-muted-foreground mb-1">
+													{file.size}
+												</p>
+												<p className="text-xs text-muted-foreground">
+													{file.modified}
+												</p>
+												<div className="flex justify-center gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+													<Button size="sm" variant="ghost">
+														<Download className="w-3 h-3" />
+													</Button>
+													<Button
+														size="sm"
+														variant="ghost"
+														onClick={() => handleShareFile(file.name, file.type)}
+													>
+														<Share2 className="w-3 h-3" />
+													</Button>
+													<Button size="sm" variant="ghost">
+														<Star
+															className={`w-3 h-3 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
+														/>
+													</Button>
+												</div>
+											</div>
+										) : (
+											<div className="flex items-center justify-between">
+												<div className="flex items-center gap-3 flex-1 min-w-0">
+													{getFileIcon(file.type)}
+													<div className="min-w-0 flex-1">
+														<h4 className="font-medium truncate">{file.name}</h4>
+														<p className="text-sm text-muted-foreground">
+															{file.modified} • {file.size}
 														</p>
-														<p className="text-xs text-muted-foreground">
-															{file.modified}
-														</p>
-														<div className="flex justify-center gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-															<Button size="sm" variant="ghost">
-																<Download className="w-3 h-3" />
-															</Button>
-															<Button
-																size="sm"
-																variant="ghost"
-																onClick={() =>
-																	handleShareFile(file.name, file.type)
-																}
-															>
-																<Share2 className="w-3 h-3" />
-															</Button>
-															<Button size="sm" variant="ghost">
-																<Star
-																	className={`w-3 h-3 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
-																/>
-															</Button>
-														</div>
 													</div>
-												) : (
-													<div className="flex items-center justify-between">
-														<div className="flex items-center gap-3 flex-1 min-w-0">
-															{getFileIcon(file.type)}
-															<div className="min-w-0 flex-1">
-																<h4 className="font-medium truncate">
-																	{file.name}
-																</h4>
-																<p className="text-sm text-muted-foreground">
-																	{file.modified} • {file.size}
-																</p>
-															</div>
-														</div>
-														<div className="flex items-center gap-2">
-															<Button
-																size="sm"
-																variant="ghost"
-																onClick={() =>
-																	handleShareFile(file.name, file.type)
-																}
-															>
-																<Share2 className="w-4 h-4" />
-															</Button>
-															<Button size="sm" variant="ghost">
-																<Star
-																	className={`w-4 h-4 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
-																/>
-															</Button>
-															<Button size="sm" variant="ghost">
-																<MoreHorizontal className="w-4 h-4" />
-															</Button>
-														</div>
-													</div>
-												)}
-											</Card>
-										),
-									)}
+												</div>
+												<div className="flex items-center gap-2">
+													<Button
+														size="sm"
+														variant="ghost"
+														onClick={() => handleShareFile(file.name, file.type)}
+													>
+														<Share2 className="w-4 h-4" />
+													</Button>
+													<Button size="sm" variant="ghost">
+														<Star
+															className={`w-4 h-4 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
+														/>
+													</Button>
+													<Button size="sm" variant="ghost">
+														<MoreHorizontal className="w-4 h-4" />
+													</Button>
+												</div>
+											</div>
+										)}
+									</Card>
+								))}
 							</div>
-
-							<Pagination>
-								<PaginationContent>
-									<PaginationItem>
-										<PaginationPrevious href="#" />
-									</PaginationItem>
-									<PaginationItem>
-										<PaginationLink href="#">1</PaginationLink>
-									</PaginationItem>
-									<PaginationItem>
-										<PaginationEllipsis />
-									</PaginationItem>
-									<PaginationItem>
-										<PaginationNext href="#" />
-									</PaginationItem>
-								</PaginationContent>
-							</Pagination>
 						</Card>
 
+						{/* Recent Folders */}
 						<Card className="p-6">
 							<div className="flex items-center justify-between mb-6">
 								<h3 className="text-lg font-semibold">Recent Folders</h3>
-								<div className="flex items-center gap-2">
-									<Button
-										variant="outline"
-										size="sm"
-										onClick={() =>
-											setFolderViewMode(
-												folderViewMode === "grid" ? "list" : "grid",
-											)
-										}
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() =>
+										setFolderViewMode(
+											folderViewMode === "grid" ? "list" : "grid",
+										)
+									}
+								>
+									{folderViewMode === "grid" ? <List className="w-4 h-4" /> : <Grid3X3 className="w-4 h-4" />}
+								</Button>
+							</div>
+
+							<div className={folderViewMode === "grid" ? "grid md:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-2"}>
+								{folderData.items?.map((folder, index) => (
+									<Card
+										key={folder.id}
+										onClick={() => setOpenFolderId(folder.id?.toString() ?? "")}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+											folderViewMode === "grid" ? "p-4" : "p-3"
+										}`}
+										style={{ animationDelay: `${index * 0.1}s` }}
 									>
 										{folderViewMode === "grid" ? (
-											<List className="w-4 h-4" />
+											<div className="text-center">
+												<div className="flex justify-center mb-3">
+													<FolderIcon className="w-5 h-5 text-yellow-500" />
+												</div>
+												<h4 className="font-medium text-sm truncate mb-1">
+													{folder.name}
+												</h4>
+											</div>
 										) : (
-											<Grid3X3 className="w-4 h-4" />
+											<div className="flex items-center justify-between">
+												<div className="flex items-center gap-3 flex-1 min-w-0">
+													<FolderIcon className="w-5 h-5 text-yellow-500" />
+													<h4 className="font-medium truncate">{folder.name}</h4>
+												</div>
+												<Button size="sm" variant="ghost">
+													<MoreHorizontal className="w-4 h-4" />
+												</Button>
+											</div>
 										)}
-									</Button>
-								</div>
+									</Card>
+								))}
 							</div>
-
-							<div
-								className={
-									folderViewMode === "grid"
-										? "grid md:grid-cols-2 lg:grid-cols-3 gap-4"
-										: "space-y-2"
-								}
-							>
-								{folderData.items &&
-									folderData.items?.map(
-										(
-											folder: {
-												id: Key | null | undefined;
-												name: string;
-												createdAt: string | number | Date;
-											},
-											index: number,
-										) => (
-											<Card
-												key={folder.id}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-													folderViewMode === "grid" ? "p-4" : "p-3"
-												}`}
-												style={{ animationDelay: `${index * 0.1}s` }}
-											>
-												{folderViewMode === "grid" ? (
-													<div className="text-center">
-														<div className="flex justify-center mb-3">
-															<FolderIcon className="w-5 h-5 text-yellow-500" />
-														</div>
-														<h4 className="font-medium text-sm truncate mb-1">
-															{folder.name}
-														</h4>
-														<p className="text-xs text-muted-foreground mb-1">
-															{folder.createdAt
-																? format(new Date(folder.createdAt), "PPP") // e.g. "Jul 28, 2025"
-																: "—"}
-														</p>
-													</div>
-												) : (
-													<div className="flex items-center justify-between">
-														<div className="flex items-center gap-3 flex-1 min-w-0">
-															<FolderIcon className="w-5 h-5 text-yellow-500" />
-															<div className="min-w-0 flex-1">
-																<h4 className="font-medium truncate">
-																	{folder.name}
-																</h4>
-																<p className="text-xs text-muted-foreground mb-1">
-																	{folder.createdAt
-																		? format(new Date(folder.createdAt), "PPP") // e.g. "Jul 28, 2025"
-																		: "—"}
-																</p>
-															</div>
-														</div>
-														<div className="flex items-center gap-2">
-															<Button size="sm" variant="ghost">
-																<MoreHorizontal className="w-4 h-4" />
-															</Button>
-														</div>
-													</div>
-												)}
-											</Card>
-										),
-									)}
-							</div>
-
-							<Pagination>
-								<PaginationContent>
-									<PaginationItem>
-										<PaginationPrevious href="#" />
-									</PaginationItem>
-									<PaginationItem>
-										<PaginationLink href="#">1</PaginationLink>
-									</PaginationItem>
-									<PaginationItem>
-										<PaginationEllipsis />
-									</PaginationItem>
-									<PaginationItem>
-										<PaginationNext href="#" />
-									</PaginationItem>
-								</PaginationContent>
-							</Pagination>
 						</Card>
 					</div>
 
 					{/* Sidebar */}
 					<div className="space-y-6">
-						{/* Storage Usage */}
 						<Card className="p-6">
 							<div className="flex items-center gap-2 mb-4">
 								<HardDrive className="w-5 h-5 text-primary" />
 								<h3 className="font-semibold">Storage</h3>
 							</div>
-
 							<div className="space-y-4">
 								<div>
 									<div className="flex justify-between text-sm mb-2">
@@ -422,7 +332,6 @@ const DashboardWrapper: FC = () => {
 							</div>
 						</Card>
 
-						{/* Quick Stats */}
 						<Card className="p-6">
 							<h3 className="font-semibold mb-4">Quick Stats</h3>
 							<div className="space-y-4">
@@ -447,17 +356,6 @@ const DashboardWrapper: FC = () => {
 									</div>
 									<span className="font-medium text-green-500">98%</span>
 								</div>
-							</div>
-						</Card>
-
-						{/* Team Members */}
-						<Card className="p-6">
-							<h3 className="font-semibold mb-4">Team Members</h3>
-							<div className="space-y-3">
-								TODO TEAMS
-								<Button variant="outline" size="sm" className="w-full mt-3">
-									View All Members
-								</Button>
 							</div>
 						</Card>
 					</div>
