@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import { format } from "date-fns";
 import { and, eq } from "drizzle-orm";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
@@ -31,7 +32,7 @@ export const ourFileRouter = {
 					id: newFolderId,
 					name: "Empty",
 					userId,
-					createdAt: new Date(),
+					createdAt: Math.floor(Date.now() / 1000) as unknown as Date,
 				});
 
 				folder = { id: newFolderId };
@@ -42,12 +43,12 @@ export const ourFileRouter = {
 				name: uploadedFile.name,
 				url: uploadedFile.ufsUrl,
 				folderId: folder.id,
-				uploadedAt: new Date(),
+				uploadedAt: Math.floor(Date.now() / 1000) as unknown as Date,
 				size: uploadedFile.size,
 			});
 
 			return { uploadedBy: userId };
-		})
+		}),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

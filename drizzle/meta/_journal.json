@@ -22,6 +22,13 @@
 			"when": 1753867371929,
 			"tag": "0002_mute_next_avengers",
 			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "6",
+			"when": 1753885473362,
+			"tag": "0003_nice_sentinels",
+			"breakpoints": true
 		}
 	]
 }

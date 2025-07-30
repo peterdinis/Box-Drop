@@ -22,27 +22,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { type FC, useState } from "react";
-import { useFiles } from "@/hooks/files/useFiles";
-import {
-	useFolders,
-	useFolder,
-} from "@/hooks/folders/useFolders";
-import CreateFolderModal from "../modals/CreateFolderModal";
-import FileShareModal from "../modals/FileShareModal";
-import FileUploadModal from "../modals/FileUploadModal";
-import GlobalSearchModal from "../modals/GlobalSearchModal";
-import SettingsModal from "../modals/SettingsModal";
-import NotificationPanel from "../notifications/NotificationsPanel";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { useStorageUsage } from "@/hooks/storage/useStorage";
-import { fileColumns } from "../files/FileDisplayTable";
 import {
 	Table,
 	TableBody,
@@ -51,6 +36,18 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { useFiles } from "@/hooks/files/useFiles";
+import { useFolder, useFolders } from "@/hooks/folders/useFolders";
+import { useStorageUsage } from "@/hooks/storage/useStorage";
+import { fileColumns } from "../files/FileDisplayTable";
+import CreateFolderModal from "../modals/CreateFolderModal";
+import FileShareModal from "../modals/FileShareModal";
+import FileUploadModal from "../modals/FileUploadModal";
+import GlobalSearchModal from "../modals/GlobalSearchModal";
+import SettingsModal from "../modals/SettingsModal";
+import NotificationPanel from "../notifications/NotificationsPanel";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -72,10 +69,9 @@ const DashboardWrapper: FC = () => {
 	});
 
 	const [openFolderId, setOpenFolderId] = useState<string | null>(null);
-	const {
-		data: selectedFolder,
-		isLoading: folderDetailLoading,
-	} = useFolder(openFolderId ?? "");
+	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
+		openFolderId ?? "",
+	);
 
 	const getFileIcon = (type: string) => {
 		switch (type) {
@@ -129,8 +125,13 @@ const DashboardWrapper: FC = () => {
 						<Loader2 className="w-5 h-5 animate-spin" />
 					) : selectedFolder ? (
 						<div className="space-y-2">
-							<p><strong>Name:</strong> {selectedFolder.name}</p>
-							<p><strong>Created:</strong> {new Date(selectedFolder.createdAt).toLocaleString()}</p>
+							<p>
+								<strong>Name:</strong> {selectedFolder.name}
+							</p>
+							<p>
+								<strong>Created:</strong>{" "}
+								{new Date(selectedFolder.createdAt).toLocaleString()}
+							</p>
 							{selectedFolder.files && selectedFolder.files.length > 0 ? (
 								<Table>
 									<TableHeader>
@@ -145,7 +146,9 @@ const DashboardWrapper: FC = () => {
 										{selectedFolder.files.map((file: any) => (
 											<TableRow key={file.id}>
 												<TableCell>{file.name}</TableCell>
-												<TableCell className="capitalize">{file.type}</TableCell>
+												<TableCell className="capitalize">
+													{file.type}
+												</TableCell>
 												<TableCell>{file.size}</TableCell>
 												<TableCell>{file.modified ?? "N/A"}</TableCell>
 											</TableRow>
@@ -153,7 +156,9 @@ const DashboardWrapper: FC = () => {
 									</TableBody>
 								</Table>
 							) : (
-								<p className="text-sm text-muted-foreground">No files in this folder.</p>
+								<p className="text-sm text-muted-foreground">
+									No files in this folder.
+								</p>
 							)}
 						</div>
 					) : (
@@ -192,7 +197,11 @@ const DashboardWrapper: FC = () => {
 											setFileViewMode(fileViewMode === "grid" ? "list" : "grid")
 										}
 									>
-										{fileViewMode === "grid" ? <List className="w-4 h-4" /> : <Grid3X3 className="w-4 h-4" />}
+										{fileViewMode === "grid" ? (
+											<List className="w-4 h-4" />
+										) : (
+											<Grid3X3 className="w-4 h-4" />
+										)}
 									</Button>
 									<Button variant="outline" size="sm">
 										<Link href="/files">View All</Link>
@@ -210,8 +219,9 @@ const DashboardWrapper: FC = () => {
 								{filesData?.map((file, index) => (
 									<Card
 										key={file.id}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
-											}`}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+											fileViewMode === "grid" ? "p-4" : "p-3"
+										}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
 										{fileViewMode === "grid" ? (
@@ -235,7 +245,9 @@ const DashboardWrapper: FC = () => {
 													<Button
 														size="sm"
 														variant="ghost"
-														onClick={() => handleShareFile(file.name, file.type)}
+														onClick={() =>
+															handleShareFile(file.name, file.type)
+														}
 													>
 														<Share2 className="w-3 h-3" />
 													</Button>
@@ -251,7 +263,9 @@ const DashboardWrapper: FC = () => {
 												<div className="flex items-center gap-3 flex-1 min-w-0">
 													{getFileIcon(file.type)}
 													<div className="min-w-0 flex-1">
-														<h4 className="font-medium truncate">{file.name}</h4>
+														<h4 className="font-medium truncate">
+															{file.name}
+														</h4>
 														<p className="text-sm text-muted-foreground">
 															{file.modified} • {file.size}
 														</p>
@@ -261,7 +275,9 @@ const DashboardWrapper: FC = () => {
 													<Button
 														size="sm"
 														variant="ghost"
-														onClick={() => handleShareFile(file.name, file.type)}
+														onClick={() =>
+															handleShareFile(file.name, file.type)
+														}
 													>
 														<Share2 className="w-4 h-4" />
 													</Button>
@@ -294,17 +310,28 @@ const DashboardWrapper: FC = () => {
 										)
 									}
 								>
-									{folderViewMode === "grid" ? <List className="w-4 h-4" /> : <Grid3X3 className="w-4 h-4" />}
+									{folderViewMode === "grid" ? (
+										<List className="w-4 h-4" />
+									) : (
+										<Grid3X3 className="w-4 h-4" />
+									)}
 								</Button>
 							</div>
 
-							<div className={folderViewMode === "grid" ? "grid md:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-2"}>
+							<div
+								className={
+									folderViewMode === "grid"
+										? "grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+										: "space-y-2"
+								}
+							>
 								{folderData.items?.map((folder, index) => (
 									<Card
 										key={folder.id}
 										onClick={() => setOpenFolderId(folder.id?.toString() ?? "")}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
-											}`}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+											folderViewMode === "grid" ? "p-4" : "p-3"
+										}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
 										{folderViewMode === "grid" ? (
@@ -320,7 +347,9 @@ const DashboardWrapper: FC = () => {
 											<div className="flex items-center justify-between">
 												<div className="flex items-center gap-3 flex-1 min-w-0">
 													<FolderIcon className="w-5 h-5 text-yellow-500" />
-													<h4 className="font-medium truncate">{folder.name}</h4>
+													<h4 className="font-medium truncate">
+														{folder.name}
+													</h4>
 												</div>
 												<Button size="sm" variant="ghost">
 													<MoreHorizontal className="w-4 h-4" />

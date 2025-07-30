@@ -1,14 +1,14 @@
+import { auth } from "@clerk/nextjs/server";
 import { eq, inArray, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { files, folders } from "@/db/schema";
-import { auth } from "@clerk/nextjs/server";
 
 export async function GET(req: Request) {
 	const authSession = await auth();
-		const userId = authSession.userId;
-		if (!userId) return new Response("Unauthorized", { status: 401 });
-	
+	const userId = authSession.userId;
+	if (!userId) return new Response("Unauthorized", { status: 401 });
+
 	const userFolders = await db.query.folders.findMany({
 		where: eq(folders.userId, userId),
 		columns: { id: true },

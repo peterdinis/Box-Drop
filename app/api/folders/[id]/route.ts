@@ -1,8 +1,8 @@
+import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
+import z from "zod";
 import { db } from "@/db";
 import { folders } from "@/db/schema";
-import { auth } from "@clerk/nextjs/server";
-import z from "zod";
 
 export async function GET(
 	req: Request,

@@ -10,7 +10,7 @@ export const folders = sqliteTable("folders", {
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
 	userId: text("user_id").notNull(),
-	createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+	createdAt: integer("created_at", { mode: "timestamp" }),
 });
 
 export const foldersRelations = relations(folders, ({ many }) => ({
@@ -24,7 +24,7 @@ export const files = sqliteTable("files", {
 	name: text("name").notNull(),
 	url: text("url").notNull(),
 	size: integer("size").notNull(),
-	uploadedAt: integer("uploaded_at", { mode: "timestamp" }).defaultNow(),
+	uploadedAt: integer("uploaded_at", { mode: "timestamp" }),
 });
 
 export const filesRelations = relations(files, ({ one }) => ({
