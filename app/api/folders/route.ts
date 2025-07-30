@@ -1,7 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
+import { format } from "date-fns";
 import { eq, sql } from "drizzle-orm";
-import { nanoid } from "nanoid";
-import { z } from "zod";
 import { db } from "@/db";
 import { folders } from "@/db/schema";
 
@@ -26,34 +25,21 @@ export async function GET(req: Request) {
 	);
 	const total = totalResult?.count ?? 0;
 
+	// Formátovanie dátumu pomocou date-fns
+	function formatDate(timestamp: number): string {
+		return format(new Date(timestamp * 1000), "dd.MM.yyyy");
+	}
+
+	const foldersWithFormattedDate = allFolders.map((folder) => ({
+		...folder,
+		createdAtFormatted: formatDate(folder.createdAt as unknown as number),
+	}));
+
 	return new Response(
 		JSON.stringify({
-			items: allFolders,
+			items: foldersWithFormattedDate,
 			total,
 		}),
 		{ status: 200, headers: { "Content-Type": "application/json" } },
 	);
-}
-
-export async function POST(req: Request) {
-	const authSession = await auth();
-	const userId = authSession.userId;
-	if (!userId) return new Response("Unauthorized", { status: 401 });
-
-	const body = await req.json();
-	const schema = z.object({ name: z.string().min(1) });
-	const parsed = schema.safeParse(body);
-	if (!parsed.success)
-		return new Response(JSON.stringify({ error: "Invalid name" }), {
-			status: 400,
-			headers: { "Content-Type": "application/json" },
-		});
-
-	const id = nanoid();
-	await db.insert(folders).values({ id, name: parsed.data.name, userId }).run();
-
-	return new Response(JSON.stringify({ id, name: parsed.data.name }), {
-		status: 201,
-		headers: { "Content-Type": "application/json" },
-	});
 }
