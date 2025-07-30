@@ -1,13 +1,14 @@
-import { db } from "@/db";
-import { files, folders } from "@/db/schema";
 import { eq, inArray, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { db } from "@/db";
+import { files, folders } from "@/db/schema";
 
 export async function GET(req: Request) {
 	const { searchParams } = new URL(req.url);
 	const userId = searchParams.get("userId");
 
-	if (!userId) return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+	if (!userId)
+		return NextResponse.json({ error: "Missing userId" }, { status: 400 });
 
 	const userFolders = await db.query.folders.findMany({
 		where: eq(folders.userId, userId),

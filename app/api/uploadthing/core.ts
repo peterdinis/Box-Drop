@@ -37,7 +37,7 @@ export const ourFileRouter = {
 				url: uploadedFile.ufsUrl,
 				folderId: emptyFolder.id,
 				uploadedAt: new Date(),
-				size: uploadedFile.size
+				size: uploadedFile.size,
 			});
 
 			return { uploadedBy: userId };

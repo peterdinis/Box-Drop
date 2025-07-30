@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/pagination";
 import { useFiles } from "@/hooks/files/useFiles";
 import { useFolders } from "@/hooks/folders/useFolders";
+import { useStorageUsage } from "@/hooks/storage/useStorage";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
 import FileUploadModal from "../modals/FileUploadModal";
@@ -43,7 +44,6 @@ import NotificationPanel from "../notifications/NotificationsPanel";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { quickActions, storageData } from "./DashboardActions";
-import { useStorageUsage } from "@/hooks/storage/useStorage";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -52,7 +52,7 @@ const DashboardWrapper: FC = () => {
 	const [showSettings, setShowSettings] = useState(false);
 	const { data: folderData, isLoading: folderLoading } = useFolders();
 	const { data: filesData, isLoading: fileLoading } = useFiles();
-	const { user } = useUser()
+	const { user } = useUser();
 	const { data: storageUsage } = useStorageUsage(user?.id!);
 
 	const usedFormatted = storageUsage?.usedFormatted;
@@ -200,8 +200,9 @@ const DashboardWrapper: FC = () => {
 										) => (
 											<Card
 												key={file.id}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
-													}`}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+													fileViewMode === "grid" ? "p-4" : "p-3"
+												}`}
 												style={{ animationDelay: `${index * 0.1}s` }}
 											>
 												{fileViewMode === "grid" ? (
@@ -336,8 +337,9 @@ const DashboardWrapper: FC = () => {
 										) => (
 											<Card
 												key={folder.id}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
-													}`}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+													folderViewMode === "grid" ? "p-4" : "p-3"
+												}`}
 												style={{ animationDelay: `${index * 0.1}s` }}
 											>
 												{folderViewMode === "grid" ? (
