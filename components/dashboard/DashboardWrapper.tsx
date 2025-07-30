@@ -42,6 +42,15 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { useStorageUsage } from "@/hooks/storage/useStorage";
+import { fileColumns } from "../files/FileDisplayTable";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -110,7 +119,7 @@ const DashboardWrapper: FC = () => {
 				fileName={shareModal.fileName}
 				fileType={shareModal.fileType}
 			/>
-			
+
 			<Dialog open={!!openFolderId} onOpenChange={() => setOpenFolderId(null)}>
 				<DialogContent>
 					<DialogHeader>
@@ -122,13 +131,30 @@ const DashboardWrapper: FC = () => {
 						<div className="space-y-2">
 							<p><strong>Name:</strong> {selectedFolder.name}</p>
 							<p><strong>Created:</strong> {new Date(selectedFolder.createdAt).toLocaleString()}</p>
-							<p><strong>Files:</strong> {selectedFolder.files?.length ?? 0}</p>
-
-							{selectedFolder.files?.map((file: any) => (
-								<div key={file.id} className="text-sm border rounded px-2 py-1 text-muted-foreground">
-									{file.name} ({file.size})
-								</div>
-							))}
+							{selectedFolder.files && selectedFolder.files.length > 0 ? (
+								<Table>
+									<TableHeader>
+										<TableRow>
+											<TableHead>Name</TableHead>
+											<TableHead>Type</TableHead>
+											<TableHead>Size</TableHead>
+											<TableHead>Modified</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
+										{selectedFolder.files.map((file: any) => (
+											<TableRow key={file.id}>
+												<TableCell>{file.name}</TableCell>
+												<TableCell className="capitalize">{file.type}</TableCell>
+												<TableCell>{file.size}</TableCell>
+												<TableCell>{file.modified ?? "N/A"}</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
+							) : (
+								<p className="text-sm text-muted-foreground">No files in this folder.</p>
+							)}
 						</div>
 					) : (
 						<p className="text-sm text-muted-foreground">Folder not found.</p>
@@ -184,9 +210,8 @@ const DashboardWrapper: FC = () => {
 								{filesData?.map((file, index) => (
 									<Card
 										key={file.id}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-											fileViewMode === "grid" ? "p-4" : "p-3"
-										}`}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
+											}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
 										{fileViewMode === "grid" ? (
@@ -278,9 +303,8 @@ const DashboardWrapper: FC = () => {
 									<Card
 										key={folder.id}
 										onClick={() => setOpenFolderId(folder.id?.toString() ?? "")}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-											folderViewMode === "grid" ? "p-4" : "p-3"
-										}`}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+											}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
 										{folderViewMode === "grid" ? (
