@@ -7,7 +7,6 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import Navigation from "@/components/shared/Navigation";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { Toaster } from "@/components/ui/toaster";
-import { NotificationProvider } from "@/context/NotificationContext";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -42,14 +41,12 @@ export default function RootLayout({
 						disableTransitionOnChange
 					>
 						<AppClerkProvider>
-							<NotificationProvider>
-								<QueryProvider>
-									<Navigation />
-									{children}
-									<Toaster />
-									<ScrollToTop />
-								</QueryProvider>
-							</NotificationProvider>
+							<QueryProvider>
+								<Navigation />
+								{children}
+								<Toaster />
+								<ScrollToTop />
+							</QueryProvider>
 						</AppClerkProvider>
 					</ThemeProvider>
 				</div>
