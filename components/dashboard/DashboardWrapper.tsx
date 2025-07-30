@@ -41,7 +41,6 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { storageData } from "./DashboardActions";
 import { useStorageUsage } from "@/hooks/storage/useStorage";
 
 const DashboardWrapper: FC = () => {
@@ -146,10 +145,6 @@ const DashboardWrapper: FC = () => {
 									<h2 className="text-2xl font-bold mb-2">
 										Welcome back! {user?.emailAddresses[0]?.emailAddress} 👋
 									</h2>
-									<p className="text-muted-foreground">
-										You have {filesData?.length ?? 0} recent files and{" "}
-										{storageData.used} GB of storage used.
-									</p>
 								</div>
 								<div className="hidden md:flex gap-2">
 									<FileUploadModal />
