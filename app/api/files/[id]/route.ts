@@ -1,24 +1,30 @@
-import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { files } from "@/db/schema";
-
+import { auth } from "@clerk/nextjs/server";
 export async function GET(
-	req: Request,
-	{ params }: { params: { id: string } },
+  req: Request,
+  context: { params: { id: string } },
 ) {
-	const userId = req.headers.get("x-user-id");
-	if (!userId) return new Response("Unauthorized", { status: 401 });
+  const { userId } = await auth();
 
-	const file = db
-		.select()
-		.from(files)
-		.where(eq(files.id, params.id!))
-		.get();
+  if (!userId) {
+    return new Response("Unauthorized", { status: 401 });
+  }
 
-	if (!file) return new Response("Not found", { status: 404 });
+  const folderId = context.params.id;
 
-	return new Response(JSON.stringify(file), {
-		status: 200,
-		headers: { "Content-Type": "application/json" },
-	});
+  const folder = await db.query.folders.findFirst({
+    where: (folders, { eq }) => eq(folders.id, folderId),
+    with: {
+      files: true,
+    },
+  });
+
+  if (!folder) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  return new Response(JSON.stringify(folder), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 }
