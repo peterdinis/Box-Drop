@@ -22,7 +22,7 @@ export async function GET(req: Request) {
 		.offset(offset);
 		
 	const totalResult = await db.get<{ count: number }>(
-		sql`SELECT COUNT(*) as count FROM folders WHERE userId = ${userId}`
+		sql`SELECT COUNT(*) as count FROM folders WHERE user_id = ${userId}`
 	);
 	const total = totalResult?.count ?? 0;
 

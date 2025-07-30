@@ -312,7 +312,7 @@ const DashboardWrapper: FC = () => {
 										: "space-y-2"
 								}
 							>
-								{folderData?.map(
+								{folderData.items && folderData.items?.map(
 									(
 										folder: {
 											id: Key | null | undefined;
