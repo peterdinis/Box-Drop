@@ -9,7 +9,8 @@
 		"lint": "next lint",
 		"format": "pnpm exec biome check --write .",
 		"db:generate": "npx drizzle-kit generate",
-		"db:migrate": "npx drizzle-kit migrate"
+		"db:migrate": "npx drizzle-kit migrate",
+		"test": "vitest"
 	},
 	"dependencies": {
 		"@casl/ability": "^6.7.3",
@@ -28,7 +29,10 @@
 		"@tanstack/react-query": "^5.83.0",
 		"@tanstack/react-query-devtools": "^5.83.0",
 		"@tanstack/react-table": "^8.21.3",
+		"@testing-library/dom": "^10.4.1",
+		"@testing-library/react": "^16.3.0",
 		"@uploadthing/react": "^7.3.2",
+		"@vitejs/plugin-react": "^4.7.0",
 		"better-sqlite3": "^12.2.0",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
@@ -37,6 +41,7 @@
 		"drizzle-orm": "^0.44.3",
 		"framer-motion": "^12.23.11",
 		"hono": "^4.8.9",
+		"jsdom": "^26.1.0",
 		"lucide-react": "^0.525.0",
 		"nanoid": "^5.1.5",
 		"next": "15.4.4",
@@ -46,6 +51,8 @@
 		"react-resizable-panels": "^3.0.3",
 		"tailwind-merge": "^3.3.1",
 		"uploadthing": "^7.7.3",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^3.2.4",
 		"zod": "^4.0.10"
 	},
 	"devDependencies": {
