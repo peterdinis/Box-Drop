@@ -6,7 +6,9 @@ export function useFolders(page = 0, limit = 10) {
 	return useQuery({
 		queryKey: ["folders", page, limit],
 		queryFn: async () => {
-			const res = await fetch(`/api/folders?limit=${limit}&offset=${page * limit}`);
+			const res = await fetch(
+				`/api/folders?limit=${limit}&offset=${page * limit}`,
+			);
 			if (!res.ok) throw new Error("Failed to fetch folders");
 			return res.json();
 		},

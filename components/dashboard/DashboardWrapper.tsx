@@ -23,6 +23,16 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { type FC, type Key, useState } from "react";
+import {
+	Pagination,
+	PaginationContent,
+	PaginationEllipsis,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
+} from "@/components/ui/pagination";
+import { useFiles } from "@/hooks/files/useFiles";
 import { useFolders } from "@/hooks/folders/useFolders";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
@@ -32,17 +42,7 @@ import SettingsModal from "../modals/SettingsModal";
 import NotificationPanel from "../notifications/NotificationsPanel";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import { useFiles } from "@/hooks/files/useFiles";
 import { quickActions, storageData } from "./DashboardActions";
-import {
-	Pagination,
-	PaginationContent,
-	PaginationEllipsis,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
-} from "@/components/ui/pagination"
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -50,7 +50,7 @@ const DashboardWrapper: FC = () => {
 	const [showNotifications, setShowNotifications] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
 	const { data: folderData, isLoading: folderLoading } = useFolders();
-	const { data: filesData, isLoading: fileLoading } = useFiles()
+	const { data: filesData, isLoading: fileLoading } = useFiles();
 
 	const [shareModal, setShareModal] = useState<{
 		isOpen: boolean;
@@ -85,7 +85,8 @@ const DashboardWrapper: FC = () => {
 
 	const { user } = useUser();
 
-	if(fileLoading || folderLoading) return <Loader2 className="animate-spin w-8 h-8" />
+	if (fileLoading || folderLoading)
+		return <Loader2 className="animate-spin w-8 h-8" />;
 
 	return (
 		<div className="min-h-screen bg-background">
@@ -179,90 +180,97 @@ const DashboardWrapper: FC = () => {
 										: "space-y-2"
 								}
 							>
-								{filesData && filesData.map((file: {
-									id: string,
-									type: string,
-									name: string,
-									size: string,
-									modified: boolean,
-									starred: boolean
-								}, index: number) => (
-									<Card
-										key={file.id}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
-											}`}
-										style={{ animationDelay: `${index * 0.1}s` }}
-									>
-										{fileViewMode === "grid" ? (
-											<div className="text-center">
-												<div className="flex justify-center mb-3">
-													{getFileIcon(file.type)}
-												</div>
-												<h4 className="font-medium text-sm truncate mb-1">
-													{file.name}
-												</h4>
-												<p className="text-xs text-muted-foreground mb-1">
-													{file.size}
-												</p>
-												<p className="text-xs text-muted-foreground">
-													{file.modified}
-												</p>
-												<div className="flex justify-center gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-													<Button size="sm" variant="ghost">
-														<Download className="w-3 h-3" />
-													</Button>
-													<Button
-														size="sm"
-														variant="ghost"
-														onClick={() =>
-															handleShareFile(file.name, file.type)
-														}
-													>
-														<Share2 className="w-3 h-3" />
-													</Button>
-													<Button size="sm" variant="ghost">
-														<Star
-															className={`w-3 h-3 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
-														/>
-													</Button>
-												</div>
-											</div>
-										) : (
-											<div className="flex items-center justify-between">
-												<div className="flex items-center gap-3 flex-1 min-w-0">
-													{getFileIcon(file.type)}
-													<div className="min-w-0 flex-1">
-														<h4 className="font-medium truncate">
+								{filesData &&
+									filesData.map(
+										(
+											file: {
+												id: string;
+												type: string;
+												name: string;
+												size: string;
+												modified: boolean;
+												starred: boolean;
+											},
+											index: number,
+										) => (
+											<Card
+												key={file.id}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+													fileViewMode === "grid" ? "p-4" : "p-3"
+												}`}
+												style={{ animationDelay: `${index * 0.1}s` }}
+											>
+												{fileViewMode === "grid" ? (
+													<div className="text-center">
+														<div className="flex justify-center mb-3">
+															{getFileIcon(file.type)}
+														</div>
+														<h4 className="font-medium text-sm truncate mb-1">
 															{file.name}
 														</h4>
-														<p className="text-sm text-muted-foreground">
-															{file.modified} • {file.size}
+														<p className="text-xs text-muted-foreground mb-1">
+															{file.size}
 														</p>
+														<p className="text-xs text-muted-foreground">
+															{file.modified}
+														</p>
+														<div className="flex justify-center gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+															<Button size="sm" variant="ghost">
+																<Download className="w-3 h-3" />
+															</Button>
+															<Button
+																size="sm"
+																variant="ghost"
+																onClick={() =>
+																	handleShareFile(file.name, file.type)
+																}
+															>
+																<Share2 className="w-3 h-3" />
+															</Button>
+															<Button size="sm" variant="ghost">
+																<Star
+																	className={`w-3 h-3 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
+																/>
+															</Button>
+														</div>
 													</div>
-												</div>
-												<div className="flex items-center gap-2">
-													<Button
-														size="sm"
-														variant="ghost"
-														onClick={() =>
-															handleShareFile(file.name, file.type)
-														}
-													>
-														<Share2 className="w-4 h-4" />
-													</Button>
-													<Button size="sm" variant="ghost">
-														<Star
-															className={`w-4 h-4 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
-														/>
-													</Button>
-													<Button size="sm" variant="ghost">
-														<MoreHorizontal className="w-4 h-4" />
-													</Button>
-												</div>
-											</div>
-										)}
-									</Card>
-								))}
+												) : (
+													<div className="flex items-center justify-between">
+														<div className="flex items-center gap-3 flex-1 min-w-0">
+															{getFileIcon(file.type)}
+															<div className="min-w-0 flex-1">
+																<h4 className="font-medium truncate">
+																	{file.name}
+																</h4>
+																<p className="text-sm text-muted-foreground">
+																	{file.modified} • {file.size}
+																</p>
+															</div>
+														</div>
+														<div className="flex items-center gap-2">
+															<Button
+																size="sm"
+																variant="ghost"
+																onClick={() =>
+																	handleShareFile(file.name, file.type)
+																}
+															>
+																<Share2 className="w-4 h-4" />
+															</Button>
+															<Button size="sm" variant="ghost">
+																<Star
+																	className={`w-4 h-4 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
+																/>
+															</Button>
+															<Button size="sm" variant="ghost">
+																<MoreHorizontal className="w-4 h-4" />
+															</Button>
+														</div>
+													</div>
+												)}
+											</Card>
+										),
+									)}
 							</div>
 
 							<Pagination>
@@ -312,60 +320,62 @@ const DashboardWrapper: FC = () => {
 										: "space-y-2"
 								}
 							>
-								{folderData.items && folderData.items?.map(
-									(
-										folder: {
-											id: Key | null | undefined;
-											name: string;
-											createdAt: string | number | Date;
-										},
-										index: number,
-									) => (
-										<Card
-											key={folder.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+								{folderData.items &&
+									folderData.items?.map(
+										(
+											folder: {
+												id: Key | null | undefined;
+												name: string;
+												createdAt: string | number | Date;
+											},
+											index: number,
+										) => (
+											<Card
+												key={folder.id}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+													folderViewMode === "grid" ? "p-4" : "p-3"
 												}`}
-											style={{ animationDelay: `${index * 0.1}s` }}
-										>
-											{folderViewMode === "grid" ? (
-												<div className="text-center">
-													<div className="flex justify-center mb-3">
-														<FolderIcon className="w-5 h-5 text-yellow-500" />
+												style={{ animationDelay: `${index * 0.1}s` }}
+											>
+												{folderViewMode === "grid" ? (
+													<div className="text-center">
+														<div className="flex justify-center mb-3">
+															<FolderIcon className="w-5 h-5 text-yellow-500" />
+														</div>
+														<h4 className="font-medium text-sm truncate mb-1">
+															{folder.name}
+														</h4>
+														<p className="text-xs text-muted-foreground mb-1">
+															{folder.createdAt
+																? format(new Date(folder.createdAt), "PPP") // e.g. "Jul 28, 2025"
+																: "—"}
+														</p>
 													</div>
-													<h4 className="font-medium text-sm truncate mb-1">
-														{folder.name}
-													</h4>
-													<p className="text-xs text-muted-foreground mb-1">
-														{folder.createdAt
-															? format(new Date(folder.createdAt), "PPP") // e.g. "Jul 28, 2025"
-															: "—"}
-													</p>
-												</div>
-											) : (
-												<div className="flex items-center justify-between">
-													<div className="flex items-center gap-3 flex-1 min-w-0">
-														<FolderIcon className="w-5 h-5 text-yellow-500" />
-														<div className="min-w-0 flex-1">
-															<h4 className="font-medium truncate">
-																{folder.name}
-															</h4>
-															<p className="text-xs text-muted-foreground mb-1">
-																{folder.createdAt
-																	? format(new Date(folder.createdAt), "PPP") // e.g. "Jul 28, 2025"
-																	: "—"}
-															</p>
+												) : (
+													<div className="flex items-center justify-between">
+														<div className="flex items-center gap-3 flex-1 min-w-0">
+															<FolderIcon className="w-5 h-5 text-yellow-500" />
+															<div className="min-w-0 flex-1">
+																<h4 className="font-medium truncate">
+																	{folder.name}
+																</h4>
+																<p className="text-xs text-muted-foreground mb-1">
+																	{folder.createdAt
+																		? format(new Date(folder.createdAt), "PPP") // e.g. "Jul 28, 2025"
+																		: "—"}
+																</p>
+															</div>
+														</div>
+														<div className="flex items-center gap-2">
+															<Button size="sm" variant="ghost">
+																<MoreHorizontal className="w-4 h-4" />
+															</Button>
 														</div>
 													</div>
-													<div className="flex items-center gap-2">
-														<Button size="sm" variant="ghost">
-															<MoreHorizontal className="w-4 h-4" />
-														</Button>
-													</div>
-												</div>
-											)}
-										</Card>
-									),
-								)}
+												)}
+											</Card>
+										),
+									)}
 							</div>
 
 							<Pagination>
