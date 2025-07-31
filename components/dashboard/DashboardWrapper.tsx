@@ -1,5 +1,6 @@
 "use client";
 
+import prettyBytes from 'pretty-bytes';
 import { useUser } from "@clerk/nextjs";
 import {
 	Archive,
@@ -143,7 +144,11 @@ const DashboardWrapper: FC = () => {
 												<TableCell className="capitalize">
 													{file.type}
 												</TableCell>
-												<TableCell>{file.size}</TableCell>
+												<TableCell>
+													{prettyBytes(file.size, {
+														bits: true
+													})}
+												</TableCell>
 												<TableCell>{file.modified ?? "N/A"}</TableCell>
 											</TableRow>
 										))}
@@ -213,9 +218,8 @@ const DashboardWrapper: FC = () => {
 								{filesData?.map((file, index) => (
 									<Card
 										key={file.id}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-											fileViewMode === "grid" ? "p-4" : "p-3"
-										}`}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
+											}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
 										{fileViewMode === "grid" ? (
@@ -319,13 +323,13 @@ const DashboardWrapper: FC = () => {
 										: "space-y-2"
 								}
 							>
-								{folderData.items?.map((folder, index) => (
+
+								{folderData?.items && folderData?.items?.map((folder, index) => (
 									<Card
 										key={folder.id}
 										onClick={() => setOpenFolderId(folder.id?.toString() ?? "")}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-											folderViewMode === "grid" ? "p-4" : "p-3"
-										}`}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+											}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
 										{folderViewMode === "grid" ? (

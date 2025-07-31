@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
+
 export async function GET(req: Request, context: { params: { id: string } }) {
 	const { userId } = await auth();
 
