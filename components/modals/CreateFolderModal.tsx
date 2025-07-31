@@ -11,7 +11,6 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useNotifications } from "@/context/NotificationContext";
 import { useCreateFolder } from "@/hooks/folders/useFolders";
 import { useToast } from "@/hooks/shared/use-toast";
 
@@ -22,7 +21,6 @@ interface CreateFolderModalProps {
 const CreateFolderModal: FC<CreateFolderModalProps> = ({ onFolderCreate }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [folderName, setFolderName] = useState("");
-	const { addNotification } = useNotifications();
 	const { toast } = useToast();
 
 	const createFolder = useCreateFolder();
@@ -34,12 +32,6 @@ const CreateFolderModal: FC<CreateFolderModalProps> = ({ onFolderCreate }) => {
 		createFolder.mutate(folderName, {
 			onSuccess: () => {
 				onFolderCreate?.(folderName);
-
-				addNotification({
-					title: "Folder Created",
-					message: `"${folderName}" folder has been created successfully.`,
-					type: "success",
-				});
 
 				toast({
 					title: "Folder created",

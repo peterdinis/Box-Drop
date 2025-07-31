@@ -30,7 +30,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useNotifications } from "@/context/NotificationContext";
 import { useToast } from "@/hooks/shared/use-toast";
 
 interface SettingsModalProps {
@@ -40,7 +39,6 @@ interface SettingsModalProps {
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 	const { theme, setTheme } = useTheme();
-	const { addNotification } = useNotifications();
 	const { toast } = useToast();
 
 	const [settings, setSettings] = useState({
@@ -85,15 +83,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 	};
 
 	const saveSettings = () => {
-		addNotification({
-			title: "Settings Updated",
-			message: "Your preferences have been saved successfully.",
-			type: "success",
-		});
-
 		toast({
 			title: "Settings saved",
 			description: "Your preferences have been updated.",
+			className: "bg-green-800 text-white font-bold text-xl"
 		});
 	};
 

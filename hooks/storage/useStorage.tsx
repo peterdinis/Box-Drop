@@ -1,7 +1,7 @@
+import { formatBytes } from "@/utils/format-bytes";
 import { useQuery } from "@tanstack/react-query";
-import { formatBytes } from "@/lib/format-bytes";
 
-const STORAGE_LIMIT_BYTES = 100 * 1024 * 1024 * 1024; // 100 GB
+const STORAGE_LIMIT_BYTES = 100 * 1024 * 1024 * 1024;
 
 export function useStorageUsage() {
 	return useQuery({
@@ -9,7 +9,7 @@ export function useStorageUsage() {
 		queryFn: async () => {
 			const res = await fetch(`/api/storage`);
 			if (!res.ok) throw new Error("Failed to fetch storage usage");
-			return res.json(); // { usedBytes: number }
+			return res.json();
 		},
 		select: (data) => {
 			const used = data.usedBytes;
