@@ -14,9 +14,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const token = uuidv4(); // generuje unikátny token
-
-    // Ulož link do DB
+    const token = uuidv4();
+    
     await db.insert(shareLinks).values({
       token,
       fileId,
