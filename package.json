@@ -10,7 +10,8 @@
 		"format": "pnpm exec biome check --write .",
 		"db:generate": "npx drizzle-kit generate",
 		"db:migrate": "npx drizzle-kit migrate",
-		"test": "vitest"
+		"test": "vitest",
+		"seed": "tsx ./db/seeder.ts"
 	},
 	"dependencies": {
 		"@casl/ability": "^6.7.3",
@@ -67,6 +68,7 @@
 		"eslint": "^9",
 		"eslint-config-next": "15.4.4",
 		"tailwindcss": "^4",
+		"tsx": "^4.20.3",
 		"tw-animate-css": "^1.3.6",
 		"typescript": "^5"
 	}
