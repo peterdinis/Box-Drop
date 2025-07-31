@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useNotifications } from "@/context/NotificationContext";
 import { useToast } from "@/hooks/shared/use-toast";
 
 interface FileShareModalProps {
@@ -48,7 +47,6 @@ const FileShareModal: React.FC<FileShareModalProps> = ({
 	const [selectedPermission, setSelectedPermission] = useState<
 		"view" | "download" | "edit"
 	>("view");
-	const { addNotification } = useNotifications();
 	const { toast } = useToast();
 
 	const generateShareLink = () => {
@@ -73,12 +71,6 @@ const FileShareModal: React.FC<FileShareModalProps> = ({
 
 	const shareWithEmail = () => {
 		if (!shareEmail.trim()) return;
-
-		addNotification({
-			title: "File Shared",
-			message: `"${fileName}" has been shared with ${shareEmail}`,
-			type: "success",
-		});
 
 		toast({
 			title: "File shared",
