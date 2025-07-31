@@ -93,6 +93,15 @@ const DashboardWrapper: FC = () => {
 		setShareModal({ isOpen: true, fileName, fileType });
 	};
 
+	const handleDownloadFile = (fileUrl: string, fileName: string) => {
+		const link = document.createElement("a");
+		link.href = fileUrl;
+		link.download = fileName;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	};
+
 	if (fileLoading || folderLoading)
 		return <Loader2 className="animate-spin w-8 h-8" />;
 
@@ -237,7 +246,7 @@ const DashboardWrapper: FC = () => {
 													{file.modified}
 												</p>
 												<div className="flex justify-center gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-													<Button size="sm" variant="ghost">
+													<Button size="sm" variant="ghost"  onClick={() => handleDownloadFile(file.url, file.name)}>
 														<Download className="w-3 h-3" />
 													</Button>
 													<Button
