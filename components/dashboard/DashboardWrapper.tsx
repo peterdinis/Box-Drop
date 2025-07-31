@@ -39,13 +39,11 @@ import {
 import { useFiles } from "@/hooks/files/useFiles";
 import { useFolder, useFolders } from "@/hooks/folders/useFolders";
 import { useStorageUsage } from "@/hooks/storage/useStorage";
-import { fileColumns } from "../files/FileDisplayTable";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
 import FileUploadModal from "../modals/FileUploadModal";
 import GlobalSearchModal from "../modals/GlobalSearchModal";
 import SettingsModal from "../modals/SettingsModal";
-import NotificationPanel from "../notifications/NotificationsPanel";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 
@@ -99,10 +97,6 @@ const DashboardWrapper: FC = () => {
 
 	return (
 		<div className="min-h-screen bg-background">
-			<NotificationPanel
-				isOpen={showNotifications}
-				onClose={() => setShowNotifications(false)}
-			/>
 			<SettingsModal
 				isOpen={showSettings}
 				onClose={() => setShowSettings(false)}
