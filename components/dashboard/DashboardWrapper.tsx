@@ -53,6 +53,7 @@ const DashboardWrapper: FC = () => {
 	const [showNotifications, setShowNotifications] = useState(false);
 	const [showSettings, setShowSettings] = useState(false);
 	const { data: folderData, isLoading: folderLoading } = useFolders();
+	console.log("F", folderData)
 	const { data: filesData, isLoading: fileLoading } = useFiles();
 	const { user } = useUser();
 	const { data: storageUsage } = useStorageUsage();
@@ -319,39 +320,41 @@ const DashboardWrapper: FC = () => {
 										: "space-y-2"
 								}
 							>
-								{folderData.items?.map((folder, index) => (
-									<Card
-										key={folder.id}
-										onClick={() => setOpenFolderId(folder.id?.toString() ?? "")}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-											folderViewMode === "grid" ? "p-4" : "p-3"
-										}`}
-										style={{ animationDelay: `${index * 0.1}s` }}
-									>
-										{folderViewMode === "grid" ? (
-											<div className="text-center">
-												<div className="flex justify-center mb-3">
-													<FolderIcon className="w-5 h-5 text-yellow-500" />
-												</div>
-												<h4 className="font-medium text-sm truncate mb-1">
-													{folder.name}
-												</h4>
-											</div>
-										) : (
-											<div className="flex items-center justify-between">
-												<div className="flex items-center gap-3 flex-1 min-w-0">
-													<FolderIcon className="w-5 h-5 text-yellow-500" />
-													<h4 className="font-medium truncate">
-														{folder.name}
-													</h4>
-												</div>
-												<Button size="sm" variant="ghost">
-													<MoreHorizontal className="w-4 h-4" />
-												</Button>
-											</div>
-										)}
-									</Card>
-								))}
+								{/*
+{folderData.map((folder, index) => (
+	<Card
+		key={folder.id}
+		onClick={() => setOpenFolderId(folder.id?.toString() ?? "")}
+		className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+			folderViewMode === "grid" ? "p-4" : "p-3"
+		}`}
+		style={{ animationDelay: `${index * 0.1}s` }}
+	>
+		{folderViewMode === "grid" ? (
+			<div className="text-center">
+				<div className="flex justify-center mb-3">
+					<FolderIcon className="w-5 h-5 text-yellow-500" />
+				</div>
+				<h4 className="font-medium text-sm truncate mb-1">
+					{folder.name}
+				</h4>
+			</div>
+		) : (
+			<div className="flex items-center justify-between">
+				<div className="flex items-center gap-3 flex-1 min-w-0">
+					<FolderIcon className="w-5 h-5 text-yellow-500" />
+					<h4 className="font-medium truncate">
+						{folder.name}
+					</h4>
+				</div>
+				<Button size="sm" variant="ghost">
+					<MoreHorizontal className="w-4 h-4" />
+				</Button>
+			</div>
+		)}
+	</Card>
+))}
+*/}
 							</div>
 						</Card>
 					</div>

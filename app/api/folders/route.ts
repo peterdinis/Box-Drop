@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
-import { format } from "date-fns";
 import { eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { folders } from "@/db/schema";
+import { formatDate } from "@/utils/format-date";
 
 export async function GET(req: Request) {
 	const authSession = await auth();
@@ -24,11 +24,6 @@ export async function GET(req: Request) {
 		sql`SELECT COUNT(*) as count FROM folders WHERE user_id = ${userId}`,
 	);
 	const total = totalResult?.count ?? 0;
-
-	// Formátovanie dátumu pomocou date-fns
-	function formatDate(timestamp: number): string {
-		return format(new Date(timestamp * 1000), "dd.MM.yyyy");
-	}
 
 	const foldersWithFormattedDate = allFolders.map((folder) => ({
 		...folder,
