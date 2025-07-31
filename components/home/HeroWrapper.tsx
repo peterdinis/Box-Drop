@@ -1,6 +1,5 @@
-import { ChevronRight, FolderOpen, Play, Share2, Upload } from "lucide-react";
+import { FolderOpen, Share2, Upload } from "lucide-react";
 import type { FC } from "react";
-import { Button } from "../ui/button";
 
 const HeroWrapper: FC = () => {
 	return (
@@ -16,19 +15,6 @@ const HeroWrapper: FC = () => {
 						Store, sync, and share your files securely in the cloud. Access your
 						content from any device, anywhere in the world.
 					</p>
-					<div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-						<Button
-							size="lg"
-							className="transition-all duration-300 transform hover:scale-105 animate-glow"
-						>
-							Start Free Trial
-							<ChevronRight className="w-4 h-4 ml-2" />
-						</Button>
-						<Button size="lg" variant="outline" className="group">
-							<Play className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" />
-							Watch Demo
-						</Button>
-					</div>
 				</div>
 
 				{/* Floating Elements */}
