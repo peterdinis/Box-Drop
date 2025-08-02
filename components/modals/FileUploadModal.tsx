@@ -10,7 +10,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { UploadDropzone } from "@/lib/uploadthing";
+import FileUploader from "../files/FileUpdloader";
 
 const FileUploadModal: FC = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -53,11 +53,7 @@ const FileUploadModal: FC = () => {
 				</DialogHeader>
 
 				<div className="space-y-6">
-					<UploadDropzone
-						endpoint="imageUploader"
-						className="ut-uploading:text-primary ut-button:bg-muted ut-button:hover:bg-muted/80 ut-label:text-muted-foreground"
-					/>
-
+					<FileUploader/>
 					<div>
 						<h4 className="font-medium mb-3">Supported file types:</h4>
 						<div className="grid grid-cols-2 gap-3">
