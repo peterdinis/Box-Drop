@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/shared/use-toast";
+import { useToast } from "@/hooks/shared/useToast";
 
 interface FileShareModalProps {
 	isOpen: boolean;

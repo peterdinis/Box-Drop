@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useCreateFolder } from "@/hooks/folders/useFolders";
-import { useToast } from "@/hooks/shared/use-toast";
+import { useToast } from "@/hooks/shared/useToast";
 
 interface CreateFolderModalProps {
 	onFolderCreate?: (folderName: string) => void;

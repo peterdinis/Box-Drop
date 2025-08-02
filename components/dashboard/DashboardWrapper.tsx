@@ -15,7 +15,6 @@ import {
 	MoreHorizontal,
 	Music,
 	Share2,
-	Shield,
 	TrendingUp,
 	Video,
 } from "lucide-react";
@@ -138,7 +137,6 @@ const DashboardWrapper: FC = () => {
 									<TableHeader>
 										<TableRow>
 											<TableHead>Name</TableHead>
-											<TableHead>Type</TableHead>
 											<TableHead>Size</TableHead>
 											<TableHead>Modified</TableHead>
 										</TableRow>
@@ -148,15 +146,11 @@ const DashboardWrapper: FC = () => {
 											(file: {
 												id: string;
 												name: string;
-												type: string;
 												size: number;
 												modified: boolean;
 											}) => (
 												<TableRow key={file.id}>
 													<TableCell>{file.name}</TableCell>
-													<TableCell className="capitalize">
-														{file.type}
-													</TableCell>
 													<TableCell>
 														{prettyBytes(file.size, {
 															bits: true,
@@ -254,7 +248,7 @@ const DashboardWrapper: FC = () => {
 														{file.name}
 													</h4>
 													<p className="text-xs text-muted-foreground mb-1">
-														{file.size}
+														{prettyBytes(file.size as unknown as number)}
 													</p>
 													<p className="text-xs text-muted-foreground">
 														{file.modified}
@@ -289,7 +283,7 @@ const DashboardWrapper: FC = () => {
 																{file.name}
 															</h4>
 															<p className="text-sm text-muted-foreground">
-																{file.modified} • {file.size}
+																{file.modified} - {prettyBytes(file.size as unknown as number)}
 															</p>
 														</div>
 													</div>
