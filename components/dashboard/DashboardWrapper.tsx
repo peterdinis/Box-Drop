@@ -1,6 +1,5 @@
 "use client";
 
-import prettyBytes from 'pretty-bytes';
 import { useUser } from "@clerk/nextjs";
 import {
 	Archive,
@@ -17,11 +16,10 @@ import {
 	Music,
 	Share2,
 	Shield,
-	Star,
 	TrendingUp,
 	Video,
 } from "lucide-react";
-import Link from "next/link";
+import prettyBytes from "pretty-bytes";
 import { type FC, useState } from "react";
 import {
 	Dialog,
@@ -45,7 +43,6 @@ import FileShareModal from "../modals/FileShareModal";
 import FileUploadModal from "../modals/FileUploadModal";
 import GlobalSearchModal from "../modals/GlobalSearchModal";
 import SettingsModal from "../modals/SettingsModal";
-
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 
@@ -155,7 +152,7 @@ const DashboardWrapper: FC = () => {
 												</TableCell>
 												<TableCell>
 													{prettyBytes(file.size, {
-														bits: true
+														bits: true,
 													})}
 												</TableCell>
 												<TableCell>{file.modified ?? "N/A"}</TableCell>
@@ -211,9 +208,6 @@ const DashboardWrapper: FC = () => {
 											<Grid3X3 className="w-4 h-4" />
 										)}
 									</Button>
-									<Button variant="outline" size="sm">
-										<Link href="/files">View All</Link>
-									</Button>
 								</div>
 							</div>
 
@@ -227,8 +221,9 @@ const DashboardWrapper: FC = () => {
 								{filesData?.map((file, index) => (
 									<Card
 										key={file.id}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
-											}`}
+										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+											fileViewMode === "grid" ? "p-4" : "p-3"
+										}`}
 										style={{ animationDelay: `${index * 0.1}s` }}
 									>
 										{fileViewMode === "grid" ? (
@@ -246,7 +241,13 @@ const DashboardWrapper: FC = () => {
 													{file.modified}
 												</p>
 												<div className="flex justify-center gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-													<Button size="sm" variant="ghost"  onClick={() => handleDownloadFile(file.url, file.name)}>
+													<Button
+														size="sm"
+														variant="ghost"
+														onClick={() =>
+															handleDownloadFile(file.url, file.name)
+														}
+													>
 														<Download className="w-3 h-3" />
 													</Button>
 													<Button
@@ -257,11 +258,6 @@ const DashboardWrapper: FC = () => {
 														}
 													>
 														<Share2 className="w-3 h-3" />
-													</Button>
-													<Button size="sm" variant="ghost">
-														<Star
-															className={`w-3 h-3 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
-														/>
 													</Button>
 												</div>
 											</div>
@@ -287,11 +283,6 @@ const DashboardWrapper: FC = () => {
 														}
 													>
 														<Share2 className="w-4 h-4" />
-													</Button>
-													<Button size="sm" variant="ghost">
-														<Star
-															className={`w-4 h-4 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
-														/>
 													</Button>
 													<Button size="sm" variant="ghost">
 														<MoreHorizontal className="w-4 h-4" />
@@ -332,39 +323,42 @@ const DashboardWrapper: FC = () => {
 										: "space-y-2"
 								}
 							>
-
-								{folderData?.items && folderData?.items?.map((folder, index) => (
-									<Card
-										key={folder.id}
-										onClick={() => setOpenFolderId(folder.id?.toString() ?? "")}
-										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+								{folderData?.items &&
+									folderData?.items?.map((folder, index) => (
+										<Card
+											key={folder.id}
+											onClick={() =>
+												setOpenFolderId(folder.id?.toString() ?? "")
+											}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+												folderViewMode === "grid" ? "p-4" : "p-3"
 											}`}
-										style={{ animationDelay: `${index * 0.1}s` }}
-									>
-										{folderViewMode === "grid" ? (
-											<div className="text-center">
-												<div className="flex justify-center mb-3">
-													<FolderIcon className="w-5 h-5 text-yellow-500" />
-												</div>
-												<h4 className="font-medium text-sm truncate mb-1">
-													{folder.name}
-												</h4>
-											</div>
-										) : (
-											<div className="flex items-center justify-between">
-												<div className="flex items-center gap-3 flex-1 min-w-0">
-													<FolderIcon className="w-5 h-5 text-yellow-500" />
-													<h4 className="font-medium truncate">
+											style={{ animationDelay: `${index * 0.1}s` }}
+										>
+											{folderViewMode === "grid" ? (
+												<div className="text-center">
+													<div className="flex justify-center mb-3">
+														<FolderIcon className="w-5 h-5 text-yellow-500" />
+													</div>
+													<h4 className="font-medium text-sm truncate mb-1">
 														{folder.name}
 													</h4>
 												</div>
-												<Button size="sm" variant="ghost">
-													<MoreHorizontal className="w-4 h-4" />
-												</Button>
-											</div>
-										)}
-									</Card>
-								))}
+											) : (
+												<div className="flex items-center justify-between">
+													<div className="flex items-center gap-3 flex-1 min-w-0">
+														<FolderIcon className="w-5 h-5 text-yellow-500" />
+														<h4 className="font-medium truncate">
+															{folder.name}
+														</h4>
+													</div>
+													<Button size="sm" variant="ghost">
+														<MoreHorizontal className="w-4 h-4" />
+													</Button>
+												</div>
+											)}
+										</Card>
+									))}
 							</div>
 						</Card>
 					</div>
@@ -394,21 +388,14 @@ const DashboardWrapper: FC = () => {
 										<TrendingUp className="w-4 h-4 text-green-500" />
 										<span className="text-sm">Files uploaded</span>
 									</div>
-									<span className="font-medium">24</span>
+									<span className="font-medium">{filesData.length}</span>
 								</div>
 								<div className="flex items-center justify-between">
 									<div className="flex items-center gap-2">
 										<Share2 className="w-4 h-4 text-blue-500" />
 										<span className="text-sm">Files shared</span>
 									</div>
-									<span className="font-medium">8</span>
-								</div>
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-2">
-										<Shield className="w-4 h-4 text-purple-500" />
-										<span className="text-sm">Security score</span>
-									</div>
-									<span className="font-medium text-green-500">98%</span>
+									<span className="font-medium">TODO</span>
 								</div>
 							</div>
 						</Card>

@@ -1,32 +1,34 @@
 import { useMutation } from "@tanstack/react-query";
 
 interface GenerateShareLinkInput {
-  fileId: string;
-  permission: string;
+	fileId: string;
+	permission: string;
 }
 
 interface GenerateShareLinkResponse {
-  shareUrl: string;
+	shareUrl: string;
 }
 
-async function generateShareLinkApi(input: GenerateShareLinkInput): Promise<GenerateShareLinkResponse> {
-  const res = await fetch("/api/share-link", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
-  });
+async function generateShareLinkApi(
+	input: GenerateShareLinkInput,
+): Promise<GenerateShareLinkResponse> {
+	const res = await fetch("/api/share-link", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(input),
+	});
 
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.error || "Failed to generate share link");
-  }
+	if (!res.ok) {
+		const errorData = await res.json();
+		throw new Error(errorData.error || "Failed to generate share link");
+	}
 
-  return res.json();
+	return res.json();
 }
 
 export function useGenerateShareLink() {
-  return useMutation({
-    mutationKey: ["generate-share-link"],
-    mutationFn: (input: GenerateShareLinkInput) => generateShareLinkApi(input),
-  });
+	return useMutation({
+		mutationKey: ["generate-share-link"],
+		mutationFn: (input: GenerateShareLinkInput) => generateShareLinkApi(input),
+	});
 }

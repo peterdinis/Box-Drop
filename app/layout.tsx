@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Fira_Code } from "next/font/google";
+import { Fira_Code, Inter } from "next/font/google";
 import "./globals.css";
 import AppClerkProvider from "@/components/providers/AppClerkProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
@@ -23,17 +23,24 @@ export const metadata: Metadata = {
 		default: "Box-Drop",
 		template: "%s | Box-Drop",
 	},
-	description: "A secure, modern way to manage files and folders collaboratively.",
-	keywords: ["file storage", "cloud", "folders", "sharing", "Box-Drop", "collaboration"],
-	authors: [
-		{ name: "Box-Drop Team", url: "https://box-drop.app" },
+	description:
+		"A secure, modern way to manage files and folders collaboratively.",
+	keywords: [
+		"file storage",
+		"cloud",
+		"folders",
+		"sharing",
+		"Box-Drop",
+		"collaboration",
 	],
+	authors: [{ name: "Box-Drop Team", url: "https://box-drop.app" }],
 	creator: "Box-Drop",
 	metadataBase: new URL("https://box-drop.app"),
 
 	openGraph: {
 		title: "Box-Drop",
-		description: "A secure, modern way to manage files and folders collaboratively.",
+		description:
+			"A secure, modern way to manage files and folders collaboratively.",
 		url: "https://box-drop.app",
 		siteName: "Box-Drop",
 		images: [

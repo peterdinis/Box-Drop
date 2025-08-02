@@ -1,10 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
-import { format } from "date-fns";
 import { and, eq } from "drizzle-orm";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { db } from "@/db";
 import { files, folders } from "@/db/schema";
+import { redis } from "@/lib/redis";
 
 const f = createUploadthing();
 
@@ -19,36 +19,43 @@ export const ourFileRouter = {
 		})
 		.onUploadComplete(async ({ metadata, file: uploadedFile }) => {
 			const { userId } = metadata;
-			let [folder] = await db
-				.select({ id: folders.id })
-				.from(folders)
-				.where(and(eq(folders.name, "Empty"), eq(folders.userId, userId)))
-				.limit(1);
 
-			if (!folder) {
-				const newFolderId = crypto.randomUUID();
+			const redisKey = `default-folder:${userId}`;
+			let folderId = await redis.get(redisKey);
 
-				await db.insert(folders).values({
-					id: newFolderId,
-					name: "Empty",
-					userId,
-					createdAt: Math.floor(Date.now() / 1000) as unknown as Date,
-				});
+			if (!folderId) {
+				let [folder] = await db
+					.select({ id: folders.id })
+					.from(folders)
+					.where(and(eq(folders.name, "Empty"), eq(folders.userId, userId)))
+					.limit(1);
 
-				folder = { id: newFolderId };
+				if (!folder) {
+					folderId = crypto.randomUUID();
+
+					await db.insert(folders).values({
+						id: folderId,
+						name: "Empty",
+						userId,
+						createdAt: Math.floor(Date.now() / 1000) as unknown as Date,
+					});
+				} else {
+					folderId = folder.id;
+				}
+				await redis.set(redisKey, folderId);
 			}
 
 			await db.insert(files).values({
 				id: crypto.randomUUID(),
 				name: uploadedFile.name,
 				url: uploadedFile.ufsUrl,
-				folderId: folder.id,
+				folderId: folderId,
 				uploadedAt: Math.floor(Date.now() / 1000) as unknown as Date,
 				size: uploadedFile.size,
 			});
 
 			return { uploadedBy: userId };
-		}),
+		})
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

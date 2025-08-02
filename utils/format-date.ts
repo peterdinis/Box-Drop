@@ -1,4 +1,4 @@
-import {format} from "date-fns"
+import { format } from "date-fns";
 
 export function formatDate(value: unknown): string {
 	if (!value) return "-";
