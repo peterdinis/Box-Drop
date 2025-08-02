@@ -42,7 +42,7 @@ const CreateFolderModal: FC<CreateFolderModalProps> = ({ onFolderCreate }) => {
 				setFolderName("");
 				setIsOpen(false);
 			},
-			onError: (err: any) => {
+			onError: (err) => {
 				toast({
 					title: "Error",
 					description: err?.message ?? "Something went wrong.",
