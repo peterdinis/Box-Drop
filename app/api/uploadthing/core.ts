@@ -5,6 +5,7 @@ import { UploadThingError } from "uploadthing/server";
 import { db } from "@/db";
 import { files, folders } from "@/db/schema";
 import { redis } from "@/lib/redis";
+import { formatDate } from "@/utils/format-date";
 
 const f = createUploadthing();
 
@@ -19,42 +20,47 @@ export const ourFileRouter = {
 		})
 		.onUploadComplete(async ({ metadata, file: uploadedFile }) => {
 			const { userId } = metadata;
+			if (!userId) throw new UploadThingError("Missing userId");
 
 			const redisKey = `default-folder:${userId}`;
-			let folderId = await redis.get(redisKey);
+			let folderId = await redis.get<string>(redisKey);
 
 			if (!folderId) {
-				const [folder] = await db
-					.select({ id: folders.id })
-					.from(folders)
-					.where(and(eq(folders.name, "Empty"), eq(folders.userId, userId)))
-					.limit(1);
+				const folder = await db.query.folders.findFirst({
+					where: and(eq(folders.name, "Empty"), eq(folders.userId, userId)),
+				});
 
-				if (!folder) {
+				if (folder) {
+					folderId = folder.id;
+				} else {
 					folderId = crypto.randomUUID();
 
 					await db.insert(folders).values({
 						id: folderId,
 						name: "Empty",
 						userId,
-						createdAt: Math.floor(Date.now() / 1000) as unknown as Date,
+						createdAt: new Date(),
 					});
-				} else {
-					folderId = folder.id;
 				}
+
 				await redis.set(redisKey, folderId);
 			}
+
+			const uploadedAt = new Date();
 
 			await db.insert(files).values({
 				id: crypto.randomUUID(),
 				name: uploadedFile.name,
 				url: uploadedFile.ufsUrl,
 				folderId: folderId,
-				uploadedAt: Math.floor(Date.now() / 1000) as unknown as Date,
 				size: uploadedFile.size,
+				uploadedAt,
 			});
 
-			return { uploadedBy: userId };
+			return {
+				uploadedBy: userId,
+				uploadedAtFormatted: formatDate(uploadedAt),
+			};
 		}),
 } satisfies FileRouter;
 
