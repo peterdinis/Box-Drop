@@ -137,7 +137,6 @@ const DashboardWrapper: FC = () => {
 									<TableHeader>
 										<TableRow>
 											<TableHead>Name</TableHead>
-											<TableHead>Type</TableHead>
 											<TableHead>Size</TableHead>
 											<TableHead>Modified</TableHead>
 										</TableRow>
@@ -147,15 +146,11 @@ const DashboardWrapper: FC = () => {
 											(file: {
 												id: string;
 												name: string;
-												type: string;
 												size: number;
 												modified: boolean;
 											}) => (
 												<TableRow key={file.id}>
 													<TableCell>{file.name}</TableCell>
-													<TableCell className="capitalize">
-														{file.type}
-													</TableCell>
 													<TableCell>
 														{prettyBytes(file.size, {
 															bits: true,
