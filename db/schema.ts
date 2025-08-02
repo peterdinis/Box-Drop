@@ -35,10 +35,10 @@ export const filesRelations = relations(files, ({ one }) => ({
 }));
 
 export const shareLinks = sqliteTable("share_links", {
-  token: text("token").primaryKey(),
-  fileId: text("file_id"),
-  permission: text("permission"),
-  expiresAt: text("expires_at"),
+	token: text("token").primaryKey(),
+	fileId: text("file_id"),
+	permission: text("permission"),
+	expiresAt: text("expires_at"),
 });
 
 // PERMISSIONS

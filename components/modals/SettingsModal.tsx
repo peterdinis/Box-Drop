@@ -86,7 +86,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 		toast({
 			title: "Settings saved",
 			description: "Your preferences have been updated.",
-			className: "bg-green-800 text-white font-bold text-xl"
+			className: "bg-green-800 text-white font-bold text-xl",
 		});
 	};
 
