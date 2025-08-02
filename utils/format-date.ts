@@ -6,7 +6,6 @@ export function formatDate(value: unknown): string {
 	let date: Date;
 
 	if (typeof value === "number") {
-		// Skúsime zistiť, či je v sekundách alebo milisekundách
 		date = new Date(value < 10_000_000_000 ? value * 1000 : value);
 	} else if (typeof value === "string" || value instanceof Date) {
 		date = new Date(value);
