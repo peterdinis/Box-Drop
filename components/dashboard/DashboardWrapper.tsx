@@ -144,7 +144,13 @@ const DashboardWrapper: FC = () => {
 										</TableRow>
 									</TableHeader>
 									<TableBody>
-										{selectedFolder.files.map((file: any) => (
+										{selectedFolder.files.map((file: {
+											id: string,
+											name: string
+											type: string
+											size: number,
+											modified: boolean
+										}) => (
 											<TableRow key={file.id}>
 												<TableCell>{file.name}</TableCell>
 												<TableCell className="capitalize">
@@ -218,7 +224,14 @@ const DashboardWrapper: FC = () => {
 										: "space-y-2"
 								}
 							>
-								{filesData?.map((file, index) => (
+								{filesData?.map((file: {
+									id: string;
+									type: string;
+									name: string;
+									size: string;
+									modified: boolean;
+									url: string;
+								}, index: number) => (
 									<Card
 										key={file.id}
 										className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
@@ -324,7 +337,10 @@ const DashboardWrapper: FC = () => {
 								}
 							>
 								{folderData?.items &&
-									folderData?.items?.map((folder, index) => (
+									folderData?.items?.map((folder: {
+										id: string;
+										name: string;
+									}, index: number) => (
 										<Card
 											key={folder.id}
 											onClick={() =>
