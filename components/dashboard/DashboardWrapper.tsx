@@ -15,7 +15,6 @@ import {
 	MoreHorizontal,
 	Music,
 	Share2,
-	Shield,
 	TrendingUp,
 	Video,
 } from "lucide-react";
@@ -254,7 +253,7 @@ const DashboardWrapper: FC = () => {
 														{file.name}
 													</h4>
 													<p className="text-xs text-muted-foreground mb-1">
-														{file.size}
+														{prettyBytes(file.size as unknown as number)}
 													</p>
 													<p className="text-xs text-muted-foreground">
 														{file.modified}
@@ -289,7 +288,7 @@ const DashboardWrapper: FC = () => {
 																{file.name}
 															</h4>
 															<p className="text-sm text-muted-foreground">
-																{file.modified} • {file.size}
+																{file.modified} - {prettyBytes(file.size as unknown as number)}
 															</p>
 														</div>
 													</div>
