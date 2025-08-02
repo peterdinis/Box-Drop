@@ -30,7 +30,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/shared/use-toast";
+import { useToast } from "@/hooks/shared/useToast";
 
 interface SettingsModalProps {
 	isOpen: boolean;
@@ -71,7 +71,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 	const updateSetting = (
 		category: keyof typeof settings,
 		key: string,
-		value: any,
+		value: unknown,
 	) => {
 		setSettings((prev) => ({
 			...prev,

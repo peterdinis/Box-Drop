@@ -24,7 +24,7 @@ export const ourFileRouter = {
 			let folderId = await redis.get(redisKey);
 
 			if (!folderId) {
-				let [folder] = await db
+				const [folder] = await db
 					.select({ id: folders.id })
 					.from(folders)
 					.where(and(eq(folders.name, "Empty"), eq(folders.userId, userId)))
@@ -55,7 +55,7 @@ export const ourFileRouter = {
 			});
 
 			return { uploadedBy: userId };
-		})
+		}),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
