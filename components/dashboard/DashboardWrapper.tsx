@@ -17,11 +17,9 @@ import {
 	Music,
 	Share2,
 	Shield,
-	Star,
 	TrendingUp,
 	Video,
 } from "lucide-react";
-import Link from "next/link";
 import { type FC, useState } from "react";
 import {
 	Dialog,
@@ -45,7 +43,6 @@ import FileShareModal from "../modals/FileShareModal";
 import FileUploadModal from "../modals/FileUploadModal";
 import GlobalSearchModal from "../modals/GlobalSearchModal";
 import SettingsModal from "../modals/SettingsModal";
-
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 
@@ -211,9 +208,6 @@ const DashboardWrapper: FC = () => {
 											<Grid3X3 className="w-4 h-4" />
 										)}
 									</Button>
-									<Button variant="outline" size="sm">
-										<Link href="/files">View All</Link>
-									</Button>
 								</div>
 							</div>
 
@@ -258,11 +252,6 @@ const DashboardWrapper: FC = () => {
 													>
 														<Share2 className="w-3 h-3" />
 													</Button>
-													<Button size="sm" variant="ghost">
-														<Star
-															className={`w-3 h-3 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
-														/>
-													</Button>
 												</div>
 											</div>
 										) : (
@@ -287,11 +276,6 @@ const DashboardWrapper: FC = () => {
 														}
 													>
 														<Share2 className="w-4 h-4" />
-													</Button>
-													<Button size="sm" variant="ghost">
-														<Star
-															className={`w-4 h-4 ${file.starred ? "fill-yellow-400 text-yellow-400" : ""}`}
-														/>
 													</Button>
 													<Button size="sm" variant="ghost">
 														<MoreHorizontal className="w-4 h-4" />
@@ -394,21 +378,16 @@ const DashboardWrapper: FC = () => {
 										<TrendingUp className="w-4 h-4 text-green-500" />
 										<span className="text-sm">Files uploaded</span>
 									</div>
-									<span className="font-medium">24</span>
+									<span className="font-medium">
+										{filesData.length}
+									</span>
 								</div>
 								<div className="flex items-center justify-between">
 									<div className="flex items-center gap-2">
 										<Share2 className="w-4 h-4 text-blue-500" />
 										<span className="text-sm">Files shared</span>
 									</div>
-									<span className="font-medium">8</span>
-								</div>
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-2">
-										<Shield className="w-4 h-4 text-purple-500" />
-										<span className="text-sm">Security score</span>
-									</div>
-									<span className="font-medium text-green-500">98%</span>
+									<span className="font-medium">TODO</span>
 								</div>
 							</div>
 						</Card>
