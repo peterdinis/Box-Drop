@@ -44,6 +44,7 @@ import GlobalSearchModal from "../modals/GlobalSearchModal";
 import SettingsModal from "../modals/SettingsModal";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import { formatDate } from "@/utils/format-date";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -67,6 +68,8 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
+
+	console.log("SF", selectedFolder)
 
 	const getFileIcon = (type: string) => {
 		switch (type) {
@@ -130,7 +133,7 @@ const DashboardWrapper: FC = () => {
 							</p>
 							<p>
 								<strong>Created:</strong>{" "}
-								{new Date(selectedFolder.createdAt).toLocaleString()}
+								{formatDate(selectedFolder.createdAt)}
 							</p>
 							{selectedFolder.files && selectedFolder.files.length > 0 ? (
 								<Table>
