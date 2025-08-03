@@ -34,9 +34,12 @@ async function seed() {
 	]);
 
 	// 3. Add files
+	const fileId1 = randomUUID();
+	const fileId2 = randomUUID();
+
 	await db.insert(files).values([
 		{
-			id: randomUUID(),
+			id: fileId1,
 			folderId: folderId1,
 			name: "report.pdf",
 			url: "https://example.com/report.pdf",
@@ -44,7 +47,7 @@ async function seed() {
 			uploadedAt: new Date(),
 		},
 		{
-			id: randomUUID(),
+			id: fileId2,
 			folderId: folderId2,
 			name: "design.png",
 			url: "https://example.com/design.png",
@@ -53,17 +56,31 @@ async function seed() {
 		},
 	]);
 
-	// 4. Set permissions
+	// 4. Set permissions (folder and file)
 	await db.insert(permissions).values([
 		{
-			folderId: folderId1,
+			targetId: folderId1,
+			targetType: "folder",
 			userId: userId2,
 			access: "read",
 		},
 		{
-			folderId: folderId2,
+			targetId: folderId2,
+			targetType: "folder",
 			userId: userId1,
 			access: "write",
+		},
+		{
+			targetId: fileId1,
+			targetType: "file",
+			userId: userId2,
+			access: "read",
+		},
+		{
+			targetId: fileId2,
+			targetType: "file",
+			userId: userId1,
+			access: "read",
 		},
 	]);
 
