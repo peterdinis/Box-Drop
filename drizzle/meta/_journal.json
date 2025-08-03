@@ -1,41 +1,13 @@
 {
-	"version": "7",
-	"dialect": "sqlite",
-	"entries": [
-		{
-			"idx": 0,
-			"version": "6",
-			"when": 1753624357863,
-			"tag": "0000_pretty_firebrand",
-			"breakpoints": true
-		},
-		{
-			"idx": 1,
-			"version": "6",
-			"when": 1753724481621,
-			"tag": "0001_fixed_zaladane",
-			"breakpoints": true
-		},
-		{
-			"idx": 2,
-			"version": "6",
-			"when": 1753867371929,
-			"tag": "0002_mute_next_avengers",
-			"breakpoints": true
-		},
-		{
-			"idx": 3,
-			"version": "6",
-			"when": 1753885473362,
-			"tag": "0003_nice_sentinels",
-			"breakpoints": true
-		},
-		{
-			"idx": 4,
-			"version": "6",
-			"when": 1753960830914,
-			"tag": "0004_numerous_stark_industries",
-			"breakpoints": true
-		}
-	]
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1754211110271,
+      "tag": "0000_spicy_harry_osborn",
+      "breakpoints": true
+    }
+  ]
 }
