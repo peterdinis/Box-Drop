@@ -3,6 +3,7 @@ import { eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { folders } from "@/db/schema";
 import { formatDate } from "@/utils/format-date";
+import { nanoid } from "nanoid";
 
 export async function GET(req: Request) {
 	const authSession = await auth();
@@ -37,4 +38,31 @@ export async function GET(req: Request) {
 		}),
 		{ status: 200, headers: { "Content-Type": "application/json" } },
 	);
+}
+
+export async function POST(req: Request) {
+  const authSession = await auth();
+  const userId = authSession.userId;
+  if (!userId) return new Response("Unauthorized", { status: 401 });
+
+  const body = await req.json();
+  const { name } = body;
+
+  if (!name || typeof name !== "string") {
+    return new Response("Invalid folder name", { status: 400 });
+  }
+
+  const newFolder = {
+    id: nanoid(),
+    name,
+    userId,
+    createdAt: new Date(),
+  };
+
+  await db.insert(folders).values(newFolder);
+
+  return new Response(JSON.stringify(newFolder), {
+    status: 201,
+    headers: { "Content-Type": "application/json" },
+  });
 }
