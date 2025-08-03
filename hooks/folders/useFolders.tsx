@@ -76,6 +76,10 @@ export function useDeleteFolder() {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["folders"] });
+			queryClient.invalidateQueries({ queryKey: ["files"] }); // if you have a global file list
+		},
+		onError: (error) => {
+			console.error("Failed to delete folder:", error);
 		},
 	});
 }

@@ -2,7 +2,8 @@ import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import z from "zod";
 import { db } from "@/db";
-import { folders } from "@/db/schema";
+import { files, folders } from "@/db/schema";
+import { UTApi } from "uploadthing/server";
 
 export async function GET(
 	req: Request,
@@ -53,8 +54,7 @@ export async function PUT(
 		.set({ name: parsed.data.name })
 		.where(and(eq(folders.id, id), eq(folders.userId, userId)))
 		.run();
-
-	// Optionally check result to see if update happened
+		
 	return new Response(JSON.stringify({ success: true }), {
 		status: 200,
 		headers: { "Content-Type": "application/json" },
@@ -62,22 +62,40 @@ export async function PUT(
 }
 
 export async function DELETE(
-	req: Request,
-	{ params }: { params: { id: string } },
+  req: Request,
+  { params }: { params: { id: string } },
 ) {
-	const authSession = await auth();
-	const userId = authSession.userId;
-	if (!userId) return new Response("Unauthorized", { status: 401 });
+  const authSession = await auth();
+  const userId = authSession.userId;
+  if (!userId) return new Response("Unauthorized", { status: 401 });
 
-	const { id } = params;
+  const { id } = params;
+  const utapi = new UTApi();
 
-	await db
-		.delete(folders)
-		.where(and(eq(folders.id, id), eq(folders.userId, userId)))
-		.run();
+  const folderFiles = await db.query.files.findMany({
+    where: and(eq(files.folderId, id)),
+  });
 
-	return new Response(JSON.stringify({ success: true }), {
-		status: 200,
-		headers: { "Content-Type": "application/json" },
-	});
+  const fileKeysToDelete = folderFiles
+    .map((file) => file.id)
+    .filter(Boolean);
+
+  if (fileKeysToDelete.length > 0) {
+    await utapi.deleteFiles(fileKeysToDelete);
+  }
+
+  await db
+    .delete(files)
+    .where(and(eq(files.folderId, id)))
+    .run();
+
+  await db
+    .delete(folders)
+    .where(and(eq(folders.id, id), eq(folders.userId, userId)))
+    .run();
+
+  return new Response(JSON.stringify({ success: true }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 }
