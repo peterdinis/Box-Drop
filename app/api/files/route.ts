@@ -7,7 +7,7 @@ export async function GET(req: Request) {
 	const userId = authSession.userId;
 	if (!userId) return new Response("Unauthorized", { status: 401 });
 
-	const allFiles = await db.select().from(files).all();
+	const allFiles = db.select().from(files).all();
 	return new Response(JSON.stringify(allFiles), {
 		status: 200,
 		headers: { "Content-Type": "application/json" },

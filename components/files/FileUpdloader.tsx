@@ -22,6 +22,7 @@ const FileUploader: FC = () => {
 							duration: 2000,
 							className: "bg-green-800 text-white font-bold text-xl"
 						})
+						window.location.replace("/dashboard")
 					}}
 					onUploadError={(error: Error) => {
 						toast({
