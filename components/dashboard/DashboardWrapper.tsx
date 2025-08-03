@@ -15,6 +15,7 @@ import {
 	MoreHorizontal,
 	Music,
 	Share2,
+	TrashIcon,
 	TrendingUp,
 	Video,
 } from "lucide-react";
@@ -45,6 +46,7 @@ import SettingsModal from "../modals/SettingsModal";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { formatDate } from "@/utils/format-date";
+import { useDeleteFile } from "@/hooks/files/useDeleteFile";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -54,7 +56,7 @@ const DashboardWrapper: FC = () => {
 	const { data: filesData, isLoading: fileLoading } = useFiles();
 	const { user } = useUser();
 	const { data: storageUsage } = useStorageUsage();
-
+	const { mutate: deleteFile, isPending } = useDeleteFile();
 	const usedFormatted = storageUsage?.usedFormatted;
 	const limitFormatted = storageUsage?.limitFormatted;
 
@@ -160,6 +162,16 @@ const DashboardWrapper: FC = () => {
 														})}
 													</TableCell>
 													<TableCell>{file.modified ?? "N/A"}</TableCell>
+													<TableCell>
+														<Button
+															variant="ghost"
+															size="icon"
+															onClick={() => deleteFile(file.id)}
+															disabled={isPending}
+														>
+															<TrashIcon className="w-4 h-4 text-red-600" />
+														</Button>
+													</TableCell>
 												</TableRow>
 											),
 										)}
@@ -237,9 +249,8 @@ const DashboardWrapper: FC = () => {
 									) => (
 										<Card
 											key={file.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-												fileViewMode === "grid" ? "p-4" : "p-3"
-											}`}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
+												}`}
 											style={{ animationDelay: `${index * 0.1}s` }}
 										>
 											{fileViewMode === "grid" ? (
@@ -354,9 +365,8 @@ const DashboardWrapper: FC = () => {
 												onClick={() =>
 													setOpenFolderId(folder.id?.toString() ?? "")
 												}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-													folderViewMode === "grid" ? "p-4" : "p-3"
-												}`}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+													}`}
 												style={{ animationDelay: `${index * 0.1}s` }}
 											>
 												{folderViewMode === "grid" ? (
