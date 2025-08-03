@@ -54,8 +54,7 @@ export async function PUT(
 		.set({ name: parsed.data.name })
 		.where(and(eq(folders.id, id), eq(folders.userId, userId)))
 		.run();
-
-	// Optionally check result to see if update happened
+		
 	return new Response(JSON.stringify({ success: true }), {
 		status: 200,
 		headers: { "Content-Type": "application/json" },
@@ -84,7 +83,7 @@ export async function DELETE(
   if (fileKeysToDelete.length > 0) {
     await utapi.deleteFiles(fileKeysToDelete);
   }
-  
+
   await db
     .delete(files)
     .where(and(eq(files.folderId, id)))
