@@ -256,65 +256,79 @@ const DashboardWrapper: FC = () => {
 
 						{/* Files Section */}
 						<Card className="p-6">
-							<div className="flex items-center justify-between mb-4">
-								<h3 className="text-lg font-semibold">Files</h3>
+							<div className="flex items-center justify-between mb-6">
+								<h3 className="text-xl font-semibold">Files</h3>
 								<div className="flex gap-2">
 									<Button
+										size="sm"
 										variant={fileViewMode === "grid" ? "default" : "outline"}
 										onClick={() => setFileViewMode("grid")}
-										size="sm"
 									>
 										<Grid3X3 className="w-4 h-4" />
 									</Button>
 									<Button
+										size="sm"
 										variant={fileViewMode === "list" ? "default" : "outline"}
 										onClick={() => setFileViewMode("list")}
-										size="sm"
 									>
 										<List className="w-4 h-4" />
 									</Button>
 								</div>
 							</div>
+
 							{fileViewMode === "grid" ? (
 								<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+									{filesData?.items.length === 0 && (
+										<p className="text-muted-foreground">
+											No files uploaded yet.
+										</p>
+									)}
 									{filesData?.items.map((file) => (
-										<Card
+										<div
 											key={file.id}
-											className="flex flex-col gap-2 p-4 border border-border rounded-md"
+											className="relative rounded border p-4 flex flex-col gap-2 hover:shadow-md"
 										>
-											<div className="flex items-center gap-2">
-												{getFileIcon(file.type)}
-												<p className="truncate font-medium">{file.name}</p>
-											</div>
-											<div className="flex justify-between text-sm text-muted-foreground">
-												<span>{prettyBytes(file.size, { bits: true })}</span>
-												<span>{formatDate(file.modified)}</span>
-											</div>
-											<div className="flex justify-between mt-2">
+											<div className="flex justify-between items-center">
+												<div className="flex items-center gap-2">
+													{getFileIcon(file.type)}
+													<span className="truncate max-w-[10rem]">{file.name}</span>
+												</div>
 												<Button
-													variant="outline"
-													size="sm"
-													onClick={() => handleShareFile(file.name, file.type)}
-												>
-													<Share2 className="w-4 h-4" />
-												</Button>
-												<Button
-													variant="outline"
-													size="sm"
-													onClick={() => handleDownloadFile(file.url, file.name)}
-												>
-													<Download className="w-4 h-4" />
-												</Button>
-												<Button
-													variant="outline"
-													size="sm"
+													variant="ghost"
+													size="icon"
 													onClick={() => deleteFile(file.id)}
 													disabled={isPending}
 												>
 													<TrashIcon className="w-4 h-4 text-red-600" />
 												</Button>
 											</div>
-										</Card>
+											<div className="flex justify-between text-sm text-muted-foreground">
+												<span>{prettyBytes(file.size)}</span>
+												<span>{formatDate(file.modified)}</span>
+											</div>
+											<div className="flex gap-2 mt-2">
+												<Button
+													size="sm"
+													variant="outline"
+													onClick={() =>
+														handleShareFile(file.name, file.type)
+													}
+												>
+													<Share2 className="w-4 h-4" />
+													Share
+												</Button>
+												<Button
+													size="sm"
+													variant="outline"
+													onClick={() =>
+														handleDownloadFile(file.url, file.name)
+													}
+												>
+													<Download className="w-4 h-4" />
+													Download
+												</Button>
+											</div>
+										</div>
 									))}
 								</div>
 							) : (
@@ -330,33 +344,10 @@ const DashboardWrapper: FC = () => {
 									<TableBody>
 										{filesData?.items.map((file) => (
 											<TableRow key={file.id}>
-												<TableCell className="flex items-center gap-2">
-													{getFileIcon(file.type)}
-													{file.name}
-												</TableCell>
-												<TableCell>
-													{prettyBytes(file.size, { bits: true })}
-												</TableCell>
+												<TableCell>{file.name}</TableCell>
+												<TableCell>{prettyBytes(file.size)}</TableCell>
 												<TableCell>{formatDate(file.modified)}</TableCell>
 												<TableCell className="flex gap-2 items-center">
-													<Button
-														variant="ghost"
-														size="icon"
-														onClick={() =>
-															handleShareFile(file.name, file.type)
-														}
-													>
-														<Share2 className="w-4 h-4" />
-													</Button>
-													<Button
-														variant="ghost"
-														size="icon"
-														onClick={() =>
-															handleDownloadFile(file.url, file.name)
-														}
-													>
-														<Download className="w-4 h-4" />
-													</Button>
 													<Button
 														variant="ghost"
 														size="icon"
@@ -365,6 +356,29 @@ const DashboardWrapper: FC = () => {
 													>
 														<TrashIcon className="w-4 h-4 text-red-600" />
 													</Button>
+													{/* Move File Select */}
+													<select
+														value={targetFolderId ?? ""}
+														onChange={(e) => {
+															const newFolderId = e.target.value;
+															if (newFolderId) {
+																setMovingFileId(file.id);
+																setTargetFolderId(newFolderId);
+																handleMoveFile(file.id, newFolderId);
+															}
+														}}
+														disabled={isMoving}
+														className="border rounded px-2 py-1 text-sm"
+													>
+														<option value="">Move to...</option>
+														{folderData?.items
+															.filter((f) => f.id !== file.folderId)
+															.map((folder) => (
+																<option key={folder.id} value={folder.id}>
+																	{folder.name}
+																</option>
+															))}
+													</select>
 												</TableCell>
 											</TableRow>
 										))}
@@ -373,31 +387,35 @@ const DashboardWrapper: FC = () => {
 							)}
 						</Card>
 					</div>
+
 					{/* Folders Section */}
-					<div className="space-y-6">
+					<div>
 						<Card className="p-6">
-							<div className="flex items-center justify-between mb-4">
-								<h3 className="text-lg font-semibold">Folders</h3>
-								<div className="flex gap-2">
-									<CreateFolderModal />
-								</div>
+							<div className="flex items-center justify-between mb-6">
+								<h3 className="text-xl font-semibold">Folders</h3>
+								<Button size="sm" onClick={() => setShowSettings(true)}>
+									Settings
+								</Button>
 							</div>
 							{folderViewMode === "grid" ? (
-								<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								<div className="grid grid-cols-2 gap-4">
+									{folderData?.items.length === 0 && (
+										<p className="text-muted-foreground">No folders created.</p>
+									)}
 									{folderData?.items.map((folder) => (
-										<Card
+										<div
 											key={folder.id}
-											className="p-4 flex items-center justify-between cursor-pointer"
+											className="border rounded p-4 cursor-pointer hover:shadow-md"
 											onClick={() => setOpenFolderId(folder.id)}
 										>
 											<div className="flex items-center gap-2">
-												<FolderIcon className="w-5 h-5 text-primary" />
-												<p>{folder.name}</p>
+												<FolderIcon className="w-6 h-6 text-primary" />
+												<span className="font-semibold">{folder.name}</span>
 											</div>
-											<Button size="sm" variant="outline">
-												Open
-											</Button>
-										</Card>
+											<p className="text-sm text-muted-foreground mt-1">
+												{folder.fileCount} files
+											</p>
+										</div>
 									))}
 								</div>
 							) : (
@@ -405,29 +423,49 @@ const DashboardWrapper: FC = () => {
 									<TableHeader>
 										<TableRow>
 											<TableHead>Name</TableHead>
+											<TableHead>File Count</TableHead>
 											<TableHead>Created</TableHead>
-											<TableHead>Actions</TableHead>
 										</TableRow>
 									</TableHeader>
 									<TableBody>
 										{folderData?.items.map((folder) => (
-											<TableRow key={folder.id} onClick={() => setOpenFolderId(folder.id)}>
+											<TableRow
+												key={folder.id}
+												className="cursor-pointer"
+												onClick={() => setOpenFolderId(folder.id)}
+											>
 												<TableCell>{folder.name}</TableCell>
+												<TableCell>{folder.fileCount}</TableCell>
 												<TableCell>{formatDate(folder.createdAt)}</TableCell>
-												<TableCell>
-													<Button size="sm" variant="outline">
-														Open
-													</Button>
-												</TableCell>
 											</TableRow>
 										))}
 									</TableBody>
 								</Table>
 							)}
+							<div className="mt-4 flex gap-2">
+								<Button
+									size="sm"
+									variant={folderViewMode === "grid" ? "default" : "outline"}
+									onClick={() => setFolderViewMode("grid")}
+								>
+									<Grid3X3 className="w-4 h-4" />
+								</Button>
+								<Button
+									size="sm"
+									variant={folderViewMode === "list" ? "default" : "outline"}
+									onClick={() => setFolderViewMode("list")}
+								>
+									<List className="w-4 h-4" />
+								</Button>
+							</div>
 						</Card>
 
-						<Card className="p-4 text-center text-sm text-muted-foreground">
-							Storage used: {usedFormatted} / {limitFormatted}
+						<Card className="mt-6 p-4 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-primary/20">
+							<p>
+								Storage used:{" "}
+								<span className="font-semibold">{usedFormatted}</span> /{" "}
+								<span className="font-semibold">{limitFormatted}</span>
+							</p>
 						</Card>
 					</div>
 				</div>
