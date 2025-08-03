@@ -41,7 +41,6 @@ export const shareLinks = sqliteTable("share_links", {
 	expiresAt: text("expires_at"),
 });
 
-// PERMISSIONS
 export const permissions = sqliteTable(
 	"permissions",
 	{
@@ -66,7 +65,7 @@ export const permissionsRelations = relations(permissions, ({ one }) => ({
 }));
 
 export const members = sqliteTable("members", {
-	id: text("id").primaryKey().notNull(), // Clerk user ID
+	id: text("id").primaryKey().notNull(),
 	email: text("email").notNull(),
 	name: text("name").notNull(),
 	isAdmin: integer("is_admin", { mode: "boolean" }).default(false).notNull(),
