@@ -70,9 +70,7 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
-
-	console.log("SF", selectedFolder)
-
+	
 	const getFileIcon = (type: string) => {
 		switch (type) {
 			case "image":
