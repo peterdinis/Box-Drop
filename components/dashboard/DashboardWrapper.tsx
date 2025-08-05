@@ -20,7 +20,7 @@ import {
 	Video,
 } from "lucide-react";
 import prettyBytes from "pretty-bytes";
-import { type FC, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
+import { type FC, useState } from "react";
 import {
 	Dialog,
 	DialogContent,
@@ -221,14 +221,14 @@ const DashboardWrapper: FC = () => {
 															}}
 															disabled={isMoving}
 														>
-															<SelectTrigger className="w-[180px]">
+															<SelectTrigger className="w-[200px]">
 																<SelectValue placeholder="Move to..." />
 															</SelectTrigger>
-															<SelectContent>
+															<SelectContent className="dark:bg-background bg-stone-600">
 																{folderData?.items
 																	.filter((f: { id: string | null; }) => f.id !== openFolderId)
 																	.map((folder: { id: string; name: string }) => (
-																		<SelectItem key={folder.id} value={folder.id}>
+																		<SelectItem className="hover:bg-transparent dark:hover:bg-transparent" key={folder.id} value={folder.id}>
 																			{folder.name}
 																		</SelectItem>
 																	))}
