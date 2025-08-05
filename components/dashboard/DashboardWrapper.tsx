@@ -20,7 +20,7 @@ import {
 	Video,
 } from "lucide-react";
 import prettyBytes from "pretty-bytes";
-import { type FC, useState } from "react";
+import { type FC, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
 import {
 	Dialog,
 	DialogContent,
@@ -79,20 +79,18 @@ const DashboardWrapper: FC = () => {
 		openFolderId ?? "",
 	);
 
-	const [movingFileId, setMovingFileId] = useState<string | null>(null);
+	const [, setMovingFileId] = useState<string | null>(null);
 	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
 
 	const handleMoveFile = (fileId: string, newFolderId: string) => {
 		moveFile(
-			{ fileId, newFolderId },
+			{ fileId, folderId: newFolderId },
 			{
 				onSuccess: () => {
 					setMovingFileId(null);
-					setTargetFolderId(null);
-					// případně refresh dat přes useFiles/useFolders nebo refetch
+					setTargetFolderId("");
 				},
 				onError: (error) => {
-					// tady můžeš přidat notifikaci o chybě
 					console.error("Error moving file:", error);
 				},
 			},
@@ -217,8 +215,8 @@ const DashboardWrapper: FC = () => {
 															</SelectTrigger>
 															<SelectContent>
 																{folderData?.items
-																	.filter((f) => f.id !== openFolderId)
-																	.map((folder) => (
+																	.filter((f: { id: string | null; }) => f.id !== openFolderId)
+																	.map((folder: { id: string; name: string }) => (
 																		<SelectItem key={folder.id} value={folder.id}>
 																			{folder.name}
 																		</SelectItem>
@@ -351,7 +349,7 @@ const DashboardWrapper: FC = () => {
 																{file.name}
 															</h4>
 															<p className="text-sm text-muted-foreground">
-																{file.modified} - {prettyBytes(file.size as unknown as number)}
+																{prettyBytes(file.size as unknown as number)}
 															</p>
 														</div>
 													</div>
