@@ -17,6 +17,7 @@ import {
 	Share2,
 	TrashIcon,
 	TrendingUp,
+	Users2,
 	Video,
 } from "lucide-react";
 import prettyBytes from "pretty-bytes";
@@ -497,6 +498,23 @@ const DashboardWrapper: FC = () => {
 								</div>
 							</div>
 						</Card>
+
+						<Card className="p-6">
+							<h3 className="font-semibold mb-4">Connections</h3>
+							<div className="space-y-4">
+								<div className="flex items-center justify-between">
+									<div className="flex items-center gap-2">
+										<Users2 className="w-4 h-4 text-green-500" />
+										<span className="text-sm">My Connections</span>
+									</div>
+									<span className="font-medium">1234</span>
+								</div>
+								<div>
+									<Button variant={"link"}>Add new member to connection list</Button>
+									<Button className="mt-6" variant={"link"}>Show my connections list</Button>
+								</div>
+							</div>
+						</Card>			
 					</div>
 				</div>
 			</div>
