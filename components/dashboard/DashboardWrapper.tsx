@@ -48,6 +48,14 @@ import { Card } from "../ui/card";
 import { formatDate } from "@/utils/format-date";
 import { useDeleteFile } from "@/hooks/files/useDeleteFile";
 import { useMoveFile } from "@/hooks/files/useMoveFile";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/shared/useToast";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -58,12 +66,9 @@ const DashboardWrapper: FC = () => {
 	const { user } = useUser();
 	const { data: storageUsage } = useStorageUsage();
 	const { mutate: deleteFile, isPending } = useDeleteFile();
-
-	const { mutate: moveFile, isPending: isMoving } = useMoveFile();
-
 	const usedFormatted = storageUsage?.usedFormatted;
 	const limitFormatted = storageUsage?.limitFormatted;
-
+	const { mutate: moveFile, isPending: isMoving } = useMoveFile();
 	const [shareModal, setShareModal] = useState({
 		isOpen: false,
 		fileName: "",
@@ -74,9 +79,34 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
-
-	const [movingFileId, setMovingFileId] = useState<string | null>(null);
+	const {toast} = useToast()
+	const [, setMovingFileId] = useState<string | null>(null);
 	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
+
+	const handleMoveFile = (fileId: string, newFolderId: string) => {
+		moveFile(
+			{ fileId, folderId: newFolderId },
+			{
+				onSuccess: () => {
+					setMovingFileId(null);
+					setTargetFolderId("");
+					toast({
+						title: "File was moved to another folder",
+						duration: 2000,
+						className: "bg-green-800 text-white font-bold text-base"
+					})
+				},
+				onError: (error) => {
+					console.error("Error moving file:", error);
+					toast({
+						title: "File was not moved to another folder",
+						duration: 2000,
+						className: "bg-red-800 text-white font-bold text-base"
+					})
+				},
+			},
+		);
+	};
 
 	const getFileIcon = (type: string) => {
 		switch (type) {
@@ -108,23 +138,6 @@ const DashboardWrapper: FC = () => {
 		document.body.removeChild(link);
 	};
 
-	const handleMoveFile = (fileId: string, newFolderId: string) => {
-		moveFile(
-			{ fileId, newFolderId },
-			{
-				onSuccess: () => {
-					setMovingFileId(null);
-					setTargetFolderId(null);
-					// případně refresh dat přes useFiles/useFolders nebo refetch
-				},
-				onError: (error) => {
-					// tady můžeš přidat notifikaci o chybě
-					console.error("Error moving file:", error);
-				},
-			},
-		);
-	};
-
 	if (fileLoading || folderLoading)
 		return <Loader2 className="animate-spin w-8 h-8" />;
 
@@ -144,7 +157,7 @@ const DashboardWrapper: FC = () => {
 			/>
 
 			<Dialog open={!!openFolderId} onOpenChange={() => setOpenFolderId(null)}>
-				<DialogContent>
+				<DialogContent className="w-full max-h-[100vh] overflow-y-auto">
 					<DialogHeader>
 						<DialogTitle>Folder Details</DialogTitle>
 					</DialogHeader>
@@ -166,7 +179,8 @@ const DashboardWrapper: FC = () => {
 											<TableHead>Name</TableHead>
 											<TableHead>Size</TableHead>
 											<TableHead>Modified</TableHead>
-											<TableHead>Actions</TableHead>
+											<TableHead>Delete</TableHead>
+											<TableHead>Move to another folder</TableHead>
 										</TableRow>
 									</TableHeader>
 									<TableBody>
@@ -175,7 +189,7 @@ const DashboardWrapper: FC = () => {
 												id: string;
 												name: string;
 												size: number;
-												modified: string | boolean;
+												modified: boolean;
 											}) => (
 												<TableRow key={file.id}>
 													<TableCell>{file.name}</TableCell>
@@ -185,7 +199,7 @@ const DashboardWrapper: FC = () => {
 														})}
 													</TableCell>
 													<TableCell>{file.modified ?? "N/A"}</TableCell>
-													<TableCell className="flex gap-2 items-center">
+													<TableCell>
 														<Button
 															variant="ghost"
 															size="icon"
@@ -194,12 +208,11 @@ const DashboardWrapper: FC = () => {
 														>
 															<TrashIcon className="w-4 h-4 text-red-600" />
 														</Button>
-
-														{/* Move File Select */}
-														<select
+													</TableCell>
+													<TableCell className="flex gap-2 items-center">
+														<Select
 															value={targetFolderId ?? ""}
-															onChange={(e) => {
-																const newFolderId = e.target.value;
+															onValueChange={(newFolderId) => {
 																if (newFolderId) {
 																	setMovingFileId(file.id);
 																	setTargetFolderId(newFolderId);
@@ -207,17 +220,20 @@ const DashboardWrapper: FC = () => {
 																}
 															}}
 															disabled={isMoving}
-															className="border rounded px-2 py-1 text-sm"
 														>
-															<option value="">Move to...</option>
-															{folderData?.items
-																.filter((f) => f.id !== openFolderId)
-																.map((folder) => (
-																	<option key={folder.id} value={folder.id}>
-																		{folder.name}
-																	</option>
-																))}
-														</select>
+															<SelectTrigger className="w-[200px]">
+																<SelectValue placeholder="Move to..." />
+															</SelectTrigger>
+															<SelectContent className="dark:bg-background bg-stone-600">
+																{folderData?.items
+																	.filter((f: { id: string | null; }) => f.id !== openFolderId)
+																	.map((folder: { id: string; name: string }) => (
+																		<SelectItem className="hover:bg-transparent dark:hover:bg-transparent" key={folder.id} value={folder.id}>
+																			{folder.name}
+																		</SelectItem>
+																	))}
+															</SelectContent>
+														</Select>
 													</TableCell>
 												</TableRow>
 											),
@@ -256,178 +272,230 @@ const DashboardWrapper: FC = () => {
 
 						{/* Files Section */}
 						<Card className="p-6">
-							<div className="flex items-center justify-between mb-4">
-								<h3 className="text-lg font-semibold">Files</h3>
-								<div className="flex gap-2">
+							<div className="flex items-center justify-between mb-6">
+								<h3 className="text-lg font-semibold">Recent Files</h3>
+								<div className="flex items-center gap-2">
 									<Button
-										variant={fileViewMode === "grid" ? "default" : "outline"}
-										onClick={() => setFileViewMode("grid")}
+										variant="outline"
 										size="sm"
+										onClick={() =>
+											setFileViewMode(fileViewMode === "grid" ? "list" : "grid")
+										}
 									>
-										<Grid3X3 className="w-4 h-4" />
-									</Button>
-									<Button
-										variant={fileViewMode === "list" ? "default" : "outline"}
-										onClick={() => setFileViewMode("list")}
-										size="sm"
-									>
-										<List className="w-4 h-4" />
+										{fileViewMode === "grid" ? (
+											<List className="w-4 h-4" />
+										) : (
+											<Grid3X3 className="w-4 h-4" />
+										)}
 									</Button>
 								</div>
 							</div>
-							{fileViewMode === "grid" ? (
-								<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-									{filesData?.items.map((file) => (
+
+							<div
+								className={
+									fileViewMode === "grid"
+										? "grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+										: "space-y-2"
+								}
+							>
+								{filesData?.map(
+									(
+										file: {
+											id: string;
+											type: string;
+											name: string;
+											size: string;
+											modified: boolean;
+											url: string;
+										},
+										index: number,
+									) => (
 										<Card
 											key={file.id}
-											className="flex flex-col gap-2 p-4 border border-border rounded-md"
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
+												}`}
+											style={{ animationDelay: `${index * 0.1}s` }}
 										>
-											<div className="flex items-center gap-2">
-												{getFileIcon(file.type)}
-												<p className="truncate font-medium">{file.name}</p>
-											</div>
-											<div className="flex justify-between text-sm text-muted-foreground">
-												<span>{prettyBytes(file.size, { bits: true })}</span>
-												<span>{formatDate(file.modified)}</span>
-											</div>
-											<div className="flex justify-between mt-2">
-												<Button
-													variant="outline"
-													size="sm"
-													onClick={() => handleShareFile(file.name, file.type)}
-												>
-													<Share2 className="w-4 h-4" />
-												</Button>
-												<Button
-													variant="outline"
-													size="sm"
-													onClick={() => handleDownloadFile(file.url, file.name)}
-												>
-													<Download className="w-4 h-4" />
-												</Button>
-												<Button
-													variant="outline"
-													size="sm"
-													onClick={() => deleteFile(file.id)}
-													disabled={isPending}
-												>
-													<TrashIcon className="w-4 h-4 text-red-600" />
-												</Button>
-											</div>
+											{fileViewMode === "grid" ? (
+												<div className="text-center">
+													<div className="flex justify-center mb-3">
+														{getFileIcon(file.type)}
+													</div>
+													<h4 className="font-medium text-sm truncate mb-1">
+														{file.name}
+													</h4>
+													<p className="text-xs text-muted-foreground mb-1">
+														{prettyBytes(file.size as unknown as number)}
+													</p>
+													<p className="text-xs text-muted-foreground">
+														{file.modified}
+													</p>
+													<div className="flex justify-center gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+														<Button
+															size="sm"
+															variant="ghost"
+															onClick={() =>
+																handleDownloadFile(file.url, file.name)
+															}
+														>
+															<Download className="w-3 h-3" />
+														</Button>
+														<Button
+															size="sm"
+															variant="ghost"
+															onClick={() =>
+																handleShareFile(file.name, file.type)
+															}
+														>
+															<Share2 className="w-3 h-3" />
+														</Button>
+													</div>
+												</div>
+											) : (
+												<div className="flex items-center justify-between">
+													<div className="flex items-center gap-3 flex-1 min-w-0">
+														{getFileIcon(file.type)}
+														<div className="min-w-0 flex-1">
+															<h4 className="font-medium truncate">
+																{file.name}
+															</h4>
+															<p className="text-sm text-muted-foreground">
+																{prettyBytes(file.size as unknown as number)}
+															</p>
+														</div>
+													</div>
+													<div className="flex items-center gap-2">
+														<Button
+															size="sm"
+															variant="ghost"
+															onClick={() =>
+																handleShareFile(file.name, file.type)
+															}
+														>
+															<Share2 className="w-4 h-4" />
+														</Button>
+														<Button size="sm" variant="ghost">
+															<MoreHorizontal className="w-4 h-4" />
+														</Button>
+													</div>
+												</div>
+											)}
 										</Card>
-									))}
-								</div>
-							) : (
-								<Table>
-									<TableHeader>
-										<TableRow>
-											<TableHead>Name</TableHead>
-											<TableHead>Size</TableHead>
-											<TableHead>Modified</TableHead>
-											<TableHead>Actions</TableHead>
-										</TableRow>
-									</TableHeader>
-									<TableBody>
-										{filesData?.items.map((file) => (
-											<TableRow key={file.id}>
-												<TableCell className="flex items-center gap-2">
-													{getFileIcon(file.type)}
-													{file.name}
-												</TableCell>
-												<TableCell>
-													{prettyBytes(file.size, { bits: true })}
-												</TableCell>
-												<TableCell>{formatDate(file.modified)}</TableCell>
-												<TableCell className="flex gap-2 items-center">
-													<Button
-														variant="ghost"
-														size="icon"
-														onClick={() =>
-															handleShareFile(file.name, file.type)
-														}
-													>
-														<Share2 className="w-4 h-4" />
-													</Button>
-													<Button
-														variant="ghost"
-														size="icon"
-														onClick={() =>
-															handleDownloadFile(file.url, file.name)
-														}
-													>
-														<Download className="w-4 h-4" />
-													</Button>
-													<Button
-														variant="ghost"
-														size="icon"
-														onClick={() => deleteFile(file.id)}
-														disabled={isPending}
-													>
-														<TrashIcon className="w-4 h-4 text-red-600" />
-													</Button>
-												</TableCell>
-											</TableRow>
-										))}
-									</TableBody>
-								</Table>
-							)}
-						</Card>
-					</div>
-					{/* Folders Section */}
-					<div className="space-y-6">
-						<Card className="p-6">
-							<div className="flex items-center justify-between mb-4">
-								<h3 className="text-lg font-semibold">Folders</h3>
-								<div className="flex gap-2">
-									<CreateFolderModal />
-								</div>
+									),
+								)}
 							</div>
-							{folderViewMode === "grid" ? (
-								<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-									{folderData?.items.map((folder) => (
-										<Card
-											key={folder.id}
-											className="p-4 flex items-center justify-between cursor-pointer"
-											onClick={() => setOpenFolderId(folder.id)}
-										>
-											<div className="flex items-center gap-2">
-												<FolderIcon className="w-5 h-5 text-primary" />
-												<p>{folder.name}</p>
-											</div>
-											<Button size="sm" variant="outline">
-												Open
-											</Button>
-										</Card>
-									))}
-								</div>
-							) : (
-								<Table>
-									<TableHeader>
-										<TableRow>
-											<TableHead>Name</TableHead>
-											<TableHead>Created</TableHead>
-											<TableHead>Actions</TableHead>
-										</TableRow>
-									</TableHeader>
-									<TableBody>
-										{folderData?.items.map((folder) => (
-											<TableRow key={folder.id} onClick={() => setOpenFolderId(folder.id)}>
-												<TableCell>{folder.name}</TableCell>
-												<TableCell>{formatDate(folder.createdAt)}</TableCell>
-												<TableCell>
-													<Button size="sm" variant="outline">
-														Open
-													</Button>
-												</TableCell>
-											</TableRow>
-										))}
-									</TableBody>
-								</Table>
-							)}
 						</Card>
 
-						<Card className="p-4 text-center text-sm text-muted-foreground">
-							Storage used: {usedFormatted} / {limitFormatted}
+						{/* Recent Folders */}
+						<Card className="p-6">
+							<div className="flex items-center justify-between mb-6">
+								<h3 className="text-lg font-semibold">Recent Folders</h3>
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={() =>
+										setFolderViewMode(
+											folderViewMode === "grid" ? "list" : "grid",
+										)
+									}
+								>
+									{folderViewMode === "grid" ? (
+										<List className="w-4 h-4" />
+									) : (
+										<Grid3X3 className="w-4 h-4" />
+									)}
+								</Button>
+							</div>
+
+							<div
+								className={
+									folderViewMode === "grid"
+										? "grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+										: "space-y-2"
+								}
+							>
+								{folderData?.items &&
+									folderData?.items?.map(
+										(
+											folder: {
+												id: string;
+												name: string;
+											},
+											index: number,
+										) => (
+											<Card
+												key={folder.id}
+												onClick={() =>
+													setOpenFolderId(folder.id?.toString() ?? "")
+												}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+													}`}
+												style={{ animationDelay: `${index * 0.1}s` }}
+											>
+												{folderViewMode === "grid" ? (
+													<div className="text-center">
+														<div className="flex justify-center mb-3">
+															<FolderIcon className="w-5 h-5 text-yellow-500" />
+														</div>
+														<h4 className="font-medium text-sm truncate mb-1">
+															{folder.name}
+														</h4>
+													</div>
+												) : (
+													<div className="flex items-center justify-between">
+														<div className="flex items-center gap-3 flex-1 min-w-0">
+															<FolderIcon className="w-5 h-5 text-yellow-500" />
+															<h4 className="font-medium truncate">
+																{folder.name}
+															</h4>
+														</div>
+														<Button size="sm" variant="ghost">
+															<MoreHorizontal className="w-4 h-4" />
+														</Button>
+													</div>
+												)}
+											</Card>
+										),
+									)}
+							</div>
+						</Card>
+					</div>
+
+					{/* Sidebar */}
+					<div className="space-y-6">
+						<Card className="p-6">
+							<div className="flex items-center gap-2 mb-4">
+								<HardDrive className="w-5 h-5 text-primary" />
+								<h3 className="font-semibold">Storage</h3>
+							</div>
+							<div className="space-y-4">
+								<div>
+									<div className="flex justify-between text-sm mb-2">
+										<span>{usedFormatted} used</span>
+										<span>{limitFormatted} total</span>
+									</div>
+								</div>
+							</div>
+						</Card>
+
+						<Card className="p-6">
+							<h3 className="font-semibold mb-4">Quick Stats</h3>
+							<div className="space-y-4">
+								<div className="flex items-center justify-between">
+									<div className="flex items-center gap-2">
+										<TrendingUp className="w-4 h-4 text-green-500" />
+										<span className="text-sm">Files uploaded</span>
+									</div>
+									<span className="font-medium">{filesData.length}</span>
+								</div>
+								<div className="flex items-center justify-between">
+									<div className="flex items-center gap-2">
+										<Share2 className="w-4 h-4 text-blue-500" />
+										<span className="text-sm">Files shared</span>
+									</div>
+									<span className="font-medium">TODO</span>
+								</div>
+							</div>
 						</Card>
 					</div>
 				</div>
