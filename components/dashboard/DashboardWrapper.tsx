@@ -55,6 +55,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/hooks/shared/useToast";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -78,7 +79,7 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
-
+	const {toast} = useToast()
 	const [, setMovingFileId] = useState<string | null>(null);
 	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
 
@@ -89,9 +90,19 @@ const DashboardWrapper: FC = () => {
 				onSuccess: () => {
 					setMovingFileId(null);
 					setTargetFolderId("");
+					toast({
+						title: "File was moved to another folder",
+						duration: 2000,
+						className: "bg-green-800 text-white font-bold text-base"
+					})
 				},
 				onError: (error) => {
 					console.error("Error moving file:", error);
+					toast({
+						title: "File was not moved to another folder",
+						duration: 2000,
+						className: "bg-red-800 text-white font-bold text-base"
+					})
 				},
 			},
 		);
