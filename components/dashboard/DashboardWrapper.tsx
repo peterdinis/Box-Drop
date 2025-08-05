@@ -47,6 +47,14 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { formatDate } from "@/utils/format-date";
 import { useDeleteFile } from "@/hooks/files/useDeleteFile";
+import { useMoveFile } from "@/hooks/files/useMoveFile";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -59,7 +67,7 @@ const DashboardWrapper: FC = () => {
 	const { mutate: deleteFile, isPending } = useDeleteFile();
 	const usedFormatted = storageUsage?.usedFormatted;
 	const limitFormatted = storageUsage?.limitFormatted;
-
+	const { mutate: moveFile, isPending: isMoving } = useMoveFile();
 	const [shareModal, setShareModal] = useState({
 		isOpen: false,
 		fileName: "",
@@ -70,7 +78,27 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
-	
+
+	const [movingFileId, setMovingFileId] = useState<string | null>(null);
+	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
+
+	const handleMoveFile = (fileId: string, newFolderId: string) => {
+		moveFile(
+			{ fileId, newFolderId },
+			{
+				onSuccess: () => {
+					setMovingFileId(null);
+					setTargetFolderId(null);
+					// případně refresh dat přes useFiles/useFolders nebo refetch
+				},
+				onError: (error) => {
+					// tady můžeš přidat notifikaci o chybě
+					console.error("Error moving file:", error);
+				},
+			},
+		);
+	};
+
 	const getFileIcon = (type: string) => {
 		switch (type) {
 			case "image":
@@ -120,7 +148,7 @@ const DashboardWrapper: FC = () => {
 			/>
 
 			<Dialog open={!!openFolderId} onOpenChange={() => setOpenFolderId(null)}>
-				<DialogContent>
+				<DialogContent className="w-full max-h-[100vh] overflow-y-auto">
 					<DialogHeader>
 						<DialogTitle>Folder Details</DialogTitle>
 					</DialogHeader>
@@ -142,6 +170,8 @@ const DashboardWrapper: FC = () => {
 											<TableHead>Name</TableHead>
 											<TableHead>Size</TableHead>
 											<TableHead>Modified</TableHead>
+											<TableHead>Delete</TableHead>
+											<TableHead>Move to another folder</TableHead>
 										</TableRow>
 									</TableHeader>
 									<TableBody>
@@ -169,6 +199,32 @@ const DashboardWrapper: FC = () => {
 														>
 															<TrashIcon className="w-4 h-4 text-red-600" />
 														</Button>
+													</TableCell>
+													<TableCell className="flex gap-2 items-center">
+														<Select
+															value={targetFolderId ?? ""}
+															onValueChange={(newFolderId) => {
+																if (newFolderId) {
+																	setMovingFileId(file.id);
+																	setTargetFolderId(newFolderId);
+																	handleMoveFile(file.id, newFolderId);
+																}
+															}}
+															disabled={isMoving}
+														>
+															<SelectTrigger className="w-[180px]">
+																<SelectValue placeholder="Move to..." />
+															</SelectTrigger>
+															<SelectContent>
+																{folderData?.items
+																	.filter((f) => f.id !== openFolderId)
+																	.map((folder) => (
+																		<SelectItem key={folder.id} value={folder.id}>
+																			{folder.name}
+																		</SelectItem>
+																	))}
+															</SelectContent>
+														</Select>
 													</TableCell>
 												</TableRow>
 											),
