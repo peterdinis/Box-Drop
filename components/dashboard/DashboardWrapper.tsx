@@ -45,7 +45,6 @@ import { useFiles } from "@/hooks/files/useFiles";
 import { useMoveFile } from "@/hooks/files/useMoveFile";
 import { useFolder, useFolders } from "@/hooks/folders/useFolders";
 import { useToast } from "@/hooks/shared/useToast";
-import { useStorageUsage } from "@/hooks/storage/useStorage";
 import { formatDate } from "@/utils/format-date";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
@@ -63,10 +62,7 @@ const DashboardWrapper: FC = () => {
 	const { data: folderData, isLoading: folderLoading } = useFolders();
 	const { data: filesData, isLoading: fileLoading } = useFiles();
 	const { user } = useUser();
-	const { data: storageUsage } = useStorageUsage();
 	const { mutate: deleteFile, isPending } = useDeleteFile();
-	const usedFormatted = storageUsage?.usedFormatted;
-	const limitFormatted = storageUsage?.limitFormatted;
 	const { mutate: moveFile, isPending: isMoving } = useMoveFile();
 	const [shareModal, setShareModal] = useState({
 		isOpen: false,
@@ -96,9 +92,8 @@ const DashboardWrapper: FC = () => {
 					});
 				},
 				onError: (error) => {
-					console.error("Error moving file:", error);
 					toast({
-						title: "File was not moved to another folder",
+						title: "File was not moved to another folder " + error.message,
 						duration: 2000,
 						className: "bg-red-800 text-white font-bold text-base",
 					});
