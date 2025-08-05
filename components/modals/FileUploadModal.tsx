@@ -53,7 +53,7 @@ const FileUploadModal: FC = () => {
 				</DialogHeader>
 
 				<div className="space-y-6">
-					<FileUploader/>
+					<FileUploader />
 					<div>
 						<h4 className="font-medium mb-3">Supported file types:</h4>
 						<div className="grid grid-cols-2 gap-3">

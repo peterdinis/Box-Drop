@@ -43,7 +43,6 @@
 		"date-fns": "^4.1.0",
 		"drizzle-orm": "^0.44.3",
 		"framer-motion": "^12.23.11",
-		"hono": "^4.8.9",
 		"jsdom": "^26.1.0",
 		"lucide-react": "^0.525.0",
 		"nanoid": "^5.1.5",
