@@ -3,26 +3,26 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 async function deleteFile(fileId: string): Promise<void> {
-  const res = await fetch(`/api/files/${fileId}/delete`, {
-    method: "DELETE",
-  });
+	const res = await fetch(`/api/files/${fileId}/delete`, {
+		method: "DELETE",
+	});
 
-  if (!res.ok) {
-    const message = await res.text();
-    throw new Error(message || "Failed to delete file");
-  }
+	if (!res.ok) {
+		const message = await res.text();
+		throw new Error(message || "Failed to delete file");
+	}
 }
 
 export function useDeleteFile() {
-  const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: deleteFile,
-    onSuccess: () => {
-      // Po zmazaní môžeš refetch-nuť files/folders, prípadne permissions
-      queryClient.invalidateQueries({ queryKey: ["files"] });
-      queryClient.invalidateQueries({ queryKey: ["folders"] });
-      queryClient.invalidateQueries({ queryKey: ["permissions"] });
-    },
-  });
+	return useMutation({
+		mutationFn: deleteFile,
+		onSuccess: () => {
+			// Po zmazaní môžeš refetch-nuť files/folders, prípadne permissions
+			queryClient.invalidateQueries({ queryKey: ["files"] });
+			queryClient.invalidateQueries({ queryKey: ["folders"] });
+			queryClient.invalidateQueries({ queryKey: ["permissions"] });
+		},
+	});
 }

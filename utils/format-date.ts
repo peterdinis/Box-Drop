@@ -9,7 +9,7 @@ export function formatDate(value: unknown): string {
 		if (typeof value === "number") {
 			// Treat as milliseconds unless it's clearly a seconds-based timestamp
 			date = new Date(
-				value > 1e12 ? value : value * 1000 // >= year 2001 in ms
+				value > 1e12 ? value : value * 1000, // >= year 2001 in ms
 			);
 		} else if (typeof value === "string" || value instanceof Date) {
 			date = new Date(value);

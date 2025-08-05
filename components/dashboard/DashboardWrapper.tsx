@@ -29,6 +29,13 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import {
 	Table,
 	TableBody,
 	TableCell,
@@ -36,9 +43,13 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { useDeleteFile } from "@/hooks/files/useDeleteFile";
 import { useFiles } from "@/hooks/files/useFiles";
+import { useMoveFile } from "@/hooks/files/useMoveFile";
 import { useFolder, useFolders } from "@/hooks/folders/useFolders";
+import { useToast } from "@/hooks/shared/useToast";
 import { useStorageUsage } from "@/hooks/storage/useStorage";
+import { formatDate } from "@/utils/format-date";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
 import FileUploadModal from "../modals/FileUploadModal";
@@ -46,17 +57,6 @@ import GlobalSearchModal from "../modals/GlobalSearchModal";
 import SettingsModal from "../modals/SettingsModal";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import { formatDate } from "@/utils/format-date";
-import { useDeleteFile } from "@/hooks/files/useDeleteFile";
-import { useMoveFile } from "@/hooks/files/useMoveFile";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { useToast } from "@/hooks/shared/useToast";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -80,7 +80,7 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
-	const {toast} = useToast()
+	const { toast } = useToast();
 	const [, setMovingFileId] = useState<string | null>(null);
 	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
 
@@ -94,16 +94,16 @@ const DashboardWrapper: FC = () => {
 					toast({
 						title: "File was moved to another folder",
 						duration: 2000,
-						className: "bg-green-800 text-white font-bold text-base"
-					})
+						className: "bg-green-800 text-white font-bold text-base",
+					});
 				},
 				onError: (error) => {
 					console.error("Error moving file:", error);
 					toast({
 						title: "File was not moved to another folder",
 						duration: 2000,
-						className: "bg-red-800 text-white font-bold text-base"
-					})
+						className: "bg-red-800 text-white font-bold text-base",
+					});
 				},
 			},
 		);
@@ -170,8 +170,7 @@ const DashboardWrapper: FC = () => {
 								<strong>Name:</strong> {selectedFolder.name}
 							</p>
 							<p>
-								<strong>Created:</strong>{" "}
-								{formatDate(selectedFolder.createdAt)}
+								<strong>Created:</strong> {formatDate(selectedFolder.createdAt)}
 							</p>
 							{selectedFolder.files && selectedFolder.files.length > 0 ? (
 								<Table>
@@ -227,12 +226,21 @@ const DashboardWrapper: FC = () => {
 															</SelectTrigger>
 															<SelectContent className="dark:bg-background bg-stone-600">
 																{folderData?.items
-																	.filter((f: { id: string | null; }) => f.id !== openFolderId)
-																	.map((folder: { id: string; name: string }) => (
-																		<SelectItem className="hover:bg-transparent dark:hover:bg-transparent" key={folder.id} value={folder.id}>
-																			{folder.name}
-																		</SelectItem>
-																	))}
+																	.filter(
+																		(f: { id: string | null }) =>
+																			f.id !== openFolderId,
+																	)
+																	.map(
+																		(folder: { id: string; name: string }) => (
+																			<SelectItem
+																				className="hover:bg-transparent dark:hover:bg-transparent"
+																				key={folder.id}
+																				value={folder.id}
+																			>
+																				{folder.name}
+																			</SelectItem>
+																		),
+																	)}
 															</SelectContent>
 														</Select>
 													</TableCell>
@@ -313,8 +321,9 @@ const DashboardWrapper: FC = () => {
 									) => (
 										<Card
 											key={file.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
-												}`}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+												fileViewMode === "grid" ? "p-4" : "p-3"
+											}`}
 											style={{ animationDelay: `${index * 0.1}s` }}
 										>
 											{fileViewMode === "grid" ? (
@@ -429,8 +438,9 @@ const DashboardWrapper: FC = () => {
 												onClick={() =>
 													setOpenFolderId(folder.id?.toString() ?? "")
 												}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
-													}`}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+													folderViewMode === "grid" ? "p-4" : "p-3"
+												}`}
 												style={{ animationDelay: `${index * 0.1}s` }}
 											>
 												{folderViewMode === "grid" ? (
@@ -510,11 +520,15 @@ const DashboardWrapper: FC = () => {
 									<span className="font-medium">1234</span>
 								</div>
 								<div>
-									<Button variant={"link"}>Add new member to connection list</Button>
-									<Button className="mt-6" variant={"link"}>Show my connections list</Button>
+									<Button variant={"link"}>
+										Add new member to connection list
+									</Button>
+									<Button className="mt-6" variant={"link"}>
+										Show my connections list
+									</Button>
 								</div>
 							</div>
-						</Card>			
+						</Card>
 					</div>
 				</div>
 			</div>
