@@ -57,6 +57,8 @@ import GlobalSearchModal from "../modals/GlobalSearchModal";
 import SettingsModal from "../modals/SettingsModal";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import ConnectionsListModal from "../modals/ConnectionsListModal";
+import AddNewMemberToConnection from "../modals/AddNewMemberToConnection";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -520,12 +522,8 @@ const DashboardWrapper: FC = () => {
 									<span className="font-medium">1234</span>
 								</div>
 								<div>
-									<Button variant={"link"}>
-										Add new member to connection list
-									</Button>
-									<Button className="mt-6" variant={"link"}>
-										Show my connections list
-									</Button>
+									<AddNewMemberToConnection />
+									<ConnectionsListModal />
 								</div>
 							</div>
 						</Card>
