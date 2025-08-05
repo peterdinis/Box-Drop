@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
-import { db } from "@/db";
-import { files } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { UTApi } from "uploadthing/server";
+import { db } from "@/db";
+import { files } from "@/db/schema";
 
 export async function GET(req: Request, context: { params: { id: string } }) {
 	const { userId } = await auth();
@@ -30,10 +30,9 @@ export async function GET(req: Request, context: { params: { id: string } }) {
 	});
 }
 
-
 export async function DELETE(
 	req: Request,
-	{ params }: { params: { id: string } }
+	{ params }: { params: { id: string } },
 ) {
 	const { userId } = await auth();
 
@@ -47,7 +46,8 @@ export async function DELETE(
 	});
 
 	if (!file) return new Response("Not found", { status: 404 });
-	if (!file.folderId) return new Response("No folder associated", { status: 400 });
+	if (!file.folderId)
+		return new Response("No folder associated", { status: 400 });
 
 	const utapi = new UTApi();
 	await utapi.deleteFiles(file.url);

@@ -1,12 +1,12 @@
-import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { and, eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { files } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
 
 export async function POST(
 	req: Request,
-	{ params }: { params: { id: string } }
+	{ params }: { params: { id: string } },
 ) {
 	try {
 		const authSession = await auth();
