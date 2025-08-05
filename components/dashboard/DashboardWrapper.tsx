@@ -45,7 +45,6 @@ import { useFiles } from "@/hooks/files/useFiles";
 import { useMoveFile } from "@/hooks/files/useMoveFile";
 import { useFolder, useFolders } from "@/hooks/folders/useFolders";
 import { useToast } from "@/hooks/shared/useToast";
-import { useStorageUsage } from "@/hooks/storage/useStorage";
 import { formatDate } from "@/utils/format-date";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
@@ -55,6 +54,7 @@ import SettingsModal from "../modals/SettingsModal";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import DashboardSidebar from "./DashboardSidebar";
+import { useFileDownload } from "@/hooks/files/useDownloadFile";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -124,13 +124,11 @@ const DashboardWrapper: FC = () => {
 		setShareModal({ isOpen: true, fileName, fileType });
 	};
 
+	const { downloadFile, isDownloading } = useFileDownload();
+
+
 	const handleDownloadFile = (fileUrl: string, fileName: string) => {
-		const link = document.createElement("a");
-		link.href = fileUrl;
-		link.download = fileName;
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
+		downloadFile(fileUrl, fileName);
 	};
 
 	if (fileLoading || folderLoading)
@@ -314,9 +312,8 @@ const DashboardWrapper: FC = () => {
 									) => (
 										<Card
 											key={file.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-												fileViewMode === "grid" ? "p-4" : "p-3"
-											}`}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
+												}`}
 											style={{ animationDelay: `${index * 0.1}s` }}
 										>
 											{fileViewMode === "grid" ? (
@@ -340,6 +337,7 @@ const DashboardWrapper: FC = () => {
 															onClick={() =>
 																handleDownloadFile(file.url, file.name)
 															}
+															disabled={isDownloading}
 														>
 															<Download className="w-3 h-3" />
 														</Button>
@@ -430,9 +428,8 @@ const DashboardWrapper: FC = () => {
 												onClick={() =>
 													setOpenFolderId(folder.id?.toString() ?? "")
 												}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-													folderViewMode === "grid" ? "p-4" : "p-3"
-												}`}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+													}`}
 												style={{ animationDelay: `${index * 0.1}s` }}
 											>
 												{folderViewMode === "grid" ? (
