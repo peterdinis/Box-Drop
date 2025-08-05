@@ -45,6 +45,7 @@ import { useFiles } from "@/hooks/files/useFiles";
 import { useMoveFile } from "@/hooks/files/useMoveFile";
 import { useFolder, useFolders } from "@/hooks/folders/useFolders";
 import { useToast } from "@/hooks/shared/useToast";
+import { useStorageUsage } from "@/hooks/storage/useStorage";
 import { formatDate } from "@/utils/format-date";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
