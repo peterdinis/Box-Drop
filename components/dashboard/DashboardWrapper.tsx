@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import {
 	Archive,
 	Download,
@@ -46,15 +45,13 @@ import { useMoveFile } from "@/hooks/files/useMoveFile";
 import { useFolder, useFolders } from "@/hooks/folders/useFolders";
 import { useToast } from "@/hooks/shared/useToast";
 import { formatDate } from "@/utils/format-date";
-import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
-import FileUploadModal from "../modals/FileUploadModal";
-import GlobalSearchModal from "../modals/GlobalSearchModal";
 import SettingsModal from "../modals/SettingsModal";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import DashboardSidebar from "./DashboardSidebar";
 import { useFileDownload } from "@/hooks/files/useDownloadFile";
+import DashboardHeader from "./DashboardHeader";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -62,7 +59,6 @@ const DashboardWrapper: FC = () => {
 	const [showSettings, setShowSettings] = useState(false);
 	const { data: folderData, isLoading: folderLoading } = useFolders();
 	const { data: filesData, isLoading: fileLoading } = useFiles();
-	const { user } = useUser();
 	const { mutate: deleteFile, isPending } = useDeleteFile();
 	const { mutate: moveFile, isPending: isMoving } = useMoveFile();
 	const [shareModal, setShareModal] = useState({
@@ -256,21 +252,7 @@ const DashboardWrapper: FC = () => {
 			<div className="container mx-auto px-6 py-6">
 				<div className="grid lg:grid-cols-4 gap-6">
 					<div className="lg:col-span-3 space-y-6">
-						<Card className="p-6 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-primary/20">
-							<div className="flex items-center justify-between">
-								<div>
-									<h2 className="text-2xl font-bold mb-2">
-										Welcome back! {user?.emailAddresses[0]?.emailAddress} 👋
-									</h2>
-								</div>
-								<div className="hidden md:flex gap-2">
-									<FileUploadModal />
-									<CreateFolderModal />
-									<GlobalSearchModal />
-								</div>
-							</div>
-						</Card>
-
+						<DashboardHeader />
 						<Card className="p-6">
 							<div className="flex items-center justify-between mb-6">
 								<h3 className="text-lg font-semibold">Recent Files</h3>
