@@ -12,7 +12,7 @@ import {
 	TrashIcon,
 } from "lucide-react";
 import prettyBytes from "pretty-bytes";
-import { type FC, useState, useCallback } from "react";
+import { type FC, useCallback, useState } from "react";
 import {
 	Dialog,
 	DialogContent,
@@ -274,8 +274,9 @@ const DashboardWrapper: FC = () => {
 									) => (
 										<Card
 											key={file.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
-												}`}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+												fileViewMode === "grid" ? "p-4" : "p-3"
+											}`}
 											style={{ animationDelay: `${index * 0.1}s` }}
 										>
 											{fileViewMode === "grid" ? (
@@ -390,8 +391,9 @@ const DashboardWrapper: FC = () => {
 												onClick={() =>
 													setOpenFolderId(folder.id?.toString() ?? "")
 												}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
-													}`}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+													folderViewMode === "grid" ? "p-4" : "p-3"
+												}`}
 												style={{ animationDelay: `${index * 0.1}s` }}
 											>
 												{folderViewMode === "grid" ? (

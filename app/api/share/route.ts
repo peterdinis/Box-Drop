@@ -21,7 +21,6 @@ export async function POST(req: NextRequest) {
 			Date.now() + 7 * 24 * 60 * 60 * 1000,
 		).toISOString();
 
-		// Ulož link do DB
 		await db.insert(shareLinks).values({
 			token,
 			fileId,
@@ -31,20 +30,17 @@ export async function POST(req: NextRequest) {
 
 		const shareUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/share/${token}`;
 
-		// Ak je email, pošli notifikáciu
 		if (email) {
-			// Vytvor transporter podľa svojho SMTP nastavenia
 			const transporter = nodemailer.createTransport({
 				host: process.env.SMTP_HOST,
 				port: Number(process.env.SMTP_PORT),
-				secure: process.env.SMTP_SECURE === "true", // true for 465, false for other ports
+				secure: process.env.SMTP_SECURE === "true",
 				auth: {
 					user: process.env.SMTP_USER,
 					pass: process.env.SMTP_PASS,
 				},
 			});
 
-			// Posli email
 			await transporter.sendMail({
 				from: `"Box Drop" <${process.env.SMTP_FROM}>`,
 				to: email,
