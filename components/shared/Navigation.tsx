@@ -26,7 +26,7 @@ const Navigation: FC = () => {
 								<Button variant="ghost">
 									<Link href="/sign-in">Sign In</Link>
 								</Button>
-								<Button className="bg-gradient-primary hover:opacity-90 transition-opacity">
+								<Button variant={"default"}>
 									<Link href="/sign-up">Get Started</Link>
 								</Button>
 							</>
