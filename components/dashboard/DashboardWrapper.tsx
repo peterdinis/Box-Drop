@@ -126,7 +126,7 @@ const DashboardWrapper: FC = () => {
 			/>
 
 			<Dialog open={!!openFolderId} onOpenChange={() => setOpenFolderId(null)}>
-				<DialogContent className="w-full max-h-[100vh] overflow-y-auto">
+				<DialogContent className="w-full max-w-6xl max-h-[90vh] overflow-y-auto">
 					<DialogHeader>
 						<DialogTitle>Folder Details</DialogTitle>
 					</DialogHeader>
