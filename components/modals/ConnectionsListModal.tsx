@@ -14,7 +14,7 @@ const ConnectionsListModal: FC = () => {
         <Dialog>
             <DialogTrigger>
                 <Button variant={"link"}>
-                    Add new member to connection list
+                    My Connections
                 </Button>
             </DialogTrigger>
             <DialogContent>
