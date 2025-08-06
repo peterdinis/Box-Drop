@@ -122,7 +122,6 @@ const DashboardWrapper: FC = () => {
 
 	const { downloadFile, isDownloading } = useFileDownload();
 
-
 	const handleDownloadFile = (fileUrl: string, fileName: string) => {
 		downloadFile(fileUrl, fileName);
 	};
