@@ -1,19 +1,13 @@
-"use client"
+"use client";
 
-import { FC, ReactNode } from "react"
+import type { FC, ReactNode } from "react";
 
 type AuthWrapperProps = {
-    children?: ReactNode
-}
+	children?: ReactNode;
+};
 
-const AuthWrapper: FC<AuthWrapperProps> = ({
-    children
-}) => {
-    return (
-        <div className="flex justify-center align-top pt-16">
-            {children}
-        </div>
-    )
-}
+const AuthWrapper: FC<AuthWrapperProps> = ({ children }) => {
+	return <div className="flex justify-center align-top pt-16">{children}</div>;
+};
 
-export default AuthWrapper
+export default AuthWrapper;

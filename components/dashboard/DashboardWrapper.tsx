@@ -1,23 +1,18 @@
 "use client";
 
 import {
-	Archive,
 	Download,
 	File,
-	FileText,
 	FolderIcon,
 	Grid3X3,
-	Image,
 	List,
 	Loader2,
 	MoreHorizontal,
-	Music,
 	Share2,
 	TrashIcon,
-	Video,
 } from "lucide-react";
 import prettyBytes from "pretty-bytes";
-import { type FC, useState } from "react";
+import { type FC, useState, useCallback } from "react";
 import {
 	Dialog,
 	DialogContent,
@@ -40,6 +35,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { useDeleteFile } from "@/hooks/files/useDeleteFile";
+import { useFileDownload } from "@/hooks/files/useDownloadFile";
 import { useFiles } from "@/hooks/files/useFiles";
 import { useMoveFile } from "@/hooks/files/useMoveFile";
 import { useFolder, useFolders } from "@/hooks/folders/useFolders";
@@ -49,9 +45,8 @@ import FileShareModal from "../modals/FileShareModal";
 import SettingsModal from "../modals/SettingsModal";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import DashboardSidebar from "./DashboardSidebar";
-import { useFileDownload } from "@/hooks/files/useDownloadFile";
 import DashboardHeader from "./DashboardHeader";
+import DashboardSidebar from "./DashboardSidebar";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -75,53 +70,38 @@ const DashboardWrapper: FC = () => {
 	const [, setMovingFileId] = useState<string | null>(null);
 	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
 
-	const handleMoveFile = (fileId: string, newFolderId: string) => {
-		moveFile(
-			{ fileId, folderId: newFolderId },
-			{
-				onSuccess: () => {
-					setMovingFileId(null);
-					setTargetFolderId("");
-					toast({
-						title: "File was moved to another folder",
-						duration: 2000,
-						className: "bg-green-800 text-white font-bold text-base",
-					});
+	const handleMoveFile = useCallback(
+		(fileId: string, newFolderId: string) => {
+			moveFile(
+				{ fileId, folderId: newFolderId },
+				{
+					onSuccess: () => {
+						setMovingFileId(null);
+						setTargetFolderId("");
+						toast({
+							title: "File was moved to another folder",
+							duration: 2000,
+							className: "bg-green-800 text-white font-bold text-base",
+						});
+					},
+					onError: (error) => {
+						toast({
+							title: "File was not moved to another folder " + error.message,
+							duration: 2000,
+							className: "bg-red-800 text-white font-bold text-base",
+						});
+					},
 				},
-				onError: (error) => {
-					toast({
-						title: "File was not moved to another folder " + error.message,
-						duration: 2000,
-						className: "bg-red-800 text-white font-bold text-base",
-					});
-				},
-			},
-		);
-	};
-
-	const getFileIcon = (type: string) => {
-		switch (type) {
-			case "image":
-				return <Image className="w-5 h-5 text-green-500" />;
-			case "video":
-				return <Video className="w-5 h-5 text-red-500" />;
-			case "audio":
-				return <Music className="w-5 h-5 text-purple-500" />;
-			case "archive":
-				return <Archive className="w-5 h-5 text-orange-500" />;
-			case "document":
-				return <FileText className="w-5 h-5 text-blue-500" />;
-			default:
-				return <File className="w-5 h-5 text-muted-foreground" />;
-		}
-	};
+			);
+		},
+		[moveFile, toast],
+	);
 
 	const handleShareFile = (fileName: string, fileType: string) => {
 		setShareModal({ isOpen: true, fileName, fileType });
 	};
 
 	const { downloadFile, isDownloading } = useFileDownload();
-
 
 	const handleDownloadFile = (fileUrl: string, fileName: string) => {
 		downloadFile(fileUrl, fileName);
@@ -146,7 +126,7 @@ const DashboardWrapper: FC = () => {
 			/>
 
 			<Dialog open={!!openFolderId} onOpenChange={() => setOpenFolderId(null)}>
-				<DialogContent className="w-full max-h-[100vh] overflow-y-auto">
+				<DialogContent className="w-full max-w-6xl max-h-[90vh] overflow-y-auto">
 					<DialogHeader>
 						<DialogTitle>Folder Details</DialogTitle>
 					</DialogHeader>
@@ -301,7 +281,7 @@ const DashboardWrapper: FC = () => {
 											{fileViewMode === "grid" ? (
 												<div className="text-center">
 													<div className="flex justify-center mb-3">
-														{getFileIcon(file.type)}
+														<File className="w-5 h-5 text-muted-foreground" />
 													</div>
 													<h4 className="font-medium text-sm truncate mb-1">
 														{file.name}
@@ -337,7 +317,7 @@ const DashboardWrapper: FC = () => {
 											) : (
 												<div className="flex items-center justify-between">
 													<div className="flex items-center gap-3 flex-1 min-w-0">
-														{getFileIcon(file.type)}
+														<File className="w-5 h-5 text-muted-foreground" />
 														<div className="min-w-0 flex-1">
 															<h4 className="font-medium truncate">
 																{file.name}
