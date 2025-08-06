@@ -5,6 +5,9 @@ import {
 	sqliteTable,
 	text,
 } from "drizzle-orm/sqlite-core";
+import { customAlphabet } from 'nanoid';
+
+const nanoid = customAlphabet('1234567890abcdef', 21);
 
 // -------------------- Folders --------------------
 
@@ -83,4 +86,25 @@ export const members = sqliteTable("members", {
 
 export const membersRelations = relations(members, ({ many }) => ({
 	permissions: many(permissions),
+}));
+
+// -------------------- Connections --------------------
+
+export const connections = sqliteTable('connections', {
+	id: text('id').primaryKey().$default(() => nanoid()),
+	requesterId: text('requester_id').notNull().references(() => members.id),
+	receiverId: text('receiver_id').notNull().references(() => members.id),
+	status: text('status', { enum: ['pending', 'accepted', 'rejected'] }).notNull().default('pending'),
+	createdAt: integer('created_at', { mode: 'timestamp' }).default(new Date()),
+});
+
+export const connectionsRelations = relations(connections, ({ one }) => ({
+	requester: one(members, {
+		fields: [connections.requesterId],
+		references: [members.id],
+	}),
+	receiver: one(members, {
+		fields: [connections.receiverId],
+		references: [members.id],
+	}),
 }));

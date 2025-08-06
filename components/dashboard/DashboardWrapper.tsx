@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import {
 	Archive,
 	Download,
@@ -8,7 +7,6 @@ import {
 	FileText,
 	FolderIcon,
 	Grid3X3,
-	HardDrive,
 	Image,
 	List,
 	Loader2,
@@ -16,8 +14,6 @@ import {
 	Music,
 	Share2,
 	TrashIcon,
-	TrendingUp,
-	Users2,
 	Video,
 } from "lucide-react";
 import prettyBytes from "pretty-bytes";
@@ -48,15 +44,14 @@ import { useFiles } from "@/hooks/files/useFiles";
 import { useMoveFile } from "@/hooks/files/useMoveFile";
 import { useFolder, useFolders } from "@/hooks/folders/useFolders";
 import { useToast } from "@/hooks/shared/useToast";
-import { useStorageUsage } from "@/hooks/storage/useStorage";
 import { formatDate } from "@/utils/format-date";
-import CreateFolderModal from "../modals/CreateFolderModal";
 import FileShareModal from "../modals/FileShareModal";
-import FileUploadModal from "../modals/FileUploadModal";
-import GlobalSearchModal from "../modals/GlobalSearchModal";
 import SettingsModal from "../modals/SettingsModal";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import DashboardSidebar from "./DashboardSidebar";
+import { useFileDownload } from "@/hooks/files/useDownloadFile";
+import DashboardHeader from "./DashboardHeader";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -64,11 +59,7 @@ const DashboardWrapper: FC = () => {
 	const [showSettings, setShowSettings] = useState(false);
 	const { data: folderData, isLoading: folderLoading } = useFolders();
 	const { data: filesData, isLoading: fileLoading } = useFiles();
-	const { user } = useUser();
-	const { data: storageUsage } = useStorageUsage();
 	const { mutate: deleteFile, isPending } = useDeleteFile();
-	const usedFormatted = storageUsage?.usedFormatted;
-	const limitFormatted = storageUsage?.limitFormatted;
 	const { mutate: moveFile, isPending: isMoving } = useMoveFile();
 	const [shareModal, setShareModal] = useState({
 		isOpen: false,
@@ -98,9 +89,8 @@ const DashboardWrapper: FC = () => {
 					});
 				},
 				onError: (error) => {
-					console.error("Error moving file:", error);
 					toast({
-						title: "File was not moved to another folder",
+						title: "File was not moved to another folder " + error.message,
 						duration: 2000,
 						className: "bg-red-800 text-white font-bold text-base",
 					});
@@ -130,13 +120,11 @@ const DashboardWrapper: FC = () => {
 		setShareModal({ isOpen: true, fileName, fileType });
 	};
 
+	const { downloadFile, isDownloading } = useFileDownload();
+
+
 	const handleDownloadFile = (fileUrl: string, fileName: string) => {
-		const link = document.createElement("a");
-		link.href = fileUrl;
-		link.download = fileName;
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
+		downloadFile(fileUrl, fileName);
 	};
 
 	if (fileLoading || folderLoading)
@@ -264,22 +252,7 @@ const DashboardWrapper: FC = () => {
 			<div className="container mx-auto px-6 py-6">
 				<div className="grid lg:grid-cols-4 gap-6">
 					<div className="lg:col-span-3 space-y-6">
-						<Card className="p-6 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-primary/20">
-							<div className="flex items-center justify-between">
-								<div>
-									<h2 className="text-2xl font-bold mb-2">
-										Welcome back! {user?.emailAddresses[0]?.emailAddress} 👋
-									</h2>
-								</div>
-								<div className="hidden md:flex gap-2">
-									<FileUploadModal />
-									<CreateFolderModal />
-									<GlobalSearchModal />
-								</div>
-							</div>
-						</Card>
-
-						{/* Files Section */}
+						<DashboardHeader />
 						<Card className="p-6">
 							<div className="flex items-center justify-between mb-6">
 								<h3 className="text-lg font-semibold">Recent Files</h3>
@@ -321,9 +294,8 @@ const DashboardWrapper: FC = () => {
 									) => (
 										<Card
 											key={file.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-												fileViewMode === "grid" ? "p-4" : "p-3"
-											}`}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
+												}`}
 											style={{ animationDelay: `${index * 0.1}s` }}
 										>
 											{fileViewMode === "grid" ? (
@@ -347,6 +319,7 @@ const DashboardWrapper: FC = () => {
 															onClick={() =>
 																handleDownloadFile(file.url, file.name)
 															}
+															disabled={isDownloading}
 														>
 															<Download className="w-3 h-3" />
 														</Button>
@@ -396,7 +369,6 @@ const DashboardWrapper: FC = () => {
 							</div>
 						</Card>
 
-						{/* Recent Folders */}
 						<Card className="p-6">
 							<div className="flex items-center justify-between mb-6">
 								<h3 className="text-lg font-semibold">Recent Folders</h3>
@@ -438,9 +410,8 @@ const DashboardWrapper: FC = () => {
 												onClick={() =>
 													setOpenFolderId(folder.id?.toString() ?? "")
 												}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-													folderViewMode === "grid" ? "p-4" : "p-3"
-												}`}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+													}`}
 												style={{ animationDelay: `${index * 0.1}s` }}
 											>
 												{folderViewMode === "grid" ? (
@@ -472,64 +443,7 @@ const DashboardWrapper: FC = () => {
 						</Card>
 					</div>
 
-					{/* Sidebar */}
-					<div className="space-y-6">
-						<Card className="p-6">
-							<div className="flex items-center gap-2 mb-4">
-								<HardDrive className="w-5 h-5 text-primary" />
-								<h3 className="font-semibold">Storage</h3>
-							</div>
-							<div className="space-y-4">
-								<div>
-									<div className="flex justify-between text-sm mb-2">
-										<span>{usedFormatted} used</span>
-										<span>{limitFormatted} total</span>
-									</div>
-								</div>
-							</div>
-						</Card>
-
-						<Card className="p-6">
-							<h3 className="font-semibold mb-4">Quick Stats</h3>
-							<div className="space-y-4">
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-2">
-										<TrendingUp className="w-4 h-4 text-green-500" />
-										<span className="text-sm">Files uploaded</span>
-									</div>
-									<span className="font-medium">{filesData.length}</span>
-								</div>
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-2">
-										<Share2 className="w-4 h-4 text-blue-500" />
-										<span className="text-sm">Files shared</span>
-									</div>
-									<span className="font-medium">TODO</span>
-								</div>
-							</div>
-						</Card>
-
-						<Card className="p-6">
-							<h3 className="font-semibold mb-4">Connections</h3>
-							<div className="space-y-4">
-								<div className="flex items-center justify-between">
-									<div className="flex items-center gap-2">
-										<Users2 className="w-4 h-4 text-green-500" />
-										<span className="text-sm">My Connections</span>
-									</div>
-									<span className="font-medium">1234</span>
-								</div>
-								<div>
-									<Button variant={"link"}>
-										Add new member to connection list
-									</Button>
-									<Button className="mt-6" variant={"link"}>
-										Show my connections list
-									</Button>
-								</div>
-							</div>
-						</Card>
-					</div>
+					<DashboardSidebar />
 				</div>
 			</div>
 		</div>
