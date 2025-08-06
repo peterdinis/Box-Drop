@@ -1,20 +1,15 @@
 "use client";
 
 import {
-	Archive,
 	Download,
 	File,
-	FileText,
 	FolderIcon,
 	Grid3X3,
-	Image,
 	List,
 	Loader2,
 	MoreHorizontal,
-	Music,
 	Share2,
-	TrashIcon,
-	Video,
+	TrashIcon
 } from "lucide-react";
 import prettyBytes from "pretty-bytes";
 import { type FC, useState } from "react";
@@ -97,23 +92,6 @@ const DashboardWrapper: FC = () => {
 				},
 			},
 		);
-	};
-
-	const getFileIcon = (type: string) => {
-		switch (type) {
-			case "image":
-				return <Image className="w-5 h-5 text-green-500" />;
-			case "video":
-				return <Video className="w-5 h-5 text-red-500" />;
-			case "audio":
-				return <Music className="w-5 h-5 text-purple-500" />;
-			case "archive":
-				return <Archive className="w-5 h-5 text-orange-500" />;
-			case "document":
-				return <FileText className="w-5 h-5 text-blue-500" />;
-			default:
-				return <File className="w-5 h-5 text-muted-foreground" />;
-		}
 	};
 
 	const handleShareFile = (fileName: string, fileType: string) => {
@@ -301,7 +279,7 @@ const DashboardWrapper: FC = () => {
 											{fileViewMode === "grid" ? (
 												<div className="text-center">
 													<div className="flex justify-center mb-3">
-														{getFileIcon(file.type)}
+														<File className="w-5 h-5 text-muted-foreground" />
 													</div>
 													<h4 className="font-medium text-sm truncate mb-1">
 														{file.name}
@@ -337,7 +315,7 @@ const DashboardWrapper: FC = () => {
 											) : (
 												<div className="flex items-center justify-between">
 													<div className="flex items-center gap-3 flex-1 min-w-0">
-														{getFileIcon(file.type)}
+														<File className="w-5 h-5 text-muted-foreground" />
 														<div className="min-w-0 flex-1">
 															<h4 className="font-medium truncate">
 																{file.name}
