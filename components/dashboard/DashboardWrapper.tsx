@@ -12,7 +12,7 @@ import {
 	TrashIcon,
 } from "lucide-react";
 import prettyBytes from "pretty-bytes";
-import { type FC, useState } from "react";
+import { type FC, useState, useCallback } from "react";
 import {
 	Dialog,
 	DialogContent,
@@ -70,29 +70,32 @@ const DashboardWrapper: FC = () => {
 	const [, setMovingFileId] = useState<string | null>(null);
 	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
 
-	const handleMoveFile = (fileId: string, newFolderId: string) => {
-		moveFile(
-			{ fileId, folderId: newFolderId },
-			{
-				onSuccess: () => {
-					setMovingFileId(null);
-					setTargetFolderId("");
-					toast({
-						title: "File was moved to another folder",
-						duration: 2000,
-						className: "bg-green-800 text-white font-bold text-base",
-					});
+	const handleMoveFile = useCallback(
+		(fileId: string, newFolderId: string) => {
+			moveFile(
+				{ fileId, folderId: newFolderId },
+				{
+					onSuccess: () => {
+						setMovingFileId(null);
+						setTargetFolderId("");
+						toast({
+							title: "File was moved to another folder",
+							duration: 2000,
+							className: "bg-green-800 text-white font-bold text-base",
+						});
+					},
+					onError: (error) => {
+						toast({
+							title: "File was not moved to another folder " + error.message,
+							duration: 2000,
+							className: "bg-red-800 text-white font-bold text-base",
+						});
+					},
 				},
-				onError: (error) => {
-					toast({
-						title: "File was not moved to another folder " + error.message,
-						duration: 2000,
-						className: "bg-red-800 text-white font-bold text-base",
-					});
-				},
-			},
-		);
-	};
+			);
+		},
+		[moveFile, toast],
+	);
 
 	const handleShareFile = (fileName: string, fileType: string) => {
 		setShareModal({ isOpen: true, fileName, fileType });
@@ -271,9 +274,8 @@ const DashboardWrapper: FC = () => {
 									) => (
 										<Card
 											key={file.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-												fileViewMode === "grid" ? "p-4" : "p-3"
-											}`}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
+												}`}
 											style={{ animationDelay: `${index * 0.1}s` }}
 										>
 											{fileViewMode === "grid" ? (
@@ -388,9 +390,8 @@ const DashboardWrapper: FC = () => {
 												onClick={() =>
 													setOpenFolderId(folder.id?.toString() ?? "")
 												}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-													folderViewMode === "grid" ? "p-4" : "p-3"
-												}`}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+													}`}
 												style={{ animationDelay: `${index * 0.1}s` }}
 											>
 												{folderViewMode === "grid" ? (
