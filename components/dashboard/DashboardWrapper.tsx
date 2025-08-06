@@ -9,7 +9,7 @@ import {
 	Loader2,
 	MoreHorizontal,
 	Share2,
-	TrashIcon
+	TrashIcon,
 } from "lucide-react";
 import prettyBytes from "pretty-bytes";
 import { type FC, useState } from "react";
@@ -35,6 +35,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { useDeleteFile } from "@/hooks/files/useDeleteFile";
+import { useFileDownload } from "@/hooks/files/useDownloadFile";
 import { useFiles } from "@/hooks/files/useFiles";
 import { useMoveFile } from "@/hooks/files/useMoveFile";
 import { useFolder, useFolders } from "@/hooks/folders/useFolders";
@@ -44,9 +45,8 @@ import FileShareModal from "../modals/FileShareModal";
 import SettingsModal from "../modals/SettingsModal";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import DashboardSidebar from "./DashboardSidebar";
-import { useFileDownload } from "@/hooks/files/useDownloadFile";
 import DashboardHeader from "./DashboardHeader";
+import DashboardSidebar from "./DashboardSidebar";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -99,7 +99,6 @@ const DashboardWrapper: FC = () => {
 	};
 
 	const { downloadFile, isDownloading } = useFileDownload();
-
 
 	const handleDownloadFile = (fileUrl: string, fileName: string) => {
 		downloadFile(fileUrl, fileName);
@@ -272,8 +271,9 @@ const DashboardWrapper: FC = () => {
 									) => (
 										<Card
 											key={file.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
-												}`}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+												fileViewMode === "grid" ? "p-4" : "p-3"
+											}`}
 											style={{ animationDelay: `${index * 0.1}s` }}
 										>
 											{fileViewMode === "grid" ? (
@@ -388,8 +388,9 @@ const DashboardWrapper: FC = () => {
 												onClick={() =>
 													setOpenFolderId(folder.id?.toString() ?? "")
 												}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
-													}`}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
+													folderViewMode === "grid" ? "p-4" : "p-3"
+												}`}
 												style={{ animationDelay: `${index * 0.1}s` }}
 											>
 												{folderViewMode === "grid" ? (
