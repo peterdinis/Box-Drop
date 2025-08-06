@@ -91,20 +91,20 @@ export const membersRelations = relations(members, ({ many }) => ({
 // -------------------- Connections --------------------
 
 export const connections = sqliteTable('connections', {
-  id: text('id').primaryKey().$default(() => nanoid()),
-  requesterId: text('requester_id').notNull().references(() => members.id),
-  receiverId: text('receiver_id').notNull().references(() => members.id),
-  status: text('status', { enum: ['pending', 'accepted', 'rejected'] }).notNull().default('pending'),
- createdAt: integer('created_at', { mode: 'timestamp' }).default(new Date()),
+	id: text('id').primaryKey().$default(() => nanoid()),
+	requesterId: text('requester_id').notNull().references(() => members.id),
+	receiverId: text('receiver_id').notNull().references(() => members.id),
+	status: text('status', { enum: ['pending', 'accepted', 'rejected'] }).notNull().default('pending'),
+	createdAt: integer('created_at', { mode: 'timestamp' }).default(new Date()),
 });
 
 export const connectionsRelations = relations(connections, ({ one }) => ({
-  requester: one(members, {
-    fields: [connections.requesterId],
-    references: [members.id],
-  }),
-  receiver: one(members, {
-    fields: [connections.receiverId],
-    references: [members.id],
-  }),
+	requester: one(members, {
+		fields: [connections.requesterId],
+		references: [members.id],
+	}),
+	receiver: one(members, {
+		fields: [connections.receiverId],
+		references: [members.id],
+	}),
 }));
