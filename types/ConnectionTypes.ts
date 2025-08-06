@@ -3,4 +3,5 @@ export type Connection = {
   name: string
   email: string
   status: "accepted" | "pending" | "blocked"
+  role?: "member" | "admin"
 }
