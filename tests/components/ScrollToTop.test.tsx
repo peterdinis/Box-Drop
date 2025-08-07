@@ -1,0 +1,47 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { ScrollToTop } from "@/components/shared/ScrollToTop";
+import '@testing-library/jest-dom';
+
+describe("ScrollToTop", () => {
+  const originalScrollTo = window.scrollTo;
+
+  beforeEach(() => {
+    window.scrollTo = vi.fn(); // mock scrollTo
+  });
+
+  afterEach(() => {
+    window.scrollTo = originalScrollTo;
+    vi.restoreAllMocks();
+  });
+
+  it("does not render the button initially", () => {
+    render(<ScrollToTop />);
+    const button = screen.queryByRole("button");
+    expect(button).toBeNull();
+  });
+
+  it("renders the button after scrolling past 300px", () => {
+    render(<ScrollToTop />);
+    
+    // simulate scroll past 300px
+    window.pageYOffset = 400;
+    fireEvent.scroll(window);
+
+    // wait a tick for useEffect to run
+    const button = screen.getByRole("button");
+    expect(button).toBeInTheDocument();
+  });
+
+  it("calls window.scrollTo on button click", () => {
+    render(<ScrollToTop />);
+    
+    window.pageYOffset = 400;
+    fireEvent.scroll(window);
+
+    const button = screen.getByRole("button");
+    fireEvent.click(button);
+
+    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: "smooth" });
+  });
+});
