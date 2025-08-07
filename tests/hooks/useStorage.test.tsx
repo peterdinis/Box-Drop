@@ -1,8 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { beforeAll, afterEach,  describe, it, expect, vi } from 'vitest';
 import { useStorageUsage } from '@/hooks/storage/useStorage';
-import { wrapper } from './utils/query-wrapper';
-
+import { wrapper } from '../utils/query-wrapper';
 
 describe('useStorageUsage', () => {
   beforeAll(() => {
