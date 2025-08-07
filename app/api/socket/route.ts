@@ -1,41 +1,29 @@
-// app/api/socket/route.ts
+import { Server } from 'socket.io'
+import { NextRequest } from 'next/server'
 
-import type { Server as NetServer } from "http";
-import type { NextRequest } from "next/server";
-import { Server } from "socket.io";
-
-// This ensures we only create one Socket.IO server instance
-let io: Server | undefined;
+let io: Server | undefined
 
 export function GET(req: NextRequest) {
-	if (!(global as any).io) {
-		const server = (req as any).socket?.server as NetServer;
+  if (!(global as any).io) {
+    const server = (req as any).socket?.server
 
-		if (!server) {
-			console.error("No server found on request");
-			return new Response("No server found", { status: 500 });
-		}
+    if (!server) return new Response('No server', { status: 500 })
 
-		io = new Server(server, {
-			path: "/api/socket",
-			addTrailingSlash: false,
-		});
+    io = new Server(server, {
+      path: '/api/socket',
+    })
 
-		io.on("connection", (socket) => {
-			console.log("🔌 New client connected:", socket.id);
+    io.on('connection', (socket) => {
+      console.log('✅ Socket connected:', socket.id)
 
-			socket.on("message", (msg) => {
-				console.log("📨 Message received:", msg);
-				io?.emit("message", msg);
-			});
+      socket.on('file:shared', (fileData) => {
+        console.log('📁 File shared:', fileData)
+        socket.broadcast.emit('file:received', fileData)
+      })
+    })
 
-			socket.on("disconnect", () => {
-				console.log("❌ Client disconnected:", socket.id);
-			});
-		});
+    ;(global as any).io = io
+  }
 
-		(global as any).io = io;
-	}
-
-	return new Response("Socket.IO server running", { status: 200 });
+  return new Response('Socket server running', { status: 200 })
 }
