@@ -1,13 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
-import '@testing-library/jest-dom';
 
 describe("ScrollToTop", () => {
   const originalScrollTo = window.scrollTo;
 
   beforeEach(() => {
-    window.scrollTo = vi.fn(); // mock scrollTo
+    window.scrollTo = vi.fn();
   });
 
   afterEach(() => {
