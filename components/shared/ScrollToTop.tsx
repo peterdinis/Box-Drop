@@ -2,7 +2,7 @@
 
 import { ArrowUp } from "lucide-react";
 import * as React from "react";
-import { Button } from "@/components/ui/button"; 
+import { Button } from "@/components/ui/button";
 
 export function ScrollToTop() {
 	const [visible, setVisible] = React.useState(false);
