@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useSearch } from "@/hooks/shared/useSearch";
 import { wrapper } from "../utils/query-wrapper";
 
@@ -48,6 +48,8 @@ describe("useSearch", () => {
 		});
 
 		expect(result.current.error).toBeInstanceOf(Error);
-		expect(result.current.error?.message).toBe("Failed to fetch search results");
+		expect(result.current.error?.message).toBe(
+			"Failed to fetch search results",
+		);
 	});
 });
