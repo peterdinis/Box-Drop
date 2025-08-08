@@ -17,7 +17,6 @@ export function useDeleteConnection() {
       return res.json()
     },
     onSuccess: () => {
-      // Invalidate or refetch the connections list
       queryClient.invalidateQueries({ queryKey: ['connections'] })
     },
   })
