@@ -7,11 +7,11 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { Connection } from "@/types/ConnectionTypes";
+import { useToast } from "@/hooks/shared/useToast";
 
 export const columns: ColumnDef<Connection>[] = [
 	{
@@ -46,16 +46,31 @@ export const columns: ColumnDef<Connection>[] = [
 		id: "actions",
 		header: "Actions",
 		cell: ({ row }) => {
-			const connection = row.original;
 
-			const handleChangeRole = (newRole: "member" | "admin") => {
-				console.log(`Change role for ${connection.name} to ${newRole}`);
-				// Add your mutation or API call here
-			};
+			const { toast } = useToast()
+
+			const changeToViewer = () => {
+				toast({
+					title: "User permission was change to viewer",
+					duration: 2000,
+					className: "bg-green-800 text-white font-bold text-base"
+				})
+			}
+
+			const changeToAdmin = () => {
+				toast({
+					title: "User permission was change to admin",
+					duration: 2000,
+					className: "bg-green-800 text-white font-bold text-base"
+				})
+			}
 
 			const handleDelete = () => {
-				console.log(`Delete connection ${connection.name}`);
-				// Add your mutation or API call here
+				toast({
+					title: "User was deleted from connections",
+					duration: 2000,
+					className: "bg-red-800 text-white font-bold text-base"
+				})
 			};
 
 			return (
@@ -66,11 +81,10 @@ export const columns: ColumnDef<Connection>[] = [
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
-						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem onClick={() => handleChangeRole("member")}>
+						<DropdownMenuItem onClick={() => changeToViewer()}>
 							Set as Member
 						</DropdownMenuItem>
-						<DropdownMenuItem onClick={() => handleChangeRole("admin")}>
+						<DropdownMenuItem onClick={() => changeToAdmin()}>
 							Set as Admin
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
