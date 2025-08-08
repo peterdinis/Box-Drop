@@ -1,17 +1,19 @@
 import { like, or } from "drizzle-orm";
-import { Hono } from "hono";
 import { z } from "zod";
 import { db } from "@/db";
 import { files, folders, members } from "@/db/schema";
 
-const app = new Hono();
+export async function GET(req: Request) {
+	const url = new URL(req.url);
+	const q = url.searchParams.get("q");
 
-app.get(async (c) => {
-	const q = c.req.query("q");
 	const parsed = z.string().min(1).safeParse(q);
 
 	if (!parsed.success) {
-		return c.json({ error: "Missing query param ?q" }, 400);
+		return new Response(JSON.stringify({ error: "Missing query param ?q" }), {
+			status: 400,
+			headers: { "Content-Type": "application/json" },
+		});
 	}
 
 	const query = `%${q}%`;
@@ -26,14 +28,15 @@ app.get(async (c) => {
 			.limit(10),
 	]);
 
-	return c.json({
-		folders: folderResults,
-		files: fileResults,
-		members: memberResults,
-	});
-});
-
-// 👇 Plug in Hono using .fetch(req)
-export async function GET(req: Request) {
-	return app.fetch(req);
+	return new Response(
+		JSON.stringify({
+			folders: folderResults,
+			files: fileResults,
+			members: memberResults,
+		}),
+		{
+			status: 200,
+			headers: { "Content-Type": "application/json" },
+		}
+	);
 }
