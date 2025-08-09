@@ -7,6 +7,7 @@ import type { FC } from "react";
 import UserProfileDropdown from "../auth/ProfileDropdown";
 import { Button } from "../ui/button";
 import { ModeToggle } from "./ModeToggle";
+import NotificationDropdown from "../auth/NotificationDropdown";
 
 const Navigation: FC = () => {
 	const { user } = useUser();
@@ -31,7 +32,10 @@ const Navigation: FC = () => {
 								</Button>
 							</>
 						) : (
-							<UserProfileDropdown />
+							<>
+								<UserProfileDropdown />
+								<NotificationDropdown />
+							</>
 						)}
 						<ModeToggle />
 					</div>

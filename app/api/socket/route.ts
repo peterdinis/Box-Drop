@@ -1,41 +1,43 @@
-// app/api/socket/route.ts
+import { type NextRequest, NextResponse } from "next/server";
+import { Server as IOServer } from "socket.io";
 
-import type { Server as NetServer } from "http";
-import type { NextRequest } from "next/server";
-import { Server } from "socket.io";
+declare global {
+	// To avoid multiple instances of Socket.IO server in dev mode
+	var io: IOServer | undefined;
+}
 
-// This ensures we only create one Socket.IO server instance
-let io: Server | undefined;
+export async function GET(req: NextRequest) {
+	const { socket, server } = (req as any).socket || {};
 
-export function GET(req: NextRequest) {
-	if (!(global as any).io) {
-		const server = (req as any).socket?.server as NetServer;
+	if (!socket) {
+		return NextResponse.json(
+			{ error: "No socket object found" },
+			{ status: 500 },
+		);
+	}
 
-		if (!server) {
-			console.error("No server found on request");
-			return new Response("No server found", { status: 500 });
-		}
+	// If Socket.IO server already exists, reuse it
+	if (!global.io) {
+		console.log("Initializing Socket.IO server...");
 
-		io = new Server(server, {
-			path: "/api/socket",
-			addTrailingSlash: false,
-		});
+		// @ts-ignore
+		const io = new IOServer(server);
 
 		io.on("connection", (socket) => {
-			console.log("🔌 New client connected:", socket.id);
+			console.log("Client connected:", socket.id);
 
-			socket.on("message", (msg) => {
-				console.log("📨 Message received:", msg);
-				io?.emit("message", msg);
+			socket.on("joinRoom", (userId: string) => {
+				socket.join(userId);
+				console.log(`Socket ${socket.id} joined room ${userId}`);
 			});
 
 			socket.on("disconnect", () => {
-				console.log("❌ Client disconnected:", socket.id);
+				console.log("Client disconnected:", socket.id);
 			});
 		});
 
-		(global as any).io = io;
+		global.io = io;
 	}
 
-	return new Response("Socket.IO server running", { status: 200 });
+	return NextResponse.json({ message: "Socket.IO server running" });
 }

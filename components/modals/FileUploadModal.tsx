@@ -73,13 +73,6 @@ const FileUploadModal: FC = () => {
 							))}
 						</div>
 					</div>
-
-					{/* Upload Limits */}
-					<div className="text-sm text-muted-foreground space-y-1">
-						<p>• Maximum file size: 100 MB per file</p>
-						<p>• Maximum 20 files per upload</p>
-						<p>• Total storage limit: 100 GB</p>
-					</div>
 				</div>
 			</DialogContent>
 		</Dialog>
