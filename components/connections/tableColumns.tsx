@@ -10,8 +10,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Connection } from "@/types/ConnectionTypes";
 import { useToast } from "@/hooks/shared/useToast";
+import type { Connection } from "@/types/ConnectionTypes";
 
 export const columns: ColumnDef<Connection>[] = [
 	{
@@ -46,31 +46,30 @@ export const columns: ColumnDef<Connection>[] = [
 		id: "actions",
 		header: "Actions",
 		cell: ({ row }) => {
-
-			const { toast } = useToast()
+			const { toast } = useToast();
 
 			const changeToViewer = () => {
 				toast({
 					title: "User permission was change to viewer",
 					duration: 2000,
-					className: "bg-green-800 text-white font-bold text-base"
-				})
-			}
+					className: "bg-green-800 text-white font-bold text-base",
+				});
+			};
 
 			const changeToAdmin = () => {
 				toast({
 					title: "User permission was change to admin",
 					duration: 2000,
-					className: "bg-green-800 text-white font-bold text-base"
-				})
-			}
+					className: "bg-green-800 text-white font-bold text-base",
+				});
+			};
 
 			const handleDelete = () => {
 				toast({
 					title: "User was deleted from connections",
 					duration: 2000,
-					className: "bg-red-800 text-white font-bold text-base"
-				})
+					className: "bg-red-800 text-white font-bold text-base",
+				});
 			};
 
 			return (

@@ -118,9 +118,9 @@ export const connectionsRelations = relations(connections, ({ one }) => ({
 }));
 
 export const notifications = sqliteTable("notifications", {
-  id: integer("id").primaryKey(),
-  userId: text("user_id").notNull(),
-  message: text("message").notNull(),
-  read: integer("read").notNull().default(0),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+	id: integer("id").primaryKey(),
+	userId: text("user_id").notNull(),
+	message: text("message").notNull(),
+	read: integer("read").notNull().default(0),
+	createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
 });
