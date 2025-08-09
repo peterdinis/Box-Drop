@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     userId,
     message,
     read: 0,
-  createdAt: Math.floor(Date.now() / 1000),
+    createdAt: new Date(),
   }).returning();
 
   if (global.io) {
