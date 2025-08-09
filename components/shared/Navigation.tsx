@@ -33,8 +33,8 @@ const Navigation: FC = () => {
 							</>
 						) : (
 							<>
-							<UserProfileDropdown />
-							<NotificationDropdown />
+								<UserProfileDropdown />
+								<NotificationDropdown />
 							</>
 						)}
 						<ModeToggle />
