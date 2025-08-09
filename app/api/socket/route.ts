@@ -1,4 +1,3 @@
-// app/api/socket/route.ts
 import { NextRequest } from "next/server";
 import { Server as IOServer } from "socket.io";
 import { NextResponse } from "next/server";
