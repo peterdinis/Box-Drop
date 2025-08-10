@@ -1,43 +1,26 @@
-import { type NextRequest, NextResponse } from "next/server";
 import { Server as IOServer } from "socket.io";
+import type { NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 
 declare global {
-	// To avoid multiple instances of Socket.IO server in dev mode
-	var io: IOServer | undefined;
+  var io: IOServer | undefined;
 }
 
-export async function GET(req: NextRequest) {
-	const { socket, server } = (req as any).socket || {};
+export async function GET(req: Request, ctx: { res: NextApiResponse }) {
+  const res: any = ctx.res;
 
-	if (!socket) {
-		return NextResponse.json(
-			{ error: "No socket object found" },
-			{ status: 500 },
-		);
-	}
+  if (!res.socket?.server) {
+    return NextResponse.json({ error: "No server object" }, { status: 500 });
+  }
 
-	// If Socket.IO server already exists, reuse it
-	if (!global.io) {
-		console.log("Initializing Socket.IO server...");
+  if (!global.io) {
+    console.log("Initializing Socket.IO...");
+    const io = new IOServer(res.socket.server);
+    io.on("connection", (socket) => {
+      console.log("Client connected:", socket.id);
+    });
+    global.io = io;
+  }
 
-		// @ts-ignore
-		const io = new IOServer(server);
-
-		io.on("connection", (socket) => {
-			console.log("Client connected:", socket.id);
-
-			socket.on("joinRoom", (userId: string) => {
-				socket.join(userId);
-				console.log(`Socket ${socket.id} joined room ${userId}`);
-			});
-
-			socket.on("disconnect", () => {
-				console.log("Client disconnected:", socket.id);
-			});
-		});
-
-		global.io = io;
-	}
-
-	return NextResponse.json({ message: "Socket.IO server running" });
+  return NextResponse.json({ message: "Socket.IO running" });
 }
