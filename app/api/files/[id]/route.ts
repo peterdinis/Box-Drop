@@ -49,6 +49,8 @@ export async function DELETE(
 	if (!file.folderId)
 		return new Response("No folder associated", { status: 400 });
 
+	console.log("F", file)
+
 	const utapi = new UTApi();
 	await utapi.deleteFiles(file.url);
 
