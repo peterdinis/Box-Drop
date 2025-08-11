@@ -54,6 +54,17 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -73,6 +84,9 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
+	const [openTrashForFile, setOpenTrashForFile] = useState(false);
+	const [openTrashForFolder, setOpenTrashForFolder] = useState(false)
+	
 	const { toast } = useToast();
 	const [, setMovingFileId] = useState<string | null>(null);
 	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
