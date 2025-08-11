@@ -1,3 +1,13 @@
+CREATE TABLE `connections` (
+	`id` text PRIMARY KEY NOT NULL,
+	`requester_id` text NOT NULL,
+	`receiver_id` text NOT NULL,
+	`status` text DEFAULT 'pending' NOT NULL,
+	`created_at` integer DEFAULT '"2025-08-11T19:31:57.231Z"',
+	FOREIGN KEY (`requester_id`) REFERENCES `members`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`receiver_id`) REFERENCES `members`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
 CREATE TABLE `files` (
 	`id` text PRIMARY KEY NOT NULL,
 	`folder_id` text NOT NULL,
@@ -19,6 +29,14 @@ CREATE TABLE `members` (
 	`email` text NOT NULL,
 	`name` text NOT NULL,
 	`is_admin` integer DEFAULT false NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `notifications` (
+	`id` integer PRIMARY KEY NOT NULL,
+	`user_id` text NOT NULL,
+	`message` text NOT NULL,
+	`read` integer DEFAULT 0 NOT NULL,
+	`created_at` integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `permissions` (
