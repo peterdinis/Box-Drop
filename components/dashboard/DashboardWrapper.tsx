@@ -10,6 +10,7 @@ import {
 	MoreHorizontal,
 	Share2,
 	Trash,
+	Trash2,
 	TrashIcon,
 } from "lucide-react";
 import prettyBytes from "pretty-bytes";
@@ -48,6 +49,11 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import DashboardHeader from "./DashboardHeader";
 import DashboardSidebar from "./DashboardSidebar";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -251,6 +257,9 @@ const DashboardWrapper: FC = () => {
 											<Grid3X3 className="w-4 h-4" />
 										)}
 									</Button>
+									<Button>
+										<Trash2 />
+									</Button>
 								</div>
 							</div>
 
@@ -275,9 +284,8 @@ const DashboardWrapper: FC = () => {
 									) => (
 										<Card
 											key={file.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-												fileViewMode === "grid" ? "p-4" : "p-3"
-											}`}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
+												}`}
 											style={{ animationDelay: `${index * 0.1}s` }}
 										>
 											{fileViewMode === "grid" ? (
@@ -295,34 +303,53 @@ const DashboardWrapper: FC = () => {
 														{file.modified}
 													</p>
 													<div className="flex justify-center gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-														<Button
-															size="sm"
-															variant="ghost"
-															onClick={() =>
-																handleDownloadFile(file.url, file.name)
-															}
-															disabled={isDownloading}
-														>
-															<Download className="w-3 h-3" />
-														</Button>
-														<Button
-															size="sm"
-															variant="ghost"
-															onClick={() =>
-																handleShareFile(file.name, file.type)
-															}
-														>
-															<Share2 className="w-3 h-3" />
-														</Button>
-														<Button
-															size="sm"
-															variant="ghost"
-															onClick={() => {
-																deleteFileMutation.mutate(file.id)
-															}}
-														>
-															<Trash className="w-3 h-3" />
-														</Button>
+														<Tooltip>
+															<TooltipTrigger><Button
+																size="sm"
+																variant="ghost"
+																onClick={() =>
+																	handleDownloadFile(file.url, file.name)
+																}
+																disabled={isDownloading}
+															>
+																<Download className="w-3 h-3" />
+															</Button>
+															</TooltipTrigger>
+															<TooltipContent>Download File</TooltipContent>
+														</Tooltip>
+														<Tooltip>
+															<TooltipTrigger>
+																<Button
+																	size="sm"
+																	variant="ghost"
+																	onClick={() =>
+																		handleShareFile(file.name, file.type)
+																	}
+																>
+																	<Share2 className="w-3 h-3" />
+																</Button>
+															</TooltipTrigger>
+															<TooltipContent>Share file</TooltipContent>
+														</Tooltip>
+														<Tooltip>
+															<TooltipTrigger>
+																<Button
+																	size="sm"
+																	variant="ghost"
+																	onClick={() => {
+																		deleteFileMutation.mutate(file.id)
+																		toast({
+																			title: "File was deleted",
+																			duration: 2000,
+																			className: "bg-green-800 text-white font-bold text-xl"
+																		})
+																	}}
+																>
+																	<Trash className="w-3 h-3" />
+																</Button>
+															</TooltipTrigger>
+															<TooltipContent>Delete file</TooltipContent>
+														</Tooltip>
 													</div>
 												</div>
 											) : (
@@ -401,9 +428,8 @@ const DashboardWrapper: FC = () => {
 												onClick={() =>
 													setOpenFolderId(folder.id?.toString() ?? "")
 												}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-													folderViewMode === "grid" ? "p-4" : "p-3"
-												}`}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+													}`}
 												style={{ animationDelay: `${index * 0.1}s` }}
 											>
 												{folderViewMode === "grid" ? (
