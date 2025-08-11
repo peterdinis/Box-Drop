@@ -343,7 +343,7 @@ const DashboardWrapper: FC = () => {
 																			duration: 2000,
 																			className: "bg-green-800 text-white font-bold text-xl"
 																		})
-																		window.location.reload()
+																		
 																	}}
 																>
 																	<Trash className="w-3 h-3" />

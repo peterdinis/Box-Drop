@@ -54,7 +54,8 @@ export async function DELETE(
 	const utapi = new UTApi();
 	await utapi.deleteFiles(file.url);
 
-	await db.delete(files).where(eq(files.id, params.id));
-
+	const test = await db.delete(files).where(eq(files.id, params.id));
+	console.log("T", test)
+	
 	return new Response("✅ File deleted", { status: 200 });
 }
