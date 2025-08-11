@@ -9,6 +9,7 @@ import {
 	Loader2,
 	MoreHorizontal,
 	Share2,
+	Trash,
 	TrashIcon,
 } from "lucide-react";
 import prettyBytes from "pretty-bytes";
@@ -61,7 +62,7 @@ const DashboardWrapper: FC = () => {
 		fileName: "",
 		fileType: "",
 	});
-
+	const deleteFileMutation = useDeleteFile();
 	const [openFolderId, setOpenFolderId] = useState<string | null>(null);
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
@@ -312,6 +313,15 @@ const DashboardWrapper: FC = () => {
 															}
 														>
 															<Share2 className="w-3 h-3" />
+														</Button>
+														<Button
+															size="sm"
+															variant="ghost"
+															onClick={() => {
+																deleteFileMutation.mutate(file.id)
+															}}
+														>
+															<Trash className="w-3 h-3" />
 														</Button>
 													</div>
 												</div>
