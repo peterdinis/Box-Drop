@@ -24,5 +24,9 @@ export function useDeleteFile() {
 			queryClient.invalidateQueries({ queryKey: ["folders"] });
 			queryClient.invalidateQueries({ queryKey: ["permissions"] });
 		},
+
+		onError: () => {
+			console.log("EERORORORO")
+		}
 	});
 }
