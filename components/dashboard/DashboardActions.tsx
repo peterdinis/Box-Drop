@@ -21,10 +21,4 @@ export const quickActions = [
 		color: "text-purple-500",
 		component: false,
 	},
-	{
-		icon: <Star className="w-5 h-5" />,
-		label: "Starred",
-		color: "text-yellow-500",
-		component: false,
-	},
 ];
