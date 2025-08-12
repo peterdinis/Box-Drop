@@ -54,6 +54,8 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip"
+import CleanFileTrash from "../trash/CleanFileTrash";
+import CleanFolderTrash from "../trash/CleanFolderTrash";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -73,6 +75,17 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
+	const [openTrashForFile, setOpenTrashForFile] = useState(false);
+	const [openTrashForFolder, setOpenTrashForFolder] = useState(false)
+
+	const openTrashFileAlertDialog = () => {
+		setOpenTrashForFile(true)
+	}
+
+	const openTrashFolderAlertDialog = () => {
+		setOpenTrashForFolder(true)
+	}
+	
 	const { toast } = useToast();
 	const [, setMovingFileId] = useState<string | null>(null);
 	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
@@ -258,7 +271,8 @@ const DashboardWrapper: FC = () => {
 										)}
 									</Button>
 									<Button>
-										<Trash2 />
+										<Trash2 onClick={openTrashFileAlertDialog} />
+										{openTrashForFile && <CleanFileTrash />}
 									</Button>
 								</div>
 							</div>
@@ -343,7 +357,7 @@ const DashboardWrapper: FC = () => {
 																			duration: 2000,
 																			className: "bg-green-800 text-white font-bold text-xl"
 																		})
-																		
+
 																	}}
 																>
 																	<Trash className="w-3 h-3" />
@@ -391,24 +405,27 @@ const DashboardWrapper: FC = () => {
 						<Card className="p-6">
 							<div className="flex items-center justify-between mb-6">
 								<h3 className="text-lg font-semibold">Recent Folders</h3>
-								<Button
-									variant="outline"
-									size="sm"
-									onClick={() =>
-										setFolderViewMode(
-											folderViewMode === "grid" ? "list" : "grid",
-										)
-									}
-								>
-									{folderViewMode === "grid" ? (
-										<List className="w-4 h-4" />
-									) : (
-										<Grid3X3 className="w-4 h-4" />
-									)}
-								</Button>
-								<Button>
-									<Trash2 />
-								</Button>
+								<div className="flex items-center gap-2">
+									<Button
+										variant="outline"
+										size="sm"
+										onClick={() =>
+											setFolderViewMode(
+												folderViewMode === "grid" ? "list" : "grid",
+											)
+										}
+									>
+										{folderViewMode === "grid" ? (
+											<List className="w-4 h-4" />
+										) : (
+											<Grid3X3 className="w-4 h-4" />
+										)}
+									</Button>
+									<Button>
+										<Trash2 onClick={openTrashFolderAlertDialog} />
+									</Button>
+									{openTrashForFolder && <CleanFolderTrash />}
+								</div>
 							</div>
 
 							<div
