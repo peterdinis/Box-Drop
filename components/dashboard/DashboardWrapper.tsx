@@ -54,17 +54,8 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+import CleanFileTrash from "../trash/CleanFileTrash";
+import CleanFolderTrash from "../trash/CleanFolderTrash";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -86,6 +77,14 @@ const DashboardWrapper: FC = () => {
 	);
 	const [openTrashForFile, setOpenTrashForFile] = useState(false);
 	const [openTrashForFolder, setOpenTrashForFolder] = useState(false)
+
+	const openTrashFileAlertDialog = () => {
+		setOpenTrashForFile(true)
+	}
+
+	const openTrashFolderAlertDialog = () => {
+		setOpenTrashForFolder(true)
+	}
 	
 	const { toast } = useToast();
 	const [, setMovingFileId] = useState<string | null>(null);
@@ -272,7 +271,8 @@ const DashboardWrapper: FC = () => {
 										)}
 									</Button>
 									<Button>
-										<Trash2 />
+										<Trash2 onClick={openTrashFileAlertDialog} />
+										{openTrashForFile && <CleanFileTrash />}
 									</Button>
 								</div>
 							</div>
@@ -422,8 +422,9 @@ const DashboardWrapper: FC = () => {
 										)}
 									</Button>
 									<Button>
-										<Trash2 />
+										<Trash2 onClick={openTrashFolderAlertDialog} />
 									</Button>
+									{openTrashForFolder && <CleanFolderTrash />}
 								</div>
 							</div>
 
