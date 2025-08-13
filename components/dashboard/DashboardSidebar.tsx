@@ -51,8 +51,6 @@ const DashboardSidebar: FC = () => {
 					</div>
 				</div>
 			</Card>
-
-			<ConnectionsWrapper />
 		</div>
 	);
 };
