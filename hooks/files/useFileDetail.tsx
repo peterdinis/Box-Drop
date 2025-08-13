@@ -1,3 +1,5 @@
+"use client"
+
 import { useQuery } from "@tanstack/react-query";
 
 export const useFileQuery = (id: string, userId: string) => {
