@@ -14,28 +14,39 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Loader2 } from "lucide-react";
-import { useDeleteFolder } from "@/hooks/folders/useFolders";
+import { useDeleteAllFolders } from "@/hooks/folders/useFolders";
+import { useToast } from "@/hooks/shared/useToast";
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  folderId: string
 }
 
-const CleanFolderTrash: FC<Props> = ({ open, onOpenChange, folderId }) => {
+const CleanFolderTrash: FC<Props> = ({ open, onOpenChange }) => {
   const [success, setSuccess] = useState(false);
-  const deleteFolderMutation = useDeleteFolder();
+  const {toast} = useToast()
+  const deleteFolderMutation = useDeleteAllFolders();
+
 
   const handleDelete = async () => {
     try {
-      await deleteFolderMutation.mutateAsync(folderId);
+      await deleteFolderMutation.mutateAsync();
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
+        toast({
+          title: "Bulk delete for folders was completed",
+          duration: 2000,
+          className: "bg-green-800 text-white font-bold text-xl"
+        })
         onOpenChange(false);
       }, 2000);
     } catch (err) {
-      console.error("Failed to delete folder:", err);
+      toast({
+          title: "Bulk delete for folders was not completed",
+          duration: 2000,
+          className: "bg-red-800 text-white font-bold text-xl"
+        })
     }
   };
 

@@ -64,22 +64,23 @@ export function useUpdateFolder() {
 	});
 }
 
-export function useDeleteFolder() {
+export function useDeleteAllFolders() {
 	const queryClient = useQueryClient();
+
 	return useMutation({
-		mutationFn: async (id: string) => {
-			const res = await fetch(`${BASE_URL}/${id}`, {
+		mutationFn: async () => {
+			const res = await fetch(`${BASE_URL}`, {
 				method: "DELETE",
 			});
-			if (!res.ok) throw new Error("Failed to delete folder");
+			if (!res.ok) throw new Error("Failed to delete folders");
 			return res.json();
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["folders"] });
-			queryClient.invalidateQueries({ queryKey: ["files"] }); // if you have a global file list
+			queryClient.invalidateQueries({ queryKey: ["files"] });
 		},
 		onError: (error) => {
-			console.error("Failed to delete folder:", error);
+			console.error("Failed to delete folders:", error);
 		},
 	});
 }

@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { UTApi } from "uploadthing/server";
 import { db } from "@/db";
-import { files } from "@/db/schema";
+import { files, folders } from "@/db/schema";
 
 export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
 	const { userId } = await auth();
@@ -30,30 +30,38 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
 	});
 }
 
-export async function DELETE(req: Request, props: { params: Promise<{ id: string }> }) {
-    const params = await props.params;
+export async function DELETE(req: Request) {
     const { userId } = await auth();
 
-    if (!userId) {
-		return new Response("Unauthorized", { status: 401 });
-	}
     if (!userId) return new Response("Unauthorized", { status: 401 });
 
-    const file = await db.query.files.findFirst({
-		where: eq(files.id, params.id),
-	});
+    // 1️⃣ Get all folders for this user
+    const userFolders = await db.query.folders.findMany({
+        where: eq(folders.userId, userId),
+    });
 
-    if (!file) return new Response("Not found", { status: 404 });
-    if (!file.folderId)
-		return new Response("No folder associated", { status: 400 });
+    if (userFolders.length === 0) {
+        return new Response("No folders to delete", { status: 200 });
+    }
 
-    console.log("F", file);
+    const folderIds = userFolders.map(f => f.id);
 
-    const utapi = new UTApi();
-    await utapi.deleteFiles(file.url);
+    // 2️⃣ Get all files in all folders
+    const allFiles = await db.query.files.findMany({
+        where: inArray(files.folderId, folderIds),
+    });
 
-    const test = await db.delete(files).where(eq(files.id, params.id));
-    console.log("T", test);
+    // 3️⃣ Delete files from storage (UTApi)
+    if (allFiles.length > 0) {
+        const utapi = new UTApi();
+        await utapi.deleteFiles(allFiles.map(f => f.id));
+    }
 
-    return new Response("✅ File deleted", { status: 200 });
+    // 4️⃣ Delete files from DB
+    await db.delete(files).where(inArray(files.folderId, folderIds));
+
+    // 5️⃣ Delete folders from DB
+    await db.delete(folders).where(inArray(folders.id, folderIds));
+
+    return new Response("✅ All folders and their files deleted", { status: 200 });
 }
