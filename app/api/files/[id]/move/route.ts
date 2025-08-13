@@ -4,11 +4,9 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { files } from "@/db/schema";
 
-export async function POST(
-	req: Request,
-	{ params }: { params: { id: string } },
-) {
-	try {
+export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    try {
 		const authSession = await auth();
 		const userId = authSession.userId;
 		if (!userId) return new NextResponse("Unauthorized", { status: 401 });

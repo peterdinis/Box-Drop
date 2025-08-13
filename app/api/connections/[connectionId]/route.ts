@@ -3,13 +3,11 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { connections } from "@/db/schema";
 
-export async function DELETE(
-	_req: Request,
-	{ params }: { params: { connectionId: string } },
-) {
-	const { connectionId } = params;
+export async function DELETE(_req: Request, props: { params: Promise<{ connectionId: string }> }) {
+    const params = await props.params;
+    const { connectionId } = params;
 
-	try {
+    try {
 		const deleted = await db
 			.delete(connections)
 			.where(eq(connections.id, connectionId));
