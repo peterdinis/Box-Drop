@@ -26,7 +26,7 @@ export function useDeleteFile() {
 		},
 
 		onError: () => {
-			console.log("EERORORORO")
-		}
+			console.log("EERORORORO");
+		},
 	});
 }

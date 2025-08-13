@@ -8,11 +8,8 @@ export async function GET(req: Request) {
 	if (!userId) return new Response("Unauthorized", { status: 401 });
 
 	const allFiles = db.select().from(files).all();
-	return new Response(
-		JSON.stringify(allFiles.length === 0 ? [] : allFiles),
-		{
-			status: 200,
-			headers: { "Content-Type": "application/json" },
-		}
-	);
+	return new Response(JSON.stringify(allFiles.length === 0 ? [] : allFiles), {
+		status: 200,
+		headers: { "Content-Type": "application/json" },
+	});
 }

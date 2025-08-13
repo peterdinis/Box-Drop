@@ -38,7 +38,9 @@ const DashboardSidebar: FC = () => {
 							<TrendingUp className="w-4 h-4 text-green-500" />
 							<span className="text-sm">Files uploaded</span>
 						</div>
-						<span className="font-medium">{filesData ? filesData.length : 0}</span>
+						<span className="font-medium">
+							{filesData ? filesData.length : 0}
+						</span>
 					</div>
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-2">

@@ -49,13 +49,13 @@ export async function DELETE(
 	if (!file.folderId)
 		return new Response("No folder associated", { status: 400 });
 
-	console.log("F", file)
+	console.log("F", file);
 
 	const utapi = new UTApi();
 	await utapi.deleteFiles(file.url);
 
 	const test = await db.delete(files).where(eq(files.id, params.id));
-	console.log("T", test)
-	
+	console.log("T", test);
+
 	return new Response("✅ File deleted", { status: 200 });
 }
