@@ -74,7 +74,6 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
-	const [openTrashForFile, setOpenTrashForFile] = useState(false);
 	const [openTrashForFolder, setOpenTrashForFolder] = useState(false);
 
 	const { toast } = useToast();
@@ -415,6 +414,7 @@ const DashboardWrapper: FC = () => {
 									<CleanFolderTrash
 										open={openTrashForFolder}
 										onOpenChange={setOpenTrashForFolder}
+										folderId={selectedFolder?.id!}
 									/>
 								</div>
 							</div>
