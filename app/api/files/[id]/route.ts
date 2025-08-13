@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { UTApi } from "uploadthing/server";
 import { db } from "@/db";
-import { files } from "@/db/schema";
+import { files, folders } from "@/db/schema";
 
 export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
 	const { userId } = await auth();
@@ -32,28 +32,35 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
 
 export async function DELETE(req: Request, props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
-    const { userId } = await auth();
-
-    if (!userId) {
-		return new Response("Unauthorized", { status: 401 });
-	}
+    const authSession = await auth();
+    const userId = authSession.userId;
     if (!userId) return new Response("Unauthorized", { status: 401 });
 
-    const file = await db.query.files.findFirst({
-		where: eq(files.id, params.id),
-	});
-
-    if (!file) return new Response("Not found", { status: 404 });
-    if (!file.folderId)
-		return new Response("No folder associated", { status: 400 });
-
-    console.log("F", file);
-
+    const { id } = params;
     const utapi = new UTApi();
-    await utapi.deleteFiles(file.url);
 
-    const test = await db.delete(files).where(eq(files.id, params.id));
-    console.log("T", test);
+    const folderFiles = await db.query.files.findMany({
+        where: and(eq(files.folderId, id)),
+    });
 
-    return new Response("✅ File deleted", { status: 200 });
+    const fileKeysToDelete = folderFiles.map((file) => file.id).filter(Boolean);
+
+    if (fileKeysToDelete.length > 0) {
+        await utapi.deleteFiles(fileKeysToDelete);
+    }
+
+    await db
+        .delete(files)
+        .where(and(eq(files.folderId, id)))
+        .run();
+
+    await db
+        .delete(folders)
+        .where(and(eq(folders.id, id), eq(folders.userId, userId)))
+        .run();
+
+    return new Response(JSON.stringify({ success: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+    });
 }

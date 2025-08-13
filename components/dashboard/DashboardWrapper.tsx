@@ -69,7 +69,6 @@ const DashboardWrapper: FC = () => {
 		fileName: "",
 		fileType: "",
 	});
-	const deleteFileMutation = useDeleteFile();
 	const [openFolderId, setOpenFolderId] = useState<string | null>(null);
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
@@ -338,7 +337,7 @@ const DashboardWrapper: FC = () => {
 																	size="sm"
 																	variant="ghost"
 																	onClick={() => {
-																		deleteFileMutation.mutate(file.id);
+																		// TODO: Add back mutation for delete file
 																		toast({
 																			title: "File was deleted",
 																			duration: 2000,
@@ -414,7 +413,6 @@ const DashboardWrapper: FC = () => {
 									<CleanFolderTrash
 										open={openTrashForFolder}
 										onOpenChange={setOpenTrashForFolder}
-										folderId={selectedFolder?.id!}
 									/>
 								</div>
 							</div>

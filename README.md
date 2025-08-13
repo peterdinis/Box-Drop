@@ -7,7 +7,6 @@ A modern, Dropbox-like file storage and sharing application built with **Next.js
 ## 🚀 Features
 
 - 📁 Upload, manage, and share files and folders with ease
-- ⚡ Real-time updates and collaboration powered by Socket.IO
 - 🎨 Responsive, accessible UI built with ShadCN UI components
 - 🔒 Type-safe backend using Drizzle ORM for database queries
 - ⚙️ Scalable API routes and React Server Components using Next.js
@@ -25,7 +24,6 @@ A modern, Dropbox-like file storage and sharing application built with **Next.js
 | 💙 TypeScript    | Type safety & developer experience|
 | 📦 Drizzle ORM   | Type-safe database access         |
 | 🎛 ShadCN UI     | Component library & styling       |
-| 🔗 Socket.IO     | Real-time communication & sync   |
 | 🗄 PostgreSQL    | Database (or your choice)         |
 
 ---
