@@ -69,7 +69,7 @@ export function useDeleteAllFolders() {
 
 	return useMutation({
 		mutationFn: async () => {
-			const res = await fetch(`${BASE_URL}`, {
+			const res = await fetch(`${BASE_URL}/delete`, {
 				method: "DELETE",
 			});
 			if (!res.ok) throw new Error("Failed to delete folders");
