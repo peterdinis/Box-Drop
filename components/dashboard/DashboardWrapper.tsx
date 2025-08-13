@@ -78,14 +78,6 @@ const DashboardWrapper: FC = () => {
 	const [openTrashForFile, setOpenTrashForFile] = useState(false);
 	const [openTrashForFolder, setOpenTrashForFolder] = useState(false)
 
-	const openTrashFileAlertDialog = () => {
-		setOpenTrashForFile(true)
-	}
-
-	const openTrashFolderAlertDialog = () => {
-		setOpenTrashForFolder(true)
-	}
-	
 	const { toast } = useToast();
 	const [, setMovingFileId] = useState<string | null>(null);
 	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
@@ -271,9 +263,16 @@ const DashboardWrapper: FC = () => {
 										)}
 									</Button>
 									<Button>
-										<Trash2 onClick={openTrashFileAlertDialog} />
-										{openTrashForFile && <CleanFileTrash />}
+										<Trash2 onClick={() => {
+											setOpenTrashForFile(true)
+										}} />
 									</Button>
+									<CleanFolderTrash
+										open={openTrashForFile}
+										onOpenChange={() => {
+											setOpenTrashForFile(true)
+										}}
+									/>
 								</div>
 							</div>
 
@@ -421,10 +420,13 @@ const DashboardWrapper: FC = () => {
 											<Grid3X3 className="w-4 h-4" />
 										)}
 									</Button>
-									<Button>
-										<Trash2 onClick={openTrashFolderAlertDialog} />
+									<Button onClick={() => setOpenTrashForFolder(true)}>
+										<Trash2 />
 									</Button>
-									{openTrashForFolder && <CleanFolderTrash />}
+									<CleanFolderTrash
+										open={openTrashForFolder}
+										onOpenChange={setOpenTrashForFolder}
+									/>
 								</div>
 							</div>
 
@@ -437,18 +439,10 @@ const DashboardWrapper: FC = () => {
 							>
 								{folderData?.items &&
 									folderData?.items?.map(
-										(
-											folder: {
-												id: string;
-												name: string;
-											},
-											index: number,
-										) => (
+										(folder: { id: string; name: string }, index: number) => (
 											<Card
 												key={folder.id}
-												onClick={() =>
-													setOpenFolderId(folder.id?.toString() ?? "")
-												}
+												onClick={() => setOpenFolderId(folder.id?.toString() ?? "")}
 												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
 													}`}
 												style={{ animationDelay: `${index * 0.1}s` }}
@@ -480,6 +474,7 @@ const DashboardWrapper: FC = () => {
 									)}
 							</div>
 						</Card>
+
 					</div>
 
 					<DashboardSidebar />
