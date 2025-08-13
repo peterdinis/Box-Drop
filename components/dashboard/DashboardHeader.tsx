@@ -17,11 +17,11 @@ const DashboardHeader: FC = () => {
 						Welcome back! {user?.emailAddresses[0]?.emailAddress} 👋
 					</h2>
 				</div>
-				<div className="hidden md:flex gap-2">
-					<FileUploadModal />
-					<CreateFolderModal />
-					<GlobalSearchModal />
-				</div>
+			</div>
+			<div className="flex gap-2">
+				<FileUploadModal />
+				<CreateFolderModal />
+				<GlobalSearchModal />
 			</div>
 		</Card>
 	);
