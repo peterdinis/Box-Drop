@@ -50,7 +50,6 @@ import { useToast } from "@/hooks/shared/useToast";
 import { formatDate } from "@/utils/format-date";
 import FileShareModal from "../modals/FileShareModal";
 import SettingsModal from "../modals/SettingsModal";
-import CleanFileTrash from "../trash/CleanFileTrash";
 import CleanFolderTrash from "../trash/CleanFolderTrash";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
@@ -262,19 +261,6 @@ const DashboardWrapper: FC = () => {
 											<Grid3X3 className="w-4 h-4" />
 										)}
 									</Button>
-									<Button>
-										<Trash2
-											onClick={() => {
-												setOpenTrashForFile(true);
-											}}
-										/>
-									</Button>
-									<CleanFolderTrash
-										open={openTrashForFile}
-										onOpenChange={() => {
-											setOpenTrashForFile(true);
-										}}
-									/>
 								</div>
 							</div>
 
@@ -299,9 +285,8 @@ const DashboardWrapper: FC = () => {
 									) => (
 										<Card
 											key={file.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-												fileViewMode === "grid" ? "p-4" : "p-3"
-											}`}
+											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${fileViewMode === "grid" ? "p-4" : "p-3"
+												}`}
 											style={{ animationDelay: `${index * 0.1}s` }}
 										>
 											{fileViewMode === "grid" ? (
@@ -449,9 +434,8 @@ const DashboardWrapper: FC = () => {
 												onClick={() =>
 													setOpenFolderId(folder.id?.toString() ?? "")
 												}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-													folderViewMode === "grid" ? "p-4" : "p-3"
-												}`}
+												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${folderViewMode === "grid" ? "p-4" : "p-3"
+													}`}
 												style={{ animationDelay: `${index * 0.1}s` }}
 											>
 												{folderViewMode === "grid" ? (
