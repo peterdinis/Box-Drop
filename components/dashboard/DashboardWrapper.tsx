@@ -36,6 +36,11 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useDeleteFile } from "@/hooks/files/useDeleteFile";
 import { useFileDownload } from "@/hooks/files/useDownloadFile";
 import { useFiles } from "@/hooks/files/useFiles";
@@ -45,17 +50,11 @@ import { useToast } from "@/hooks/shared/useToast";
 import { formatDate } from "@/utils/format-date";
 import FileShareModal from "../modals/FileShareModal";
 import SettingsModal from "../modals/SettingsModal";
+import CleanFolderTrash from "../trash/CleanFolderTrash";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import DashboardHeader from "./DashboardHeader";
 import DashboardSidebar from "./DashboardSidebar";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip"
-import CleanFileTrash from "../trash/CleanFileTrash";
-import CleanFolderTrash from "../trash/CleanFolderTrash";
 
 const DashboardWrapper: FC = () => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -75,17 +74,8 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
-	const [openTrashForFile, setOpenTrashForFile] = useState(false);
-	const [openTrashForFolder, setOpenTrashForFolder] = useState(false)
+	const [openTrashForFolder, setOpenTrashForFolder] = useState(false);
 
-	const openTrashFileAlertDialog = () => {
-		setOpenTrashForFile(true)
-	}
-
-	const openTrashFolderAlertDialog = () => {
-		setOpenTrashForFolder(true)
-	}
-	
 	const { toast } = useToast();
 	const [, setMovingFileId] = useState<string | null>(null);
 	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
@@ -270,10 +260,6 @@ const DashboardWrapper: FC = () => {
 											<Grid3X3 className="w-4 h-4" />
 										)}
 									</Button>
-									<Button>
-										<Trash2 onClick={openTrashFileAlertDialog} />
-										{openTrashForFile && <CleanFileTrash />}
-									</Button>
 								</div>
 							</div>
 
@@ -318,16 +304,17 @@ const DashboardWrapper: FC = () => {
 													</p>
 													<div className="flex justify-center gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
 														<Tooltip>
-															<TooltipTrigger><Button
-																size="sm"
-																variant="ghost"
-																onClick={() =>
-																	handleDownloadFile(file.url, file.name)
-																}
-																disabled={isDownloading}
-															>
-																<Download className="w-3 h-3" />
-															</Button>
+															<TooltipTrigger>
+																<Button
+																	size="sm"
+																	variant="ghost"
+																	onClick={() =>
+																		handleDownloadFile(file.url, file.name)
+																	}
+																	disabled={isDownloading}
+																>
+																	<Download className="w-3 h-3" />
+																</Button>
 															</TooltipTrigger>
 															<TooltipContent>Download File</TooltipContent>
 														</Tooltip>
@@ -351,13 +338,13 @@ const DashboardWrapper: FC = () => {
 																	size="sm"
 																	variant="ghost"
 																	onClick={() => {
-																		deleteFileMutation.mutate(file.id)
+																		deleteFileMutation.mutate(file.id);
 																		toast({
 																			title: "File was deleted",
 																			duration: 2000,
-																			className: "bg-green-800 text-white font-bold text-xl"
-																		})
-
+																			className:
+																				"bg-green-800 text-white font-bold text-xl",
+																		});
 																	}}
 																>
 																	<Trash className="w-3 h-3" />
@@ -421,10 +408,14 @@ const DashboardWrapper: FC = () => {
 											<Grid3X3 className="w-4 h-4" />
 										)}
 									</Button>
-									<Button>
-										<Trash2 onClick={openTrashFolderAlertDialog} />
+									<Button onClick={() => setOpenTrashForFolder(true)}>
+										<Trash2 />
 									</Button>
-									{openTrashForFolder && <CleanFolderTrash />}
+									<CleanFolderTrash
+										open={openTrashForFolder}
+										onOpenChange={setOpenTrashForFolder}
+										folderId={selectedFolder?.id!}
+									/>
 								</div>
 							</div>
 
@@ -437,13 +428,7 @@ const DashboardWrapper: FC = () => {
 							>
 								{folderData?.items &&
 									folderData?.items?.map(
-										(
-											folder: {
-												id: string;
-												name: string;
-											},
-											index: number,
-										) => (
+										(folder: { id: string; name: string }, index: number) => (
 											<Card
 												key={folder.id}
 												onClick={() =>

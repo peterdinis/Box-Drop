@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { FC } from "react";
-import FilesSwipper from "../ui/files-swipper";
 import { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import { io, type Socket } from "socket.io-client";
+import FilesSwipper from "../ui/files-swipper";
 
 let socket: Socket;
 
@@ -14,7 +14,7 @@ const HeroWrapper: FC = () => {
 
 	useEffect(() => {
 		socket = io("http://localhost:3001", {
-			transports: ["websocket"]
+			transports: ["websocket"],
 		});
 
 		socket.on("connect", () => {
@@ -32,7 +32,7 @@ const HeroWrapper: FC = () => {
 		};
 	}, []);
 
-	console.log("C", connected)
+	console.log("C", connected);
 
 	return (
 		<section className="relative dark:bg-gradient-to-br dark:from-background dark:via-card dark:to-background bg-gradient-to-br from-blue-50 via-white to-teal-50 pt-16 pb-20 overflow-hidden animate-fade-in-up">

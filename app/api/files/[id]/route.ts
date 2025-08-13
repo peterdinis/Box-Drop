@@ -4,14 +4,14 @@ import { UTApi } from "uploadthing/server";
 import { db } from "@/db";
 import { files } from "@/db/schema";
 
-export async function GET(req: Request, context: { params: { id: string } }) {
+export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
 	const { userId } = await auth();
 
 	if (!userId) {
 		return new Response("Unauthorized", { status: 401 });
 	}
 
-	const folderId = context.params.id;
+	const folderId = (await context.params).id;
 
 	const folder = await db.query.folders.findFirst({
 		where: (folders, { eq }) => eq(folders.id, folderId),
@@ -30,32 +30,30 @@ export async function GET(req: Request, context: { params: { id: string } }) {
 	});
 }
 
-export async function DELETE(
-	req: Request,
-	{ params }: { params: { id: string } },
-) {
-	const { userId } = await auth();
+export async function DELETE(req: Request, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    const { userId } = await auth();
 
-	if (!userId) {
+    if (!userId) {
 		return new Response("Unauthorized", { status: 401 });
 	}
-	if (!userId) return new Response("Unauthorized", { status: 401 });
+    if (!userId) return new Response("Unauthorized", { status: 401 });
 
-	const file = await db.query.files.findFirst({
+    const file = await db.query.files.findFirst({
 		where: eq(files.id, params.id),
 	});
 
-	if (!file) return new Response("Not found", { status: 404 });
-	if (!file.folderId)
+    if (!file) return new Response("Not found", { status: 404 });
+    if (!file.folderId)
 		return new Response("No folder associated", { status: 400 });
 
-	console.log("F", file)
+    console.log("F", file);
 
-	const utapi = new UTApi();
-	await utapi.deleteFiles(file.url);
+    const utapi = new UTApi();
+    await utapi.deleteFiles(file.url);
 
-	const test = await db.delete(files).where(eq(files.id, params.id));
-	console.log("T", test)
-	
-	return new Response("✅ File deleted", { status: 200 });
+    const test = await db.delete(files).where(eq(files.id, params.id));
+    console.log("T", test);
+
+    return new Response("✅ File deleted", { status: 200 });
 }
