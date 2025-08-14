@@ -1,9 +1,7 @@
-import { FC } from "react";
+import type { FC } from "react";
 
 const FileSupportedTypes: FC = () => {
-    return (
-        <>TODO</>
-    )
-}
+	return <>TODO</>;
+};
 
-export default FileSupportedTypes
+export default FileSupportedTypes;

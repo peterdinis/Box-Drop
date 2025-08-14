@@ -15,8 +15,7 @@ const DashboardHeader: FC = () => {
 			<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 				<div>
 					<h2 className="text-xl sm:text-2xl font-bold">
-						Welcome back!{" "}
-						{user?.emailAddresses?.[0]?.emailAddress} 👋
+						Welcome back! {user?.emailAddresses?.[0]?.emailAddress} 👋
 					</h2>
 				</div>
 				<div className="flex flex-wrap gap-2">

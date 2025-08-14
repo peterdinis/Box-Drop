@@ -4,13 +4,13 @@ import { db } from "@/db";
 import { permissions } from "@/db/schema";
 
 export async function PATCH(
-    req: Request,
-    props: { params: Promise<{ userId: string; targetId: string }> }
+	req: Request,
+	props: { params: Promise<{ userId: string; targetId: string }> },
 ) {
-    const params = await props.params;
-    const { targetType, access } = await req.json();
+	const params = await props.params;
+	const { targetType, access } = await req.json();
 
-    if (
+	if (
 		!["file", "folder"].includes(targetType) ||
 		!["read", "write"].includes(access)
 	) {
@@ -20,7 +20,7 @@ export async function PATCH(
 		);
 	}
 
-    try {
+	try {
 		const result = await db
 			.update(permissions)
 			.set({ access })

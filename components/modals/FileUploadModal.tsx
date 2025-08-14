@@ -10,8 +10,8 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import FileUploader from "../files/FileUpdloader";
 import FileSupportedTypes from "../files/FileSupportedTypes";
+import FileUploader from "../files/FileUpdloader";
 
 const FileUploadModal: FC = () => {
 	const [isOpen, setIsOpen] = useState(false);
