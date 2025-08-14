@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import type React from "react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
-
 const HelpCircle = (props: React.SVGProps<SVGSVGElement>) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +123,7 @@ export default function UserProfileDropdown() {
 				trigger={
 					<button className="flex items-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
 						<div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-							{user?.firstName?.charAt(0) + user?.lastName?.charAt(0)}
+							{user?.firstName?.charAt(0)! + user?.lastName?.charAt(0)!}
 						</div>
 					</button>
 				}
