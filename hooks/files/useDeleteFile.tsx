@@ -19,10 +19,8 @@ export function useDeleteFile() {
 	return useMutation({
 		mutationFn: deleteFile,
 		onSuccess: () => {
-			// Po zmazaní môžeš refetch-nuť files/folders, prípadne permissions
 			queryClient.invalidateQueries({ queryKey: ["files"] });
 			queryClient.invalidateQueries({ queryKey: ["folders"] });
-			queryClient.invalidateQueries({ queryKey: ["permissions"] });
 		},
 
 		onError: () => {
