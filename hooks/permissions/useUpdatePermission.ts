@@ -9,6 +9,7 @@ type UpdatePermissionInput = {
 
 export function useUpdatePermission() {
 	return useMutation({
+		mutationKey: ["updatePermission"],
 		mutationFn: async ({
 			userId,
 			targetId,

@@ -29,6 +29,7 @@ export function useAddPermission() {
 	const queryClient = useQueryClient();
 
 	return useMutation<string, Error, PermissionInput>({
+		mutationKey: ["permission"],
 		mutationFn: addPermission,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["permissions"] });
