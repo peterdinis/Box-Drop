@@ -8,6 +8,7 @@ import {
 	List,
 	Loader2,
 	MoreHorizontal,
+	Move,
 	Share2,
 	Trash,
 	Trash2,
@@ -350,6 +351,26 @@ const DashboardWrapper: FC = () => {
 																</Button>
 															</TooltipTrigger>
 															<TooltipContent>Delete file</TooltipContent>
+														</Tooltip>
+
+														<Tooltip>
+															<TooltipTrigger>
+																<Button
+																	size="sm"
+																	variant="ghost"
+																	onClick={() => {
+																		toast({
+																			title: "File was deleted",
+																			duration: 2000,
+																			className:
+																				"bg-green-800 text-white font-bold text-xl",
+																		});
+																	}}
+																>
+																	<Move className="w-3 h-3" />
+																</Button>
+															</TooltipTrigger>
+															<TooltipContent>Move file to another folder</TooltipContent>
 														</Tooltip>
 													</div>
 												</div>
