@@ -26,7 +26,7 @@ export function useDeleteFile() {
 		},
 
 		onError: () => {
-			console.log("EERORORORO");
+			throw new Error("Something went wrong in deleting files")
 		},
 	});
 }
