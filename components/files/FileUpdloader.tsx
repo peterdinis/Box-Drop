@@ -9,7 +9,7 @@ const FileUploader: FC = () => {
 
 	return (
 		<main>
-			<div className="max-w-md w-full rounded-xl p-6 shadow-md">
+			<div className="max-w-md w-full rounded-xl p-6">
 				<UploadButton
 					endpoint="imageUploader"
 					appearance={{
