@@ -140,6 +140,12 @@ const DashboardWrapper: FC = () => {
 					<DialogHeader>
 						<DialogTitle>Folder Details</DialogTitle>
 					</DialogHeader>
+					<span className="mt-5">
+						<Tooltip>
+							<TooltipTrigger><Trash2 /></TooltipTrigger>
+							<TooltipContent>Delete Folder</TooltipContent>
+						</Tooltip>
+					</span>
 					{folderDetailLoading ? (
 						<Loader2 className="w-5 h-5 animate-spin" />
 					) : selectedFolder ? (
