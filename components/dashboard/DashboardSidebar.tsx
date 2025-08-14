@@ -4,7 +4,6 @@ import { HardDrive, Share2, TrendingUp } from "lucide-react";
 import type { FC } from "react";
 import { useFiles } from "@/hooks/files/useFiles";
 import { useStorageUsage } from "@/hooks/storage/useStorage";
-import ConnectionsWrapper from "../connections/ConnectionsWrapper";
 import { Card } from "../ui/card";
 
 const DashboardSidebar: FC = () => {
@@ -51,8 +50,6 @@ const DashboardSidebar: FC = () => {
 					</div>
 				</div>
 			</Card>
-
-			<ConnectionsWrapper />
 		</div>
 	);
 };
