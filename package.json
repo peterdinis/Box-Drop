@@ -1,6 +1,6 @@
 {
 	"name": "box-drop",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"private": true,
 	"scripts": {
 		"dev": "next dev --turbopack",
@@ -14,8 +14,6 @@
 		"seed": "tsx ./db/seeder.ts"
 	},
 	"dependencies": {
-		"@casl/ability": "^6.7.3",
-		"@casl/react": "^5.0.0",
 		"@clerk/clerk-sdk-node": "^5.1.6",
 		"@clerk/nextjs": "^6.27.1",
 		"@clerk/themes": "^2.4.4",
@@ -56,7 +54,6 @@
 		"react": "19.1.1",
 		"react-dom": "19.1.1",
 		"react-resizable-panels": "^3.0.3",
-		"socket.io-client": "^4.8.1",
 		"tailwind-merge": "^3.3.1",
 		"uploadthing": "^7.7.3",
 		"uuid": "^11.1.0",

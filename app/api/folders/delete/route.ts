@@ -5,7 +5,7 @@ import { UTApi } from "uploadthing/server";
 import { db } from "@/db";
 import { files, folders } from "@/db/schema";
 
-export async function DELETE(req: Request) {
+export async function DELETE() {
 	const { userId } = await auth();
 
 	if (!userId) return new Response("Unauthorized", { status: 401 });

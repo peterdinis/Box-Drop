@@ -17,16 +17,15 @@ export function useDeleteFile() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
+		mutationKey: ["deleteFile"],
 		mutationFn: deleteFile,
 		onSuccess: () => {
-			// Po zmazaní môžeš refetch-nuť files/folders, prípadne permissions
 			queryClient.invalidateQueries({ queryKey: ["files"] });
 			queryClient.invalidateQueries({ queryKey: ["folders"] });
-			queryClient.invalidateQueries({ queryKey: ["permissions"] });
 		},
 
 		onError: () => {
-			console.log("EERORORORO");
+			throw new Error("Something went wrong in deleting files")
 		},
 	});
 }

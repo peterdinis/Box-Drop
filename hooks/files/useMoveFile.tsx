@@ -6,6 +6,7 @@ export function useMoveFile() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
+		mutationKey: ["moveFile"],
 		mutationFn: async ({
 			fileId,
 			folderId,

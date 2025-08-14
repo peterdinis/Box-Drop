@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { db } from ".";
-import { files, folders, members, permissions } from "./schema";
+import { files, folders } from "./schema";
 
 async function seed() {
 	console.log("🌱 Seeding database...");
@@ -8,11 +8,6 @@ async function seed() {
 	// 1. Create members
 	const userId1 = randomUUID();
 	const userId2 = randomUUID();
-
-	await db.insert(members).values([
-		{ id: userId1, email: "alice@example.com", name: "Alice", isAdmin: true },
-		{ id: userId2, email: "bob@example.com", name: "Bob", isAdmin: false },
-	]);
 
 	// 2. Create folders
 	const folderId1 = randomUUID();
@@ -53,34 +48,6 @@ async function seed() {
 			url: "https://example.com/design.png",
 			size: 2048,
 			uploadedAt: new Date(),
-		},
-	]);
-
-	// 4. Set permissions (folder and file)
-	await db.insert(permissions).values([
-		{
-			targetId: folderId1,
-			targetType: "folder",
-			userId: userId2,
-			access: "read",
-		},
-		{
-			targetId: folderId2,
-			targetType: "folder",
-			userId: userId1,
-			access: "write",
-		},
-		{
-			targetId: fileId1,
-			targetType: "file",
-			userId: userId2,
-			access: "read",
-		},
-		{
-			targetId: fileId2,
-			targetType: "file",
-			userId: userId1,
-			access: "read",
 		},
 	]);
 

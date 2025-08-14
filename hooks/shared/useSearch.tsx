@@ -17,6 +17,6 @@ export const useSearch = (query: string) => {
 	return useQuery({
 		queryKey: ["search", query],
 		queryFn: () => fetchSearchResults(query),
-		enabled: !!query, // disables the query until `query` is truthy
+		enabled: !!query,
 	});
 };

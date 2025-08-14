@@ -4,62 +4,6 @@ import { useRouter } from "next/navigation";
 import type React from "react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
-// Icons
-const User = (props: React.SVGProps<SVGSVGElement>) => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="16"
-		height="16"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		{...props}
-	>
-		<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-		<circle cx="12" cy="7" r="4" />
-	</svg>
-);
-
-const Settings = (props: React.SVGProps<SVGSVGElement>) => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="16"
-		height="16"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		{...props}
-	>
-		<circle cx="12" cy="12" r="3" />
-		<path d="M12 1v6m0 6v6" />
-		<path d="M1 12h6m6 0h6" />
-	</svg>
-);
-
-const CreditCard = (props: React.SVGProps<SVGSVGElement>) => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="16"
-		height="16"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-		{...props}
-	>
-		<rect width="20" height="14" x="2" y="5" rx="2" />
-		<line x1="2" x2="22" y1="10" y2="10" />
-	</svg>
-);
-
 const HelpCircle = (props: React.SVGProps<SVGSVGElement>) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
@@ -179,7 +123,7 @@ export default function UserProfileDropdown() {
 				trigger={
 					<button className="flex items-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
 						<div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-							{user?.firstName?.charAt(0) + user?.lastName?.charAt(0)}
+							{user?.firstName?.charAt(0)! + user?.lastName?.charAt(0)!}
 						</div>
 					</button>
 				}
