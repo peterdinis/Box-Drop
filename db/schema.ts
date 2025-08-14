@@ -17,7 +17,6 @@ export const folders = sqliteTable("folders", {
 
 export const foldersRelations = relations(folders, ({ many }) => ({
 	files: many(files),
-	permissions: many(permissions),
 }));
 
 // -------------------- Files --------------------
@@ -36,7 +35,6 @@ export const filesRelations = relations(files, ({ one, many }) => ({
 		fields: [files.folderId],
 		references: [folders.id],
 	}),
-	permissions: many(permissions),
 }));
 
 // -------------------- Share Links --------------------
@@ -47,40 +45,3 @@ export const shareLinks = sqliteTable("share_links", {
 	permission: text("permission"),
 	expiresAt: text("expires_at"),
 });
-
-// -------------------- Permissions --------------------
-
-export const permissions = sqliteTable(
-	"permissions",
-	{
-		targetId: text("target_id").notNull(), // Can be file or folder ID
-		targetType: text("target_type", { enum: ["file", "folder"] }).notNull(),
-		userId: text("user_id").notNull(),
-		access: text("access", { enum: ["read", "write"] }).notNull(),
-	},
-	(table) => ({
-		pk: primaryKey({
-			columns: [table.userId, table.targetId, table.targetType],
-		}),
-	}),
-);
-
-export const permissionsRelations = relations(permissions, ({ one }) => ({
-	user: one(members, {
-		fields: [permissions.userId],
-		references: [members.id],
-	}),
-}));
-
-// -------------------- Members --------------------
-
-export const members = sqliteTable("members", {
-	id: text("id").primaryKey().notNull(),
-	email: text("email").notNull(),
-	name: text("name").notNull(),
-	isAdmin: integer("is_admin", { mode: "boolean" }).default(false).notNull(),
-});
-
-export const membersRelations = relations(members, ({ many }) => ({
-	permissions: many(permissions),
-}));
