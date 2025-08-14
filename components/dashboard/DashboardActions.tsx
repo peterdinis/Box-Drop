@@ -1,4 +1,4 @@
-import { Share2, Star } from "lucide-react";
+import { Share2 } from "lucide-react";
 import CreateFolderModal from "../modals/CreateFolderModal";
 import FileUploadModal from "../modals/FileUploadModal";
 
