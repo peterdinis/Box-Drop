@@ -19,7 +19,7 @@ export function useFolders(page = 0, limit = 10) {
 
 export function useFolder(folderId: string) {
 	return useQuery({
-		queryKey: ["folders", folderId],
+		queryKey: ["folderDetail", folderId],
 		queryFn: async () => {
 			const res = await fetch(`${BASE_URL}/${folderId}`);
 			if (!res.ok) throw new Error("Folder not found");
@@ -32,6 +32,7 @@ export function useFolder(folderId: string) {
 export function useCreateFolder() {
 	const queryClient = useQueryClient();
 	return useMutation({
+		mutationKey: ["newFolder"],
 		mutationFn: async (name: string) => {
 			const res = await fetch(BASE_URL, {
 				method: "POST",
@@ -50,6 +51,7 @@ export function useCreateFolder() {
 export function useUpdateFolder() {
 	const queryClient = useQueryClient();
 	return useMutation({
+		mutationKey: ["updateFolder"],
 		mutationFn: async ({ id, name }: { id: string; name: string }) => {
 			const res = await fetch(`${BASE_URL}/${id}`, {
 				method: "PUT",
@@ -70,6 +72,7 @@ export function useDeleteAllFolders() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
+		mutationKey: ["deleteFolder"],
 		mutationFn: async () => {
 			const res = await fetch(`${BASE_URL}/delete`, {
 				method: "DELETE",
