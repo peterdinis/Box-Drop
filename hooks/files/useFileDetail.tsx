@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useFileQuery = (id: string, userId: string) => {
 	return useQuery({
-		queryKey: ["file", id],
+		queryKey: ["fileDetail", id],
 		queryFn: async () => {
 			const res = await fetch(`/api/files/${id}`, {
 				headers: {
