@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { files } from "@/db/schema";
 
-export async function GET(req: Request) {
+export async function GET() {
 	const authSession = await auth();
 	const userId = authSession.userId;
 	if (!userId) return new Response("Unauthorized", { status: 401 });

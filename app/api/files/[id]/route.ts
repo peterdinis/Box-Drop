@@ -1,11 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { UTApi } from "uploadthing/server";
 import { db } from "@/db";
 import { files, folders } from "@/db/schema";
 
 export async function GET(
-	req: Request,
 	context: { params: Promise<{ id: string }> },
 ) {
 	const { userId } = await auth();
