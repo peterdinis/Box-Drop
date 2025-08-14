@@ -13,15 +13,7 @@ export interface File {
 	uploadedAt: string;
 }
 
-export interface Member {
-	id: string;
-	name: string;
-	email: string;
-	isAdmin: boolean;
-}
-
 export interface SearchResult {
 	folders: Folder[];
 	files: File[];
-	members: Member[];
 }
