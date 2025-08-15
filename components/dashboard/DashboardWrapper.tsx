@@ -1,16 +1,7 @@
 "use client";
 
 import {
-	Download,
-	File,
-	FolderIcon,
-	Grid3X3,
-	List,
 	Loader2,
-	MoreHorizontal,
-	Move,
-	Share2,
-	Trash,
 	Trash2,
 	TrashIcon,
 } from "lucide-react";
@@ -51,15 +42,13 @@ import { useToast } from "@/hooks/shared/useToast";
 import { formatDate } from "@/utils/format-date";
 import FileShareModal from "../modals/FileShareModal";
 import SettingsModal from "../modals/SettingsModal";
-import CleanFolderTrash from "../trash/CleanFolderTrash";
 import { Button } from "../ui/button";
-import { Card } from "../ui/card";
 import DashboardHeader from "./DashboardHeader";
 import DashboardSidebar from "./DashboardSidebar";
+import MyFiles from "../files/MyFiles";
+import MyFolders from "../folders/MyFolders";
 
 const DashboardWrapper: FC = () => {
-	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
-	const [folderViewMode, setFolderViewMode] = useState<"grid" | "list">("grid");
 	const [showSettings, setShowSettings] = useState(false);
 	const { data: folderData, isLoading: folderLoading } = useFolders();
 	const { data: filesData, isLoading: fileLoading } = useFiles();
@@ -74,7 +63,6 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
-	const [openTrashForFolder, setOpenTrashForFolder] = useState(false);
 
 	const { toast } = useToast();
 	const [, setMovingFileId] = useState<string | null>(null);
@@ -107,11 +95,7 @@ const DashboardWrapper: FC = () => {
 		[moveFile, toast],
 	);
 
-	const handleShareFile = (fileName: string, fileType: string) => {
-		setShareModal({ isOpen: true, fileName, fileType });
-	};
-
-	const { downloadFile, isDownloading } = useFileDownload();
+	const { downloadFile } = useFileDownload();
 
 	const handleDownloadFile = (fileUrl: string, fileName: string) => {
 		downloadFile(fileUrl, fileName);
@@ -249,251 +233,8 @@ const DashboardWrapper: FC = () => {
 				<div className="grid lg:grid-cols-4 gap-6">
 					<div className="lg:col-span-3 space-y-6">
 						<DashboardHeader />
-						<Card className="p-6">
-							<div className="flex items-center justify-between mb-6">
-								<h3 className="text-lg font-semibold">Recent Files</h3>
-								<div className="flex items-center gap-2">
-									<Button
-										variant="outline"
-										size="sm"
-										onClick={() =>
-											setFileViewMode(fileViewMode === "grid" ? "list" : "grid")
-										}
-									>
-										{fileViewMode === "grid" ? (
-											<List className="w-4 h-4" />
-										) : (
-											<Grid3X3 className="w-4 h-4" />
-										)}
-									</Button>
-								</div>
-							</div>
-
-							<div
-								className={
-									fileViewMode === "grid"
-										? "grid md:grid-cols-2 lg:grid-cols-3 gap-4"
-										: "space-y-2"
-								}
-							>
-								{filesData?.map(
-									(
-										file: {
-											id: string;
-											type: string;
-											name: string;
-											size: string;
-											modified: boolean;
-											url: string;
-										},
-										index: number,
-									) => (
-										<Card
-											key={file.id}
-											className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-												fileViewMode === "grid" ? "p-4" : "p-3"
-											}`}
-											style={{ animationDelay: `${index * 0.1}s` }}
-										>
-											{fileViewMode === "grid" ? (
-												<div className="text-center">
-													<div className="flex justify-center mb-3">
-														<File className="w-5 h-5 text-muted-foreground" />
-													</div>
-													<h4 className="font-medium text-sm truncate mb-1">
-														{file.name}
-													</h4>
-													<p className="text-xs text-muted-foreground mb-1">
-														{prettyBytes(file.size as unknown as number)}
-													</p>
-													<p className="text-xs text-muted-foreground">
-														{file.modified}
-													</p>
-													<div className="flex justify-center gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-														<Tooltip>
-															<TooltipTrigger>
-																<Button
-																	size="sm"
-																	variant="ghost"
-																	onClick={() =>
-																		handleDownloadFile(file.url, file.name)
-																	}
-																	disabled={isDownloading}
-																>
-																	<Download className="w-3 h-3" />
-																</Button>
-															</TooltipTrigger>
-															<TooltipContent>Download File</TooltipContent>
-														</Tooltip>
-														<Tooltip>
-															<TooltipTrigger>
-																<Button
-																	size="sm"
-																	variant="ghost"
-																	onClick={() =>
-																		handleShareFile(file.name, file.type)
-																	}
-																>
-																	<Share2 className="w-3 h-3" />
-																</Button>
-															</TooltipTrigger>
-															<TooltipContent>Share file</TooltipContent>
-														</Tooltip>
-														<Tooltip>
-															<TooltipTrigger>
-																<Button
-																	size="sm"
-																	variant="ghost"
-																	onClick={() => {
-																		// TODO: Add back mutation for delete file
-																		toast({
-																			title: "File was deleted",
-																			duration: 2000,
-																			className:
-																				"bg-green-800 text-white font-bold text-xl",
-																		});
-																	}}
-																>
-																	<Trash className="w-3 h-3" />
-																</Button>
-															</TooltipTrigger>
-															<TooltipContent>Delete file</TooltipContent>
-														</Tooltip>
-
-														<Tooltip>
-															<TooltipTrigger>
-																<Button
-																	size="sm"
-																	variant="ghost"
-																	onClick={() => {
-																		toast({
-																			title: "File was deleted",
-																			duration: 2000,
-																			className:
-																				"bg-green-800 text-white font-bold text-xl",
-																		});
-																	}}
-																>
-																	<Move className="w-3 h-3" />
-																</Button>
-															</TooltipTrigger>
-															<TooltipContent>
-																Move file to another folder
-															</TooltipContent>
-														</Tooltip>
-													</div>
-												</div>
-											) : (
-												<div className="flex items-center justify-between">
-													<div className="flex items-center gap-3 flex-1 min-w-0">
-														<File className="w-5 h-5 text-muted-foreground" />
-														<div className="min-w-0 flex-1">
-															<h4 className="font-medium truncate">
-																{file.name}
-															</h4>
-															<p className="text-sm text-muted-foreground">
-																{prettyBytes(file.size as unknown as number)}
-															</p>
-														</div>
-													</div>
-													<div className="flex items-center gap-2">
-														<Button
-															size="sm"
-															variant="ghost"
-															onClick={() =>
-																handleShareFile(file.name, file.type)
-															}
-														>
-															<Share2 className="w-4 h-4" />
-														</Button>
-														<Button size="sm" variant="ghost">
-															<MoreHorizontal className="w-4 h-4" />
-														</Button>
-													</div>
-												</div>
-											)}
-										</Card>
-									),
-								)}
-							</div>
-						</Card>
-
-						<Card className="p-6">
-							<div className="flex items-center justify-between mb-6">
-								<h3 className="text-lg font-semibold">Recent Folders</h3>
-								<div className="flex items-center gap-2">
-									<Button
-										variant="outline"
-										size="sm"
-										onClick={() =>
-											setFolderViewMode(
-												folderViewMode === "grid" ? "list" : "grid",
-											)
-										}
-									>
-										{folderViewMode === "grid" ? (
-											<List className="w-4 h-4" />
-										) : (
-											<Grid3X3 className="w-4 h-4" />
-										)}
-									</Button>
-									<Button onClick={() => setOpenTrashForFolder(true)}>
-										<Trash2 />
-									</Button>
-									<CleanFolderTrash
-										open={openTrashForFolder}
-										onOpenChange={setOpenTrashForFolder}
-									/>
-								</div>
-							</div>
-
-							<div
-								className={
-									folderViewMode === "grid"
-										? "grid md:grid-cols-2 lg:grid-cols-3 gap-4"
-										: "space-y-2"
-								}
-							>
-								{folderData?.items &&
-									folderData?.items?.map(
-										(folder: { id: string; name: string }, index: number) => (
-											<Card
-												key={folder.id}
-												onClick={() =>
-													setOpenFolderId(folder.id?.toString() ?? "")
-												}
-												className={`group cursor-pointer hover:shadow-hover transition-all duration-200 animate-fade-in ${
-													folderViewMode === "grid" ? "p-4" : "p-3"
-												}`}
-												style={{ animationDelay: `${index * 0.1}s` }}
-											>
-												{folderViewMode === "grid" ? (
-													<div className="text-center">
-														<div className="flex justify-center mb-3">
-															<FolderIcon className="w-5 h-5 text-yellow-500" />
-														</div>
-														<h4 className="font-medium text-sm truncate mb-1">
-															{folder.name}
-														</h4>
-													</div>
-												) : (
-													<div className="flex items-center justify-between">
-														<div className="flex items-center gap-3 flex-1 min-w-0">
-															<FolderIcon className="w-5 h-5 text-yellow-500" />
-															<h4 className="font-medium truncate">
-																{folder.name}
-															</h4>
-														</div>
-														<Button size="sm" variant="ghost">
-															<MoreHorizontal className="w-4 h-4" />
-														</Button>
-													</div>
-												)}
-											</Card>
-										),
-									)}
-							</div>
-						</Card>
+						<MyFiles files={filesData} folders={folderData} />
+						<MyFolders folders={folderData} />
 					</div>
 
 					<DashboardSidebar />
