@@ -1,6 +1,6 @@
-# 📦 box-drop
+# 📦 Box-drop
 
-A modern, Dropbox-like file storage and sharing application built with **Next.js**, **TypeScript**, **Drizzle ORM**, **ShadCN UI**, and **Socket.IO** for real-time collaboration.
+A modern, Dropbox-like file storage and sharing application built with **Next.js**, **TypeScript**, **Uploathing**, **Drizzle ORM**, **ShadCN UI**.
 
 ---
 
@@ -9,7 +9,7 @@ A modern, Dropbox-like file storage and sharing application built with **Next.js
 - 📁 Upload, manage, and share files and folders with ease
 - 🎨 Responsive, accessible UI built with ShadCN UI components
 - 🔒 Type-safe backend using Drizzle ORM for database queries
-- ⚙️ Scalable API routes and React Server Components using Next.js
+- ⚙️ Scalable API routes using Next.js
 - 👥 Authentication and user management (extendable)
 - 🕒 File versioning and activity tracking (planned)
 - 📤 Drag & drop file uploads, preview, and metadata display (planned)

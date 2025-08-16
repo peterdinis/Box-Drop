@@ -7,10 +7,7 @@ export function formatDate(value: unknown): string {
 		let date: Date;
 
 		if (typeof value === "number") {
-			// Treat as milliseconds unless it's clearly a seconds-based timestamp
-			date = new Date(
-				value > 1e12 ? value : value * 1000, // >= year 2001 in ms
-			);
+			date = new Date(value > 1e12 ? value : value * 1000);
 		} else if (typeof value === "string" || value instanceof Date) {
 			date = new Date(value);
 		} else {
@@ -19,7 +16,6 @@ export function formatDate(value: unknown): string {
 
 		if (isNaN(date.getTime())) return "-";
 
-		// Only allow years in a reasonable range
 		const year = date.getFullYear();
 		if (year < 1970 || year > 2100) return "-";
 
