@@ -12,6 +12,8 @@ const f = createUploadthing();
 export const ourFileRouter = {
 	imageUploader: f({
 		image: { maxFileSize: "16MB", maxFileCount: 5 },
+		"application/msword": {maxFileSize: "8MB", maxFileCount: 5},
+		
 	})
 		.middleware(async () => {
 			const { userId } = await auth();
