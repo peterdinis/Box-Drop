@@ -4,10 +4,22 @@ import { ArrowRightIcon, Grid3X3, InfoIcon, List } from "lucide-react";
 import prettyBytes from "pretty-bytes";
 import { type FC, useState } from "react";
 import { ITEMS_PER_PAGE } from "@/constants/applicationConstants";
+import { useBulkDeleteFiles } from "@/hooks/files/useBulkDelete";
 import { useDeleteFile } from "@/hooks/files/useDeleteFile";
 import { useMoveFile } from "@/hooks/files/useMoveFile";
 import { useToast } from "@/hooks/shared/useToast";
 import type { MyFilesProps } from "@/types/FileTypes";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import {
@@ -20,17 +32,6 @@ import {
 	DialogTrigger,
 } from "../ui/dialog";
 import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogTrigger,
-} from "../ui/alert-dialog";
-import {
 	Pagination,
 	PaginationNext,
 	PaginationPrevious,
@@ -42,7 +43,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../ui/select";
-import { useBulkDeleteFiles } from "@/hooks/files/useBulkDelete";
 
 const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
@@ -77,7 +77,9 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 
 	const toggleSelectFile = (fileId: string) => {
 		setSelectedFiles((prev) =>
-			prev.includes(fileId) ? prev.filter((id) => id !== fileId) : [...prev, fileId],
+			prev.includes(fileId)
+				? prev.filter((id) => id !== fileId)
+				: [...prev, fileId],
 		);
 	};
 
@@ -112,13 +114,23 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 							setFileViewMode(fileViewMode === "grid" ? "list" : "grid")
 						}
 					>
-						{fileViewMode === "grid" ? <List className="w-4 h-4" /> : <Grid3X3 className="w-4 h-4" />}
+						{fileViewMode === "grid" ? (
+							<List className="w-4 h-4" />
+						) : (
+							<Grid3X3 className="w-4 h-4" />
+						)}
 					</Button>
 
 					{/* Bulk Delete Trigger */}
-					<AlertDialog open={openBulkDeleteDialog} onOpenChange={setOpenBulkDeleteDialog}>
+					<AlertDialog
+						open={openBulkDeleteDialog}
+						onOpenChange={setOpenBulkDeleteDialog}
+					>
 						<AlertDialogTrigger asChild>
-							<Button variant="destructive" disabled={selectedFiles.length === 0}>
+							<Button
+								variant="destructive"
+								disabled={selectedFiles.length === 0}
+							>
 								Delete Selected ({selectedFiles.length})
 							</Button>
 						</AlertDialogTrigger>
@@ -126,12 +138,16 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 							<AlertDialogHeader>
 								<AlertDialogTitle>Delete Selected Files?</AlertDialogTitle>
 								<AlertDialogDescription>
-									Are you sure you want to delete {selectedFiles.length} files? This action cannot be undone.
+									Are you sure you want to delete {selectedFiles.length} files?
+									This action cannot be undone.
 								</AlertDialogDescription>
 							</AlertDialogHeader>
 							<AlertDialogFooter>
 								<AlertDialogCancel>Cancel</AlertDialogCancel>
-								<AlertDialogAction onClick={handleBulkDelete} disabled={isBulkDeleting}>
+								<AlertDialogAction
+									onClick={handleBulkDelete}
+									disabled={isBulkDeleting}
+								>
 									Delete
 								</AlertDialogAction>
 							</AlertDialogFooter>
@@ -140,7 +156,13 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 				</div>
 			</div>
 
-			<div className={fileViewMode === "grid" ? "grid md:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-2"}>
+			<div
+				className={
+					fileViewMode === "grid"
+						? "grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+						: "space-y-2"
+				}
+			>
 				{paginatedFiles.map((file) => (
 					<Card
 						key={file.id}
@@ -177,19 +199,23 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 											<p>
 												<strong>Size:</strong> {prettyBytes(file.size)}
 											</p>
-											<Select onValueChange={(folderId) => handleMoveFile(file.id, folderId)}>
+											<Select
+												onValueChange={(folderId) =>
+													handleMoveFile(file.id, folderId)
+												}
+											>
 												<SelectTrigger className="w-full">
 													<SelectValue placeholder="Move to folder" />
 												</SelectTrigger>
 												<SelectContent>
-													{folders?.items?.map((folder: {
-                                                        id: string;
-                                                        name: string;
-                                                    }) => (
-														<SelectItem key={folder.id} value={folder.id}>
-															{folder.name} <ArrowRightIcon className="w-3 h-3 inline ml-1" />
-														</SelectItem>
-													))}
+													{folders?.items?.map(
+														(folder: { id: string; name: string }) => (
+															<SelectItem key={folder.id} value={folder.id}>
+																{folder.name}{" "}
+																<ArrowRightIcon className="w-3 h-3 inline ml-1" />
+															</SelectItem>
+														),
+													)}
 												</SelectContent>
 											</Select>
 										</div>
@@ -213,7 +239,9 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 
 			<div className="flex justify-center mt-4">
 				<Pagination>
-					<PaginationPrevious onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}>
+					<PaginationPrevious
+						onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+					>
 						Prev
 					</PaginationPrevious>
 
@@ -227,7 +255,11 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 						</span>
 					))}
 
-					<PaginationNext onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}>
+					<PaginationNext
+						onClick={() =>
+							setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+						}
+					>
 						Next
 					</PaginationNext>
 				</Pagination>

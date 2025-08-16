@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fira_Code, Inter } from "next/font/google";
+import { Ubuntu } from "next/font/google";
 import "./globals.css";
 import AppClerkProvider from "@/components/providers/AppClerkProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
@@ -8,14 +8,9 @@ import Navigation from "@/components/shared/Navigation";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { Toaster } from "@/components/ui/toaster";
 
-const inter = Inter({
-	variable: "--font-sans",
+const ubuntu = Ubuntu({
 	subsets: ["latin"],
-});
-
-const firaCode = Fira_Code({
-	variable: "--font-mono",
-	subsets: ["latin"],
+	weight: "500",
 });
 
 export const metadata: Metadata = {
@@ -69,7 +64,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className={`${inter.variable} ${firaCode.variable} antialiased`}>
+			<body className={`${ubuntu} antialiased`}>
 				<div className="min-h-screen bg-background">
 					<ThemeProvider
 						attribute="class"

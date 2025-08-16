@@ -12,16 +12,16 @@ const f = createUploadthing();
 export const ourFileRouter = {
 	imageUploader: f({
 		image: { maxFileSize: "16MB", maxFileCount: 5 },
-		"application/msword": {maxFileSize: "8MB", maxFileCount: 5},
-		"pdf": {maxFileSize: "8MB", maxFileCount: 5},
-		"application/json": {maxFileSize: "8MB", maxFileCount: 5},
-		"application/javascript": {maxFileSize: "8MB", maxFileCount: 5},
-		"application/node": {maxFileSize: "8MB", maxFileCount: 5},
-		"application/express": {maxFileSize: "16MB", maxFileCount: 5},
-		"video/jpeg": {maxFileSize: "8MB", maxFileCount: 5},
-		"text/css": {maxFileSize: "8MB", maxFileCount: 5},
-		"text/html": {maxFileSize: "8MB", maxFileCount: 5},
-		"text/markdown": {maxFileSize: "8MB", maxFileCount: 5},
+		"application/msword": { maxFileSize: "8MB", maxFileCount: 5 },
+		pdf: { maxFileSize: "8MB", maxFileCount: 5 },
+		"application/json": { maxFileSize: "8MB", maxFileCount: 5 },
+		"application/javascript": { maxFileSize: "8MB", maxFileCount: 5 },
+		"application/node": { maxFileSize: "8MB", maxFileCount: 5 },
+		"application/express": { maxFileSize: "16MB", maxFileCount: 5 },
+		"video/jpeg": { maxFileSize: "8MB", maxFileCount: 5 },
+		"text/css": { maxFileSize: "8MB", maxFileCount: 5 },
+		"text/html": { maxFileSize: "8MB", maxFileCount: 5 },
+		"text/markdown": { maxFileSize: "8MB", maxFileCount: 5 },
 	})
 		.middleware(async () => {
 			const { userId } = await auth();
