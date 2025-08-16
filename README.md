@@ -1,4 +1,4 @@
-# 📦 box-drop
+# 📦 Box-drop
 
 A modern, Dropbox-like file storage and sharing application built with **Next.js**, **TypeScript**, **Drizzle ORM**, **ShadCN UI**, and **Socket.IO** for real-time collaboration.
 
