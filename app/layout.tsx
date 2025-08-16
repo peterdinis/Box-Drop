@@ -9,7 +9,7 @@ import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { Toaster } from "@/components/ui/toaster";
 
 const ubuntu = Ubuntu({
-	subsets: ["latin"],
+	subsets: ["latin-ext"],
 	weight: "500",
 });
 

@@ -22,6 +22,7 @@ export const ourFileRouter = {
 		"text/css": { maxFileSize: "8MB", maxFileCount: 5 },
 		"text/html": { maxFileSize: "8MB", maxFileCount: 5 },
 		"text/markdown": { maxFileSize: "8MB", maxFileCount: 5 },
+		"text": { maxFileSize: "8MB", maxFileCount: 5 },
 	})
 		.middleware(async () => {
 			const { userId } = await auth();
@@ -37,7 +38,7 @@ export const ourFileRouter = {
 
 			if (!folderId) {
 				const folder = await db.query.folders.findFirst({
-					where: and(eq(folders.name, "Empty"), eq(folders.userId, userId)),
+					where: and(eq(folders.name, "Unasigned"), eq(folders.userId, userId)),
 				});
 
 				if (folder) {
@@ -47,7 +48,7 @@ export const ourFileRouter = {
 
 					await db.insert(folders).values({
 						id: folderId,
-						name: "Empty",
+						name: "Unasigned",
 						userId,
 						createdAt: new Date(),
 					});
