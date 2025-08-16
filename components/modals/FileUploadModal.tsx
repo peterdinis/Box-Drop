@@ -32,9 +32,6 @@ const FileUploadModal: FC = () => {
 
 				<div className="space-y-6">
 					<FileUploader />
-				</div>
-
-				<div className="space-x-6">
 					<FileSupportedTypes />
 				</div>
 			</DialogContent>
