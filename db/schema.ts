@@ -22,6 +22,7 @@ export const files = sqliteTable("files", {
 	name: text("name").notNull(),
 	url: text("url").notNull(),
 	size: integer("size").notNull(),
+	isShared: integer().default(1), // 1 = false 0 = true later fix when we move to PG
 	uploadedAt: integer("uploaded_at", { mode: "timestamp" }),
 });
 
