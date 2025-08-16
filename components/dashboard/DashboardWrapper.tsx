@@ -1,10 +1,6 @@
 "use client";
 
-import {
-	Loader2,
-	Trash2,
-	TrashIcon,
-} from "lucide-react";
+import { Loader2, Trash2, TrashIcon } from "lucide-react";
 import prettyBytes from "pretty-bytes";
 import { type FC, useCallback, useState } from "react";
 import {
@@ -40,13 +36,13 @@ import { useMoveFile } from "@/hooks/files/useMoveFile";
 import { useFolder, useFolders } from "@/hooks/folders/useFolders";
 import { useToast } from "@/hooks/shared/useToast";
 import { formatDate } from "@/utils/format-date";
+import MyFiles from "../files/MyFiles";
+import MyFolders from "../folders/MyFolders";
 import FileShareModal from "../modals/FileShareModal";
 import SettingsModal from "../modals/SettingsModal";
 import { Button } from "../ui/button";
 import DashboardHeader from "./DashboardHeader";
 import DashboardSidebar from "./DashboardSidebar";
-import MyFiles from "../files/MyFiles";
-import MyFolders from "../folders/MyFolders";
 
 const DashboardWrapper: FC = () => {
 	const [showSettings, setShowSettings] = useState(false);
@@ -126,7 +122,9 @@ const DashboardWrapper: FC = () => {
 					</DialogHeader>
 					<span className="mt-5">
 						<Tooltip>
-							<TooltipTrigger><Trash2 /></TooltipTrigger>
+							<TooltipTrigger>
+								<Trash2 />
+							</TooltipTrigger>
 							<TooltipContent>Delete Folder</TooltipContent>
 						</Tooltip>
 					</span>
