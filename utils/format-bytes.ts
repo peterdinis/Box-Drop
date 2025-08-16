@@ -1,5 +1,5 @@
-import prettyBytes from 'pretty-bytes';
+import prettyBytes from "pretty-bytes";
 
 export function formatBytes(bytes: number): string {
-  return prettyBytes(bytes);
+	return prettyBytes(bytes);
 }
