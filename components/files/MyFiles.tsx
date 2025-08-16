@@ -2,7 +2,7 @@
 
 import { ArrowRightIcon, Grid3X3, InfoIcon, List } from "lucide-react";
 import prettyBytes from "pretty-bytes";
-import { type FC, Key, useState } from "react";
+import { type FC, useState } from "react";
 import { ITEMS_PER_PAGE } from "@/constants/applicationConstants";
 import { useDeleteFile } from "@/hooks/files/useDeleteFile";
 import { useMoveFile } from "@/hooks/files/useMoveFile";
@@ -117,7 +117,7 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 													handleMoveFile(file.id, folderId)
 												}
 											>
-												<SelectTrigger className="w-56">
+												<SelectTrigger className="w-full">
 													<SelectValue placeholder="Move to folder" />
 												</SelectTrigger>
 												<SelectContent>
@@ -132,7 +132,7 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 												</SelectContent>
 											</Select>
 										</div>
-										<DialogFooter className="flex justify-between">
+										<DialogFooter className="flex justify-between mt-5">
 											<Button
 												variant="destructive"
 												onClick={() => deleteFile(file.id)}
