@@ -6,7 +6,6 @@ import type { FC } from "react";
 import FilesSwipper from "../ui/files-swipper";
 
 const HeroWrapper: FC = () => {
-
 	return (
 		<section className="relative dark:bg-gradient-to-br dark:from-background dark:via-card dark:to-background bg-gradient-to-br from-blue-50 via-white to-teal-50 pt-16 pb-20 overflow-hidden animate-fade-in-up">
 			<div className="absolute inset-0 opacity-10">

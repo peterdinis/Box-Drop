@@ -4,9 +4,7 @@ import { UTApi } from "uploadthing/server";
 import { db } from "@/db";
 import { files, folders } from "@/db/schema";
 
-export async function GET(
-	context: { params: Promise<{ id: string }> },
-) {
+export async function GET(context: { params: Promise<{ id: string }> }) {
 	const { userId } = await auth();
 
 	if (!userId) {

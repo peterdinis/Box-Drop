@@ -25,7 +25,7 @@ export function useDeleteFile() {
 		},
 
 		onError: () => {
-			throw new Error("Something went wrong in deleting files")
+			throw new Error("Something went wrong in deleting files");
 		},
 	});
 }
