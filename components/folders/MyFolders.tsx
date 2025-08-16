@@ -7,22 +7,7 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "../ui/dialog";
 import { Pagination, PaginationNext, PaginationPrevious } from "../ui/pagination";
 import CleanFolderTrash from "../trash/CleanFolderTrash";
-
-interface FileItem {
-    id: string;
-    name: string;
-}
-
-interface FolderItem {
-    id: string;
-    name: string;
-    files?: FileItem[];
-}
-
-interface MyFoldersProps {
-    folders?: { items: FolderItem[] };
-    pageSize?: number;
-}
+import { FolderItem, MyFoldersProps } from "@/types/FoldersTypes";
 
 const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
     const [folderViewMode, setFolderViewMode] = useState<"grid" | "list">("grid");
