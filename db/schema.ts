@@ -1,6 +1,8 @@
 import { relations } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+// TODO: Later migration to postgresql
+
 // -------------------- Folders --------------------
 
 export const folders = sqliteTable("folders", {
