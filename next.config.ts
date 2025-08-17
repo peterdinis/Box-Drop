@@ -8,14 +8,14 @@ const nextConfig: NextConfig = {
 		devtoolSegmentExplorer: true,
 	},
 	images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "<APP_ID>.ufs.sh",
-        pathname: "/f/*",
-      },
-    ],
-  },
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "<APP_ID>.ufs.sh",
+				pathname: "/f/*",
+			},
+		],
+	},
 };
 
 export default nextConfig;
