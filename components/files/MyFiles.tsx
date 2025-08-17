@@ -63,8 +63,11 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 	const { mutate: moveFile } = useMoveFile();
 	const { mutate: bulkDeleteFiles, isPending: isBulkDeleting } =
 		useBulkDeleteFiles();
-	const { mutate: shareFile, data: shareData, isPending: isSharing } =
-		useShareFile();
+	const {
+		mutate: shareFile,
+		data: shareData,
+		isPending: isSharing,
+	} = useShareFile();
 
 	const totalFiles = files.length;
 	const totalPages = Math.ceil(totalFiles / ITEMS_PER_PAGE);

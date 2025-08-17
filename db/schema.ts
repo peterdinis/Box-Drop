@@ -36,10 +36,10 @@ export const filesRelations = relations(files, ({ one }) => ({
 }));
 
 export const sharedFiles = sqliteTable("shared_files", {
-  id: text("id").primaryKey().notNull(),
-  fileId: text("file_id").notNull(),   
-  token: text("token").notNull().unique(),
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+	id: text("id").primaryKey().notNull(),
+	fileId: text("file_id").notNull(),
+	token: text("token").notNull().unique(),
+	createdAt: integer("created_at", { mode: "timestamp" })
+		.default(sql`CURRENT_TIMESTAMP`)
+		.notNull(),
 });
