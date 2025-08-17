@@ -2,16 +2,16 @@
 
 import { HardDrive, Share2, TrendingUp } from "lucide-react";
 import type { FC } from "react";
+import { useAllSharedFiles } from "@/hooks/files/useAllSharedFiles";
 import { useFiles } from "@/hooks/files/useFiles";
 import { useStorageUsage } from "@/hooks/storage/useStorage";
 import { Card } from "../ui/card";
-import { useAllSharedFiles } from "@/hooks/files/useAllSharedFiles";
 
 const DashboardSidebar: FC = () => {
 	const { data: storageUsage } = useStorageUsage();
 	const usedFormatted = storageUsage?.usedFormatted;
 	const { data: filesData } = useFiles();
-	const {data: sharedFilesDta} = useAllSharedFiles()
+	const { data: sharedFilesDta } = useAllSharedFiles();
 
 	return (
 		<div className="space-y-6">
@@ -48,7 +48,7 @@ const DashboardSidebar: FC = () => {
 							<span className="text-sm">Files shared</span>
 						</div>
 						<span className="font-medium">
-							{sharedFilesDta && sharedFilesDta?.length || 0}
+							{(sharedFilesDta && sharedFilesDta?.length) || 0}
 						</span>
 					</div>
 				</div>

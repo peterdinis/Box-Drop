@@ -28,7 +28,7 @@ export const files = sqliteTable("files", {
 	uploadedAt: integer("uploaded_at", { mode: "timestamp" }),
 });
 
-export const filesRelations = relations(files, ({ one}) => ({
+export const filesRelations = relations(files, ({ one }) => ({
 	folder: one(folders, {
 		fields: [files.folderId],
 		references: [folders.id],

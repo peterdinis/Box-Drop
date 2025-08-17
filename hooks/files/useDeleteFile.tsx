@@ -22,7 +22,7 @@ export function useDeleteFile() {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["files"] });
 			queryClient.invalidateQueries({ queryKey: ["folders"] });
-			queryClient.invalidateQueries({ queryKey: ["storage-usage"]})
+			queryClient.invalidateQueries({ queryKey: ["storage-usage"] });
 		},
 
 		onError: () => {
