@@ -1,7 +1,8 @@
+import { randomUUID } from "crypto";
 import { eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { files } from "@/db/schema";
+import { files, sharedFiles } from "@/db/schema";
 
 export async function GET(req: NextRequest) {
 	try {
@@ -18,4 +19,20 @@ export async function GET(req: NextRequest) {
 			{ status: 500 },
 		);
 	}
+}
+
+export async function POST(req: Request) {
+	const { fileId } = await req.json();
+
+	const token = randomUUID();
+
+	await db.insert(sharedFiles).values({
+		id: randomUUID(),
+		fileId,
+		token,
+	});
+
+	return NextResponse.json({
+		url: `${process.env.NEXT_PUBLIC_APP_URL}/share/${token}`,
+	});
 }

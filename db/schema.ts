@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 // TODO: Later migration to postgresql
@@ -35,4 +35,11 @@ export const filesRelations = relations(files, ({ one }) => ({
 	}),
 }));
 
-// TODO: Maybe new table for files with hash secure url
+export const sharedFiles = sqliteTable("shared_files", {
+	id: text("id").primaryKey().notNull(),
+	fileId: text("file_id").notNull(),
+	token: text("token").notNull().unique(),
+	createdAt: integer("created_at", { mode: "timestamp" })
+		.default(sql`CURRENT_TIMESTAMP`)
+		.notNull(),
+});
