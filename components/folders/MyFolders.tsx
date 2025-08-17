@@ -65,8 +65,7 @@ const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
       },
     );
   };
-
-  // Presunuté do useMemo
+  
   const visiblePages = useMemo(() => {
     const delta = 2;
     const start = Math.max(currentPage - delta, 1);

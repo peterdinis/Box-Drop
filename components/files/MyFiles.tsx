@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightIcon, Grid3X3, InfoIcon, List, FileText } from "lucide-react";
+import { ArrowRightIcon, Grid3X3, InfoIcon, List, FileText, Ghost } from "lucide-react";
 import prettyBytes from "pretty-bytes";
 import { type FC, useMemo, useState } from "react";
 import { ITEMS_PER_PAGE } from "@/constants/applicationConstants";
@@ -168,8 +168,8 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
       </div>
 
       {files.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-          <FileText className="w-16 h-16 mb-4" />
+        <div className="flex flex-col items-center justify-center text-gray-400">
+          <Ghost className="w-12 h-12 animate-bounce mb-4" />
           <p>No files uploaded</p>
         </div>
       ) : (
