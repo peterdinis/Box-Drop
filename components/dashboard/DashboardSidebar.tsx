@@ -9,7 +9,6 @@ import { Card } from "../ui/card";
 const DashboardSidebar: FC = () => {
 	const { data: storageUsage } = useStorageUsage();
 	const usedFormatted = storageUsage?.usedFormatted;
-	const limitFormatted = storageUsage?.limitFormatted;
 	const { data: filesData } = useFiles();
 
 	return (
@@ -23,7 +22,7 @@ const DashboardSidebar: FC = () => {
 					<div>
 						<div className="flex justify-between text-sm mb-2">
 							<span>{usedFormatted} used</span>
-							<span>{limitFormatted} total</span>
+							<span> 100 GB total</span>
 						</div>
 					</div>
 				</div>
