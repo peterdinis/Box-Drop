@@ -65,7 +65,7 @@ const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
       },
     );
   };
-  
+
   const visiblePages = useMemo(() => {
     const delta = 2;
     const start = Math.max(currentPage - delta, 1);
@@ -97,55 +97,66 @@ const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
         </div>
       </div>
 
-      <div
-        className={
-          folderViewMode === "grid"
-            ? "grid md:grid-cols-2 lg:grid-cols-3 gap-4"
-            : "space-y-2"
-        }
-      >
-        {paginatedFolders?.map((folder: FolderItem) => (
-          <Card
-            key={folder.id}
-            className="p-4 cursor-pointer flex items-center gap-2"
-            onClick={() => {
-              setSelectedFolder(folder);
-              setNewFolderName(folder.name);
-            }}
+      {totalFolders === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+          <Folder className="w-12 h-12 mb-4" />
+          <p>No folders uploaded</p>
+        </div>
+      ) : (
+        <>
+          <div
+            className={
+              folderViewMode === "grid"
+                ? "grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+                : "space-y-2"
+            }
           >
-            <Folder className="w-5 h-5 text-gray-500" />
-            <span>{folder.name}</span>
-          </Card>
-        ))}
-      </div>
+            {paginatedFolders?.map((folder: FolderItem) => (
+              <Card
+                key={folder.id}
+                className="p-4 cursor-pointer flex items-center gap-2"
+                onClick={() => {
+                  setSelectedFolder(folder);
+                  setNewFolderName(folder.name);
+                }}
+              >
+                <Folder className="w-5 h-5 text-gray-500" />
+                <span>{folder.name}</span>
+              </Card>
+            ))}
+          </div>
 
-      <div className="flex justify-center mt-4">
-        <Pagination>
-          <PaginationPrevious
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          >
-            Prev
-          </PaginationPrevious>
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-4">
+              <Pagination>
+                <PaginationPrevious
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                >
+                  Prev
+                </PaginationPrevious>
 
-          {visiblePages.map((page) => (
-            <span
-              key={page}
-              className={`mt-2 cursor-pointer px-2 ${
-                page === currentPage ? "font-bold text-blue-600" : ""
-              }`}
-              onClick={() => setCurrentPage(page)}
-            >
-              {page}
-            </span>
-          ))}
+                {visiblePages.map((page) => (
+                  <span
+                    key={page}
+                    className={`mt-2 cursor-pointer px-2 ${
+                      page === currentPage ? "font-bold text-blue-600" : ""
+                    }`}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </span>
+                ))}
 
-          <PaginationNext
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-          >
-            Next
-          </PaginationNext>
-        </Pagination>
-      </div>
+                <PaginationNext
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                >
+                  Next
+                </PaginationNext>
+              </Pagination>
+            </div>
+          )}
+        </>
+      )}
 
       <Dialog
         open={!!selectedFolder}
