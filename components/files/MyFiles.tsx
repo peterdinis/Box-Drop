@@ -2,7 +2,7 @@
 
 import {
 	ArrowRightIcon,
-	FileText,
+	Copy,
 	Ghost,
 	Grid3X3,
 	InfoIcon,
@@ -14,6 +14,7 @@ import { ITEMS_PER_PAGE } from "@/constants/applicationConstants";
 import { useBulkDeleteFiles } from "@/hooks/files/useBulkDelete";
 import { useDeleteFile } from "@/hooks/files/useDeleteFile";
 import { useMoveFile } from "@/hooks/files/useMoveFile";
+import { useShareFile } from "@/hooks/files/useShareFile";
 import { useToast } from "@/hooks/shared/useToast";
 import type { MyFilesProps } from "@/types/FileTypes";
 import {
@@ -62,6 +63,8 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 	const { mutate: moveFile } = useMoveFile();
 	const { mutate: bulkDeleteFiles, isPending: isBulkDeleting } =
 		useBulkDeleteFiles();
+	const { mutate: shareFile, data: shareData, isPending: isSharing } =
+		useShareFile();
 
 	const totalFiles = files.length;
 	const totalPages = Math.ceil(totalFiles / ITEMS_PER_PAGE);
@@ -261,7 +264,34 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 													>
 														Delete
 													</Button>
+													<Button
+														variant="secondary"
+														onClick={() => shareFile(file.id)}
+														disabled={isSharing}
+													>
+														Share
+													</Button>
 												</DialogFooter>
+
+												{shareData?.url && (
+													<div className="mt-4 flex items-center gap-2">
+														<input
+															type="text"
+															readOnly
+															value={shareData.url}
+															className="flex-1 border px-2 py-1 rounded text-sm"
+														/>
+														<Button
+															size="sm"
+															variant="outline"
+															onClick={() =>
+																navigator.clipboard.writeText(shareData.url)
+															}
+														>
+															<Copy className="w-4 h-4" />
+														</Button>
+													</div>
+												)}
 											</DialogContent>
 										</Dialog>
 									</div>
