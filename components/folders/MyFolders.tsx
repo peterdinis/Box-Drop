@@ -53,7 +53,7 @@ const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
             duration: 2000,
             className: "bg-green-800 text-white font-bold text-base",
           });
-          setSelectedFolder(null); // Close dialog
+          setSelectedFolder(null);
         },
         onError: (error: any) => {
           toast({
@@ -64,6 +64,13 @@ const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
         },
       },
     );
+  };
+
+  const getVisiblePages = () => {
+    const delta = 2;
+    const start = Math.max(currentPage - delta, 1);
+    const end = Math.min(currentPage + delta, totalPages);
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
 
   return (
@@ -120,10 +127,12 @@ const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
             Prev
           </PaginationPrevious>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          {getVisiblePages().map((page) => (
             <span
               key={page}
-              className="mt-2 cursor-pointer"
+              className={`mt-2 cursor-pointer px-2 ${
+                page === currentPage ? "font-bold text-blue-600" : ""
+              }`}
               onClick={() => setCurrentPage(page)}
             >
               {page}
@@ -138,7 +147,6 @@ const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
         </Pagination>
       </div>
 
-      {/* Dialog for folder details and rename */}
       <Dialog
         open={!!selectedFolder}
         onOpenChange={() => setSelectedFolder(null)}
