@@ -1,7 +1,7 @@
 "use client";
 
 import { Folder, Grid3X3, List, Trash2 } from "lucide-react";
-import { type FC, useState } from "react";
+import { type FC, useState, useMemo } from "react";
 import type { FolderItem, MyFoldersProps } from "@/types/FoldersTypes";
 import CleanFolderTrash from "../trash/CleanFolderTrash";
 import { Button } from "../ui/button";
@@ -66,12 +66,13 @@ const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
     );
   };
 
-  const getVisiblePages = () => {
+  // Presunuté do useMemo
+  const visiblePages = useMemo(() => {
     const delta = 2;
     const start = Math.max(currentPage - delta, 1);
     const end = Math.min(currentPage + delta, totalPages);
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  };
+  }, [currentPage, totalPages]);
 
   return (
     <Card className="p-6">
@@ -127,7 +128,7 @@ const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
             Prev
           </PaginationPrevious>
 
-          {getVisiblePages().map((page) => (
+          {visiblePages.map((page) => (
             <span
               key={page}
               className={`mt-2 cursor-pointer px-2 ${
