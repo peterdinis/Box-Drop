@@ -38,23 +38,15 @@ import { useToast } from "@/hooks/shared/useToast";
 import { formatDate } from "@/utils/format-date";
 import MyFiles from "../files/MyFiles";
 import MyFolders from "../folders/MyFolders";
-import FileShareModal from "../modals/FileShareModal";
-import SettingsModal from "../modals/SettingsModal";
 import { Button } from "../ui/button";
 import DashboardHeader from "./DashboardHeader";
 import DashboardSidebar from "./DashboardSidebar";
 
 const DashboardWrapper: FC = () => {
-	const [showSettings, setShowSettings] = useState(false);
 	const { data: folderData, isLoading: folderLoading } = useFolders();
 	const { data: filesData, isLoading: fileLoading } = useFiles();
 	const { mutate: deleteFile, isPending } = useDeleteFile();
 	const { mutate: moveFile, isPending: isMoving } = useMoveFile();
-	const [shareModal, setShareModal] = useState({
-		isOpen: false,
-		fileName: "",
-		fileType: "",
-	});
 	const [openFolderId, setOpenFolderId] = useState<string | null>(null);
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
@@ -91,30 +83,11 @@ const DashboardWrapper: FC = () => {
 		[moveFile, toast],
 	);
 
-	const { downloadFile } = useFileDownload();
-
-	const handleDownloadFile = (fileUrl: string, fileName: string) => {
-		downloadFile(fileUrl, fileName);
-	};
-
 	if (fileLoading || folderLoading)
 		return <Loader2 className="animate-spin w-8 h-8" />;
 
 	return (
 		<div className="min-h-screen bg-background">
-			<SettingsModal
-				isOpen={showSettings}
-				onClose={() => setShowSettings(false)}
-			/>
-			<FileShareModal
-				isOpen={shareModal.isOpen}
-				onClose={() =>
-					setShareModal({ isOpen: false, fileName: "", fileType: "" })
-				}
-				fileName={shareModal.fileName}
-				fileType={shareModal.fileType}
-			/>
-
 			<Dialog open={!!openFolderId} onOpenChange={() => setOpenFolderId(null)}>
 				<DialogContent className="w-full max-w-6xl max-h-[90vh] overflow-y-auto">
 					<DialogHeader>

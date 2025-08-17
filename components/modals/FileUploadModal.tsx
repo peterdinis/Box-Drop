@@ -10,7 +10,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import FileSupportedTypes from "../files/FileSupportedTypes";
 import FileUploader from "../files/FileUpdloader";
 
 const FileUploadModal: FC = () => {
@@ -32,7 +31,6 @@ const FileUploadModal: FC = () => {
 
 				<div className="space-y-6">
 					<FileUploader />
-					<FileSupportedTypes />
 				</div>
 			</DialogContent>
 		</Dialog>

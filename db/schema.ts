@@ -1,6 +1,8 @@
 import { relations } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+// TODO: Later migration to postgresql
+
 // -------------------- Folders --------------------
 
 export const folders = sqliteTable("folders", {
@@ -22,21 +24,15 @@ export const files = sqliteTable("files", {
 	name: text("name").notNull(),
 	url: text("url").notNull(),
 	size: integer("size").notNull(),
+	isShared: integer().default(1), // 1 = false 0 = true later fix when we move to PG
 	uploadedAt: integer("uploaded_at", { mode: "timestamp" }),
 });
 
-export const filesRelations = relations(files, ({ one, many }) => ({
+export const filesRelations = relations(files, ({ one}) => ({
 	folder: one(folders, {
 		fields: [files.folderId],
 		references: [folders.id],
 	}),
 }));
 
-// -------------------- Share Links --------------------
-
-export const shareLinks = sqliteTable("share_links", {
-	token: text("token").primaryKey(),
-	fileId: text("file_id"),
-	permission: text("permission"),
-	expiresAt: text("expires_at"),
-});
+// TODO: Maybe new table for files with hash secure url

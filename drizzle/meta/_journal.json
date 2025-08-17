@@ -1,27 +1,41 @@
 {
-	"version": "7",
-	"dialect": "sqlite",
-	"entries": [
-		{
-			"idx": 0,
-			"version": "6",
-			"when": 1754940717247,
-			"tag": "0000_silky_electro",
-			"breakpoints": true
-		},
-		{
-			"idx": 1,
-			"version": "6",
-			"when": 1755115172713,
-			"tag": "0001_smiling_deathbird",
-			"breakpoints": true
-		},
-		{
-			"idx": 2,
-			"version": "6",
-			"when": 1755185937589,
-			"tag": "0002_faithful_marauders",
-			"breakpoints": true
-		}
-	]
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1754940717247,
+      "tag": "0000_silky_electro",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1755115172713,
+      "tag": "0001_smiling_deathbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1755185937589,
+      "tag": "0002_faithful_marauders",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1755371704828,
+      "tag": "0003_previous_joystick",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1755372447314,
+      "tag": "0004_tranquil_pride",
+      "breakpoints": true
+    }
+  ]
 }

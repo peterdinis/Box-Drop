@@ -7,6 +7,15 @@ const nextConfig: NextConfig = {
 		browserDebugInfoInTerminal: true,
 		devtoolSegmentExplorer: true,
 	},
+	images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "<APP_ID>.ufs.sh",
+        pathname: "/f/*",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
