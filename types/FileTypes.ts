@@ -12,10 +12,9 @@ export interface MyFilesProps {
 	folders: any;
 }
 
-
 export interface SharedFileResponse {
-  id: string;
-  token: string;
-  createdAt: number;
-  file: File;
+	id: string;
+	token: string;
+	createdAt: number;
+	file: File;
 }
