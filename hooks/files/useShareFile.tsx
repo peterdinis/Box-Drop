@@ -3,13 +3,6 @@
 import { SharedFileResponse } from "@/types/FileTypes";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-interface File {
-  id: string;
-  name: string;
-  url: string;
-  size: number;
-  uploadedAt: number;
-}
 
 export function useSharedFile(token: string) {
   return useQuery<SharedFileResponse, Error>({
