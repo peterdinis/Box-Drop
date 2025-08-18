@@ -206,9 +206,8 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 						{paginatedFiles.map((file) => (
 							<Card
 								key={file.id}
-								className={`group cursor-pointer hover:shadow-hover transition-all duration-200 ${
-									fileViewMode === "grid" ? "p-4" : "p-3"
-								}`}
+								className={`group cursor-pointer hover:shadow-hover transition-all duration-200 ${fileViewMode === "grid" ? "p-4" : "p-3"
+									}`}
 							>
 								<div className="flex justify-between items-center mb-2">
 									<div className="flex items-center gap-2">
@@ -287,8 +286,16 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 														<Button
 															size="sm"
 															variant="outline"
-															onClick={() =>
+															onClick={() => {
 																navigator.clipboard.writeText(shareData.url)
+																toast(
+																	{
+																		title: "Copied",
+																		duration: 2000,
+																		className: "bg-green-800 text-white font-bold text-xl"
+																	}
+																)
+															}
 															}
 														>
 															<Copy className="w-4 h-4" />
