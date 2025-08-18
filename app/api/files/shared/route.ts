@@ -34,6 +34,6 @@ export async function POST(req: Request) {
 
 	return NextResponse.json({
 		// TODO: Change me later
-		url: `http://localhost:3000/share/${token}`,
+		url: `http://localhost:3000/files/${token}`,
 	});
 }

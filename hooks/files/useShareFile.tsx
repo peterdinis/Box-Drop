@@ -7,7 +7,7 @@ export function useSharedFile(token: string) {
   return useQuery<SharedFileResponse, Error>({
     queryKey: ["sharedFile", token],
     queryFn: async () => {
-      const res = await fetch(`/api/share/${token}`);
+      const res = await fetch(`/api/files/shared/${token}`);
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || "Failed to fetch shared file");
