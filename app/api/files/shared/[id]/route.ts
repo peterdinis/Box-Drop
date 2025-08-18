@@ -3,18 +3,18 @@ import { sharedFiles, files } from "@/db/schema";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
 
-export async function GET(req: NextRequest, { params }: { params: { token: string } }) {
-  const { token } = params;
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params;
 
-  if (!token) {
-    return NextResponse.json({ error: "Missing share token" }, { status: 400 });
+  if (!id) {
+    return NextResponse.json({ error: "Missing share id" }, { status: 400 });
   }
 
   try {
     const shared = await db
       .select({
         id: sharedFiles.id,
-        token: sharedFiles.token,
+        token: sharedFiles.id,
         createdAt: sharedFiles.createdAt,
         fileId: sharedFiles.fileId,
         fileName: files.name,
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest, { params }: { params: { token: strin
       })
       .from(sharedFiles)
       .leftJoin(files, eq(files.id, sharedFiles.fileId))
-      .where(eq(sharedFiles.token, token))
+      .where(eq(sharedFiles.token, id))
       .get();
 
     if (!shared) {
