@@ -1,6 +1,6 @@
 "use client";
 
-import { HardDrive, Share2, TrendingUp } from "lucide-react";
+import { HardDrive, TrendingUp } from "lucide-react";
 import type { FC } from "react";
 import { useFiles } from "@/hooks/files/useFiles";
 import { useStorageUsage } from "@/hooks/storage/useStorage";
@@ -39,12 +39,6 @@ const DashboardSidebar: FC = () => {
 						<span className="font-medium">
 							{filesData ? filesData.length : 0}
 						</span>
-					</div>
-					<div className="flex items-center justify-between">
-						<div className="flex items-center gap-2">
-							<Share2 className="w-4 h-4 text-blue-500" />
-							<span className="text-sm">Files shared</span>
-						</div>
 					</div>
 				</div>
 			</Card>
