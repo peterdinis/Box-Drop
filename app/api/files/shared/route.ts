@@ -33,6 +33,7 @@ export async function POST(req: Request) {
 	});
 
 	return NextResponse.json({
-		url: `${process.env.NEXT_PUBLIC_APP_URL}/share/${token}`,
+		// TODO: Change me later
+		url: `http://localhost:3000/share/${token}`,
 	});
 }
