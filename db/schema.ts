@@ -1,4 +1,10 @@
-import { pgTable, text, boolean, integer, timestamp } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	integer,
+	pgTable,
+	text,
+	timestamp,
+} from "drizzle-orm/pg-core";
 
 // -------------------- Tables --------------------
 
@@ -11,7 +17,9 @@ export const folders = pgTable("folders", {
 
 export const files = pgTable("files", {
 	id: text("id").primaryKey().notNull(),
-	folderId: text("folder_id").notNull().references(() => folders.id),
+	folderId: text("folder_id")
+		.notNull()
+		.references(() => folders.id),
 	name: text("name").notNull(),
 	url: text("url").notNull(),
 	size: integer("size").notNull(),
@@ -21,7 +29,9 @@ export const files = pgTable("files", {
 
 export const sharedFiles = pgTable("shared_files", {
 	id: text("id").primaryKey().notNull(),
-	fileId: text("file_id").notNull().references(() => files.id),
+	fileId: text("file_id")
+		.notNull()
+		.references(() => files.id),
 	token: text("token").notNull().unique(),
 	createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });

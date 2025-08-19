@@ -42,8 +42,9 @@ export async function DELETE(
 	const { id } = params;
 	const utapi = new UTApi();
 
+	// načítame všetky súbory vo foldri
 	const folderFiles = await db.query.files.findMany({
-		where: and(eq(files.folderId, id)),
+		where: eq(files.folderId, id),
 	});
 
 	const fileKeysToDelete = folderFiles.map((file) => file.id).filter(Boolean);
@@ -52,15 +53,12 @@ export async function DELETE(
 		await utapi.deleteFiles(fileKeysToDelete);
 	}
 
-	await db
-		.delete(files)
-		.where(and(eq(files.folderId, id)))
-		.run();
+	// ✅ pri PostgreSQL sa nepoužíva .run()
+	await db.delete(files).where(eq(files.folderId, id));
 
 	await db
 		.delete(folders)
-		.where(and(eq(folders.id, id), eq(folders.userId, userId)))
-		.run();
+		.where(and(eq(folders.id, id), eq(folders.userId, userId)));
 
 	return new Response(JSON.stringify({ success: true }), {
 		status: 200,

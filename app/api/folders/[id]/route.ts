@@ -45,17 +45,18 @@ export async function PUT(
 
 	const schema = z.object({ name: z.string().min(1) });
 	const parsed = schema.safeParse(body);
-	if (!parsed.success)
+
+	if (!parsed.success) {
 		return new Response(JSON.stringify({ error: "Invalid name" }), {
 			status: 400,
 			headers: { "Content-Type": "application/json" },
 		});
+	}
 
 	await db
 		.update(folders)
 		.set({ name: parsed.data.name })
-		.where(and(eq(folders.id, id), eq(folders.userId, userId)))
-		.run();
+		.where(and(eq(folders.id, id), eq(folders.userId, userId)));
 
 	return new Response(JSON.stringify({ success: true }), {
 		status: 200,
@@ -76,7 +77,7 @@ export async function DELETE(
 	const utapi = new UTApi();
 
 	const folderFiles = await db.query.files.findMany({
-		where: and(eq(files.folderId, id)),
+		where: eq(files.folderId, id),
 	});
 
 	const fileKeysToDelete = folderFiles.map((file) => file.id).filter(Boolean);
@@ -85,15 +86,10 @@ export async function DELETE(
 		await utapi.deleteFiles(fileKeysToDelete);
 	}
 
-	await db
-		.delete(files)
-		.where(and(eq(files.folderId, id)))
-		.run();
-
+	await db.delete(files).where(eq(files.folderId, id));
 	await db
 		.delete(folders)
-		.where(and(eq(folders.id, id), eq(folders.userId, userId)))
-		.run();
+		.where(and(eq(folders.id, id), eq(folders.userId, userId)));
 
 	return new Response(JSON.stringify({ success: true }), {
 		status: 200,

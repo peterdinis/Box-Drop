@@ -4,7 +4,6 @@ import { useUser } from "@clerk/nextjs";
 import { Cloud } from "lucide-react";
 import Link from "next/link";
 import type { FC } from "react";
-import NotificationDropdown from "../auth/NotificationDropdown";
 import UserProfileDropdown from "../auth/ProfileDropdown";
 import { Button } from "../ui/button";
 import { ModeToggle } from "./ModeToggle";

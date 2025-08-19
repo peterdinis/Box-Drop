@@ -14,6 +14,7 @@ export async function GET(req: Request) {
 	const limit = Number(searchParams.get("limit") || 10);
 	const offset = Number(searchParams.get("offset") || 0);
 
+	// fetch paginated folders
 	const allFolders = await db
 		.select()
 		.from(folders)
@@ -21,10 +22,12 @@ export async function GET(req: Request) {
 		.limit(limit)
 		.offset(offset);
 
-	const totalResult = await db.get<{ count: number }>(
-		sql`SELECT COUNT(*) as count FROM folders WHERE user_id = ${userId}`,
+	const result = await db.execute<{ count: string }>(
+		sql`SELECT COUNT(*) as count FROM ${folders} WHERE ${folders.userId} = ${userId}`,
 	);
-	const total = totalResult?.count ?? 0;
+
+	// Postgres returns counts as strings, so convert
+	const total = result.rows.length > 0 ? Number(result.rows[0].count) : 0;
 
 	const foldersWithFormattedDate = allFolders.map((folder) => ({
 		...folder,

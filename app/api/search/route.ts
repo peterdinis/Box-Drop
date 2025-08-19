@@ -1,7 +1,7 @@
 import { like, or } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
-import { files, folders, members } from "@/db/schema";
+import { files, folders } from "@/db/schema";
 
 export async function GET(req: Request) {
 	const url = new URL(req.url);
@@ -18,21 +18,15 @@ export async function GET(req: Request) {
 
 	const query = `%${q}%`;
 
-	const [folderResults, fileResults, memberResults] = await Promise.all([
+	const [folderResults, fileResults] = await Promise.all([
 		db.select().from(folders).where(like(folders.name, query)).limit(10),
 		db.select().from(files).where(like(files.name, query)).limit(10),
-		db
-			.select()
-			.from(members)
-			.where(or(like(members.name, query), like(members.email, query)))
-			.limit(10),
 	]);
 
 	return new Response(
 		JSON.stringify({
 			folders: folderResults,
 			files: fileResults,
-			members: memberResults,
 		}),
 		{
 			status: 200,

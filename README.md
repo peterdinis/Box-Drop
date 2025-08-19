@@ -10,9 +10,8 @@ A modern, Dropbox-like file storage and sharing application built with **Next.js
 - 🎨 Responsive, accessible UI built with ShadCN UI components
 - 🔒 Type-safe backend using Drizzle ORM for database queries
 - ⚙️ Scalable API routes using Next.js
-- 👥 Authentication and user management (extendable)
-- 🕒 File versioning and activity tracking (planned)
-- 📤 Drag & drop file uploads, preview, and metadata display (planned)
+- 👥 Authentication and user management 
+- 📤 Drag & drop file uploads, preview, and metadata display
 
 ---
 

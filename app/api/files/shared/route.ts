@@ -6,12 +6,12 @@ import { files, sharedFiles } from "@/db/schema";
 
 export async function GET(req: NextRequest) {
 	try {
-		const sharedFiles = await db
+		const results = await db
 			.select()
 			.from(files)
-			.where(eq(files.isShared, 0));
+			.where(eq(files.isShared, true)); // ✅ Boolean not 0/1
 
-		return NextResponse.json(sharedFiles, { status: 200 });
+		return NextResponse.json(results, { status: 200 });
 	} catch (error) {
 		console.error("Failed to fetch shared files:", error);
 		return NextResponse.json(
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
 	}
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
 	const { fileId } = await req.json();
 
 	const token = randomUUID();
@@ -32,8 +32,10 @@ export async function POST(req: Request) {
 		token,
 	});
 
+	// ✅ Build correct base URL from request
+	const { origin } = new URL(req.url);
+
 	return NextResponse.json({
-		// TODO: Change me later
-		url: `http://localhost:3000/files/${token}`,
+		url: `${origin}/files/${token}`,
 	});
 }
