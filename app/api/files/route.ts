@@ -3,13 +3,14 @@ import { db } from "@/db";
 import { files } from "@/db/schema";
 
 export async function GET() {
-	const authSession = await auth();
-	const userId = authSession.userId;
-	if (!userId) return new Response("Unauthorized", { status: 401 });
+  const authSession = await auth();
+  const userId = authSession.userId;
+  if (!userId) return new Response("Unauthorized", { status: 401 });
 
-	const allFiles = db.select().from(files).all();
-	return new Response(JSON.stringify(allFiles.length === 0 ? [] : allFiles), {
-		status: 200,
-		headers: { "Content-Type": "application/json" },
-	});
+  const allFiles = await db.select().from(files);
+
+  return new Response(JSON.stringify(allFiles), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 }

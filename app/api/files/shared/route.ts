@@ -5,35 +5,37 @@ import { db } from "@/db";
 import { files, sharedFiles } from "@/db/schema";
 
 export async function GET(req: NextRequest) {
-	try {
-		const sharedFiles = await db
-			.select()
-			.from(files)
-			.where(eq(files.isShared, 0));
+  try {
+    const results = await db
+      .select()
+      .from(files)
+      .where(eq(files.isShared, true)); // ✅ Boolean not 0/1
 
-		return NextResponse.json(sharedFiles, { status: 200 });
-	} catch (error) {
-		console.error("Failed to fetch shared files:", error);
-		return NextResponse.json(
-			{ message: "Failed to fetch shared files" },
-			{ status: 500 },
-		);
-	}
+    return NextResponse.json(results, { status: 200 });
+  } catch (error) {
+    console.error("Failed to fetch shared files:", error);
+    return NextResponse.json(
+      { message: "Failed to fetch shared files" },
+      { status: 500 },
+    );
+  }
 }
 
-export async function POST(req: Request) {
-	const { fileId } = await req.json();
+export async function POST(req: NextRequest) {
+  const { fileId } = await req.json();
 
-	const token = randomUUID();
+  const token = randomUUID();
 
-	await db.insert(sharedFiles).values({
-		id: randomUUID(),
-		fileId,
-		token,
-	});
+  await db.insert(sharedFiles).values({
+    id: randomUUID(),
+    fileId,
+    token,
+  });
 
-	return NextResponse.json({
-		// TODO: Change me later
-		url: `http://localhost:3000/files/${token}`,
-	});
+  // ✅ Build correct base URL from request
+  const { origin } = new URL(req.url);
+
+  return NextResponse.json({
+    url: `${origin}/files/${token}`,
+  });
 }
