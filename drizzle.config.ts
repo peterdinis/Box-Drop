@@ -1,9 +1,10 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
-import * as schema from "./db/schema";
+import { defineConfig, type Config } from "drizzle-kit";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL!,
-});
-
-export const db = drizzle(pool, { schema });
+export default defineConfig({
+  schema: "./db/schema.ts",
+  out: "./drizzle",
+  dialect: "postgresql",
+  dbCredentials: {
+    url: process.env.DATABASE_URL!,
+  },
+}) satisfies Config;
