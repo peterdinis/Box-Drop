@@ -1,1 +1,0 @@
-ALTER TABLE `files` ADD `isShared` integer DEFAULT 1;
