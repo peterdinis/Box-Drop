@@ -1,15 +1,15 @@
 import { relations, sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-
-// TODO: Later migration to postgresql
+import { integer, pgTable, text, boolean, timestamp } from "drizzle-orm/pg-core";
 
 // -------------------- Folders --------------------
 
-export const folders = sqliteTable("folders", {
+export const folders = pgTable("folders", {
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
 	userId: text("user_id").notNull(),
-	createdAt: integer("created_at", { mode: "timestamp" }),
+	createdAt: timestamp("created_at", { mode: "date" })
+		.defaultNow()
+		.notNull(),
 });
 
 export const foldersRelations = relations(folders, ({ many }) => ({
@@ -18,14 +18,14 @@ export const foldersRelations = relations(folders, ({ many }) => ({
 
 // -------------------- Files --------------------
 
-export const files = sqliteTable("files", {
+export const files = pgTable("files", {
 	id: text("id").primaryKey().notNull(),
 	folderId: text("folder_id").notNull(),
 	name: text("name").notNull(),
 	url: text("url").notNull(),
 	size: integer("size").notNull(),
-	isShared: integer().default(1), // 1 = false 0 = true later fix when we move to PG
-	uploadedAt: integer("uploaded_at", { mode: "timestamp" }),
+	isShared: boolean("is_shared").default(false).notNull(),
+	uploadedAt: timestamp("uploaded_at", { mode: "date" }).defaultNow().notNull(),
 });
 
 export const filesRelations = relations(files, ({ one }) => ({
@@ -35,11 +35,13 @@ export const filesRelations = relations(files, ({ one }) => ({
 	}),
 }));
 
-export const sharedFiles = sqliteTable("shared_files", {
+// -------------------- Shared Files --------------------
+
+export const sharedFiles = pgTable("shared_files", {
 	id: text("id").primaryKey().notNull(),
 	fileId: text("file_id").notNull(),
 	token: text("token").notNull().unique(),
-	createdAt: integer("created_at", { mode: "timestamp" })
-		.default(sql`CURRENT_TIMESTAMP`)
+	createdAt: timestamp("created_at", { mode: "date" })
+		.defaultNow()
 		.notNull(),
 });
