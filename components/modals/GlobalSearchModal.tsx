@@ -91,16 +91,6 @@ const GlobalSearchModal: FC = () => {
 									</div>
 								))}
 							</section>
-
-							<section>
-								<h3 className="font-semibold mb-1">Members</h3>
-								{data.members.length === 0 && <p>No members found.</p>}
-								{data.members.map((member) => (
-									<div key={member.id} className="py-1">
-										{member.name} ({member.email})
-									</div>
-								))}
-							</section>
 						</motion.div>
 					)}
 				</AnimatePresence>
