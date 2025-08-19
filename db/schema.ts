@@ -1,45 +1,27 @@
-import { relations, sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { pgTable, text, boolean, integer, timestamp } from "drizzle-orm/pg-core";
 
-// TODO: Later migration to postgresql
+// -------------------- Tables --------------------
 
-// -------------------- Folders --------------------
-
-export const folders = sqliteTable("folders", {
+export const folders = pgTable("folders", {
 	id: text("id").primaryKey().notNull(),
 	name: text("name").notNull(),
 	userId: text("user_id").notNull(),
-	createdAt: integer("created_at", { mode: "timestamp" }),
+	createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
-export const foldersRelations = relations(folders, ({ many }) => ({
-	files: many(files),
-}));
-
-// -------------------- Files --------------------
-
-export const files = sqliteTable("files", {
+export const files = pgTable("files", {
 	id: text("id").primaryKey().notNull(),
-	folderId: text("folder_id").notNull(),
+	folderId: text("folder_id").notNull().references(() => folders.id),
 	name: text("name").notNull(),
 	url: text("url").notNull(),
 	size: integer("size").notNull(),
-	isShared: integer().default(1), // 1 = false 0 = true later fix when we move to PG
-	uploadedAt: integer("uploaded_at", { mode: "timestamp" }),
+	isShared: boolean("is_shared").default(false).notNull(),
+	uploadedAt: timestamp("uploaded_at", { mode: "date" }).defaultNow().notNull(),
 });
 
-export const filesRelations = relations(files, ({ one }) => ({
-	folder: one(folders, {
-		fields: [files.folderId],
-		references: [folders.id],
-	}),
-}));
-
-export const sharedFiles = sqliteTable("shared_files", {
+export const sharedFiles = pgTable("shared_files", {
 	id: text("id").primaryKey().notNull(),
-	fileId: text("file_id").notNull(),
+	fileId: text("file_id").notNull().references(() => files.id),
 	token: text("token").notNull().unique(),
-	createdAt: integer("created_at", { mode: "timestamp" })
-		.default(sql`CURRENT_TIMESTAMP`)
-		.notNull(),
+	createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
