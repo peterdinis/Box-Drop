@@ -1,7 +1,7 @@
 import { like, or } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
-import { files, folders} from "@/db/schema";
+import { files, folders } from "@/db/schema";
 
 export async function GET(req: Request) {
 	const url = new URL(req.url);

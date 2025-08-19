@@ -21,9 +21,9 @@ export async function GET(req: Request) {
 		.where(eq(folders.userId, userId))
 		.limit(limit)
 		.offset(offset);
-		
+
 	const result = await db.execute<{ count: string }>(
-		sql`SELECT COUNT(*) as count FROM ${folders} WHERE ${folders.userId} = ${userId}`
+		sql`SELECT COUNT(*) as count FROM ${folders} WHERE ${folders.userId} = ${userId}`,
 	);
 
 	// Postgres returns counts as strings, so convert

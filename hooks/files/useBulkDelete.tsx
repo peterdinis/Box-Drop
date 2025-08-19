@@ -1,7 +1,10 @@
-"use client"
+"use client";
 
-import { BulkDeleteFilesParams, BulkDeleteFilesResponse } from "@/types/BulkFilesTypes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type {
+	BulkDeleteFilesParams,
+	BulkDeleteFilesResponse,
+} from "@/types/BulkFilesTypes";
 
 export const useBulkDeleteFiles = () => {
 	const queryClient = useQueryClient();

@@ -72,7 +72,6 @@ const DropdownMenuItem = ({ children, onClick }: DropdownMenuItemProps) => (
 	</a>
 );
 
-
 export default function UserProfileDropdown() {
 	const { user } = useUser();
 	const { signOut } = useClerk();
