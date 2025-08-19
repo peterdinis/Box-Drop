@@ -1,9 +1,7 @@
 onlyBuiltDependencies:
   - '@clerk/shared'
   - '@tailwindcss/oxide'
-  - better-sqlite3
   - esbuild
   - msgpackr-extract
-  - msw
   - sharp
   - unrs-resolver

@@ -10,9 +10,10 @@ const nextConfig: NextConfig = {
 	images: {
 		remotePatterns: [
 			{
-				protocol: "https",
-				hostname: "<APP_ID>.ufs.sh",
-				pathname: "/f/*",
+				protocol: 'https',
+				hostname: '*',
+				port: '',
+				pathname: '/**',
 			},
 		],
 	},
