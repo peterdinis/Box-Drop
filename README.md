@@ -23,7 +23,7 @@ A modern, Dropbox-like file storage and sharing application built with **Next.js
 | 💙 TypeScript    | Type safety & developer experience|
 | 📦 Drizzle ORM   | Type-safe database access         |
 | 🎛 ShadCN UI     | Component library & styling       |
-| 🗄 PostgreSQL    | Database (or your choice)         |
+| 🗄 PostgreSQL    | Database       |
 
 ---
 
@@ -32,7 +32,7 @@ A modern, Dropbox-like file storage and sharing application built with **Next.js
 ### ⚙️ Prerequisites
 
 - Node.js >= 18.x
-- PostgreSQL (or other supported DB)
+- PostgreSQL
 - pnpm / npm / yarn
 
 ### 📥 Installation
