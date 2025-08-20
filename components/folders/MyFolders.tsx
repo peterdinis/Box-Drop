@@ -28,9 +28,6 @@ const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
 	const [selectedFolder, setSelectedFolder] = useState<FolderItem | null>(null);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [newFolderName, setNewFolderName] = useState<string>("");
-
-	console.log("FFF", folders)
-
 	const { toast } = useToast();
 	const { mutate: updateFolder, isPending: isUpdating } = useUpdateFolder();
 

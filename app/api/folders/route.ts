@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
-import { eq, sql, inArray } from "drizzle-orm";
-import { nanoid } from "nanoid"; 
+import { eq, inArray, sql } from "drizzle-orm";
+import { nanoid } from "nanoid";
 import { db } from "@/db";
-import { folders, files } from "@/db/schema";
+import { files, folders } from "@/db/schema";
 import { formatDate } from "@/utils/format-date";
 
 export async function GET(req: Request) {
@@ -14,7 +14,6 @@ export async function GET(req: Request) {
 	const limit = Number(searchParams.get("limit") || 10);
 	const offset = Number(searchParams.get("offset") || 0);
 
-	// fetch paginated folders
 	const allFolders = await db
 		.select()
 		.from(folders)
@@ -22,22 +21,24 @@ export async function GET(req: Request) {
 		.limit(limit)
 		.offset(offset);
 
-	const folderIds = allFolders.map(f => f.id);
+	const folderIds = allFolders.map((f) => f.id);
 
 	const allFiles = await db
 		.select()
 		.from(files)
 		.where(inArray(files.folderId, folderIds));
 
-	const foldersWithFiles = allFolders.map(folder => ({
+	const foldersWithFiles = allFolders.map((folder) => ({
 		...folder,
-		files: allFiles.filter(f => f.folderId === folder.id).map(file => ({
-			...file,
-			uploadedAtFormatted: formatDate(file.uploadedAt as unknown as number),
-		})),
+		files: allFiles
+			.filter((f) => f.folderId === folder.id)
+			.map((file) => ({
+				...file,
+				uploadedAtFormatted: formatDate(file.uploadedAt as unknown as number),
+			})),
 		createdAtFormatted: formatDate(folder.createdAt as unknown as number),
 	}));
-	
+
 	const result = await db.execute<{ count: string }>(
 		sql`SELECT COUNT(*) as count FROM ${folders} WHERE ${folders.userId} = ${userId}`,
 	);
@@ -65,7 +66,7 @@ export async function POST(req: Request) {
 	}
 
 	const newFolder = {
-		id: nanoid(), // nanoid už funguje
+		id: nanoid(),
 		name,
 		userId,
 		createdAt: new Date(),
