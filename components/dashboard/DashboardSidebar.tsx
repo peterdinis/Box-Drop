@@ -8,10 +8,8 @@ import { Card } from "../ui/card";
 
 const DashboardSidebar: FC = () => {
 	const { data: storageUsage } = useStorageUsage();
-	const usedFormatted = storageUsage?.usedBytes;
+	const usedFormatted = storageUsage?.usedFormatted;
 	const { data: filesData } = useFiles();
-
-	console.log("Storage Usage:", storageUsage);
 
 	return (
 		<div className="space-y-6">
