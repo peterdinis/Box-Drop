@@ -59,9 +59,9 @@ const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
 					});
 					setSelectedFolder(null);
 				},
-				onError: (error: any) => {
+				onError: (error) => {
 					toast({
-						title: "Failed to update folder: " + error.message,
+						title: "Failed to update folder: " + error,
 						duration: 2000,
 						className: "bg-red-800 text-white font-bold text-base",
 					});
