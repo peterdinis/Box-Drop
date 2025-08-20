@@ -17,11 +17,13 @@ export async function GET() {
 
 	if (folderIds.length === 0) return NextResponse.json({ usedBytes: 0 });
 
-	const total = await db
-		.select({ usedBytes: sql<number>`sum(${files.size})` })
+	const rows = await db
+		.select({ usedBytes: sql`sum(${files.size})` })
 		.from(files)
-		.where(inArray(files.folderId, folderIds))
-		.then((rows) => rows[0]?.usedBytes ?? 0);
+		.where(inArray(files.folderId, folderIds));
 
-	return NextResponse.json({ usedBytes: total });
+	const usedBytes = rows[0]?.usedBytes;
+	const totalBytes = usedBytes ? Number(usedBytes) : 0;
+
+	return NextResponse.json({ usedBytes: totalBytes });
 }

@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
-import { eq, sql } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { db } from "@/db";
-import { folders } from "@/db/schema";
+import { files, folders } from "@/db/schema";
 import { formatDate } from "@/utils/format-date";
 
 export async function GET(req: Request) {
@@ -14,7 +14,6 @@ export async function GET(req: Request) {
 	const limit = Number(searchParams.get("limit") || 10);
 	const offset = Number(searchParams.get("offset") || 0);
 
-	// fetch paginated folders
 	const allFolders = await db
 		.select()
 		.from(folders)
@@ -22,21 +21,32 @@ export async function GET(req: Request) {
 		.limit(limit)
 		.offset(offset);
 
-	const result = await db.execute<{ count: string }>(
-		sql`SELECT COUNT(*) as count FROM ${folders} WHERE ${folders.userId} = ${userId}`,
-	);
+	const folderIds = allFolders.map((f) => f.id);
 
-	// Postgres returns counts as strings, so convert
-	const total = result.rows.length > 0 ? Number(result.rows[0].count) : 0;
+	const allFiles = await db
+		.select()
+		.from(files)
+		.where(inArray(files.folderId, folderIds));
 
-	const foldersWithFormattedDate = allFolders.map((folder) => ({
+	const foldersWithFiles = allFolders.map((folder) => ({
 		...folder,
+		files: allFiles
+			.filter((f) => f.folderId === folder.id)
+			.map((file) => ({
+				...file,
+				uploadedAtFormatted: formatDate(file.uploadedAt as unknown as number),
+			})),
 		createdAtFormatted: formatDate(folder.createdAt as unknown as number),
 	}));
 
+	const result = await db.execute<{ count: string }>(
+		sql`SELECT COUNT(*) as count FROM ${folders} WHERE ${folders.userId} = ${userId}`,
+	);
+	const total = result.rows.length > 0 ? Number(result.rows[0].count) : 0;
+
 	return new Response(
 		JSON.stringify({
-			items: foldersWithFormattedDate,
+			items: foldersWithFiles,
 			total,
 		}),
 		{ status: 200, headers: { "Content-Type": "application/json" } },
