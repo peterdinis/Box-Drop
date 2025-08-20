@@ -43,6 +43,7 @@ import DashboardSidebar from "./DashboardSidebar";
 
 const DashboardWrapper: FC = () => {
 	const { data: folderData, isLoading: folderLoading } = useFolders();
+	console.log("Folder Data:", folderData);
 	const { data: filesData, isLoading: fileLoading } = useFiles();
 	const { mutate: deleteFile, isPending } = useDeleteFile();
 	const { mutate: moveFile, isPending: isMoving } = useMoveFile();
