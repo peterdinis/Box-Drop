@@ -35,7 +35,6 @@
 		"@uploadthing/react": "^7.3.3",
 		"@upstash/redis": "^1.35.3",
 		"@vitejs/plugin-react": "^4.7.0",
-		"better-sqlite3": "^12.2.0",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"cmdk": "^1.1.1",
