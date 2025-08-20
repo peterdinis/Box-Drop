@@ -1,4 +1,4 @@
-import { like, or } from "drizzle-orm";
+import { like} from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db";
 import { files, folders } from "@/db/schema";

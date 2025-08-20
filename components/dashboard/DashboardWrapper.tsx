@@ -30,7 +30,6 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useDeleteFile } from "@/hooks/files/useDeleteFile";
-import { useFileDownload } from "@/hooks/files/useDownloadFile";
 import { useFiles } from "@/hooks/files/useFiles";
 import { useMoveFile } from "@/hooks/files/useMoveFile";
 import { useFolder, useFolders } from "@/hooks/folders/useFolders";

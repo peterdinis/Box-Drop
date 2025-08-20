@@ -42,7 +42,7 @@ const CleanFolderTrash: FC<Props> = ({ open, onOpenChange }) => {
 			}, 2000);
 		} catch (err) {
 			toast({
-				title: "Bulk delete for folders was not completed",
+				title: "Bulk delete for folders was not completed" + err,
 				duration: 2000,
 				className: "bg-red-800 text-white font-bold text-xl",
 			});

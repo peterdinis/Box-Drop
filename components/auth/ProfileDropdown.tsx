@@ -82,7 +82,7 @@ export default function UserProfileDropdown() {
 				trigger={
 					<button className="flex items-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
 						<div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-							{user?.firstName?.charAt(0)! + user?.lastName?.charAt(0)!}
+							{`${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`}
 						</div>
 					</button>
 				}
