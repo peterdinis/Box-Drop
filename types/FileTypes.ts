@@ -7,9 +7,16 @@ export interface File {
 	url: string;
 }
 
+export interface Folder {
+	id: string
+	name: string
+}
+
 export interface MyFilesProps {
 	files: File[];
-	folders: any;
+	folders: {
+		items: Folder[]
+	}
 }
 
 export interface SharedFileResponse {
