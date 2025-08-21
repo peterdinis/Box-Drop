@@ -7,14 +7,14 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const { userId } = await auth();
   if (!userId) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const folderId = context.params.id;
+  const folderId = (await context.params).id;
 
   const folder = await db.query.folders.findFirst({
     where: (folders, { eq }) => eq(folders.id, folderId),
@@ -32,12 +32,12 @@ export async function GET(
 
 export async function DELETE(
   req: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   const { userId } = await auth();
   if (!userId) return new Response("Unauthorized", { status: 401 });
 
-  const { id } = context.params;
+  const { id } = (await context.params);
   const utapi = new UTApi();
 
   // load all files in folder
