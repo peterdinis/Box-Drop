@@ -1,8 +1,8 @@
 "use client";
 
+import { BASE_URL } from "@/constants/applicationConstants";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-const BASE_URL = "/api/folders";
 
 export function useFolders(page = 0, limit = 10) {
 	return useQuery({

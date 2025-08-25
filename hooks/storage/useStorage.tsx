@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { formatBytes } from "@/utils/format-bytes";
-
-const STORAGE_LIMIT_BYTES = 100 * 1024 * 1024 * 1024;
+import { STORAGE_LIMIT_BYTES } from "@/constants/applicationConstants";
 
 export function useStorageUsage() {
 	return useQuery({
