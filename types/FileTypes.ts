@@ -8,15 +8,15 @@ export interface File {
 }
 
 export interface Folder {
-	id: string
-	name: string
+	id: string;
+	name: string;
 }
 
 export interface MyFilesProps {
 	files: File[];
 	folders: {
-		items: Folder[]
-	}
+		items: Folder[];
+	};
 }
 
 export interface SharedFileResponse {

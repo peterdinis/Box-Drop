@@ -1,8 +1,8 @@
 "use client";
+import { useQueryClient } from "@tanstack/react-query";
 import type { FC } from "react";
 import { useToast } from "@/hooks/shared/useToast";
 import { UploadButton } from "@/lib/uploadthing";
-import { useQueryClient } from "@tanstack/react-query";
 
 const FileUploader: FC = () => {
 	const { toast } = useToast();
@@ -20,18 +20,19 @@ const FileUploader: FC = () => {
 							"bg-muted hover:bg-muted/80 text-sm font-medium px-4 py-2 rounded-md transition-colors",
 					}}
 					onClientUploadComplete={() => {
-						console.log("SOM V SUCCESS CASTI")
 						toast({
 							title: "Upload was completed",
 							duration: 2000,
 							className: "bg-green-800 text-white font-bold text-xl",
 						});
 						queryClient.invalidateQueries({
-							queryKey: ["files"]
+							queryKey: ["files"],
 						});
+						queryClient.invalidateQueries({
+							queryKey: ["storage-usage"]
+						})
 					}}
 					onUploadError={(error: Error) => {
-						console.error("Upload error:", error); // Add logging
 						toast({
 							title: "Failed to upload file: " + error.message,
 							duration: 5000, // Longer duration to see the error

@@ -1,58 +1,60 @@
 import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
 import { UTApi } from "uploadthing/server";
 import { db } from "@/db";
 import { files, folders } from "@/db/schema";
-import { NextResponse } from "next/server";
 
 export async function GET(
-  req: Request,
-  context: { params: Promise<{ id: string }> }
+	req: Request,
+	context: { params: Promise<{ id: string }> },
 ) {
-  const { userId } = await auth();
-  if (!userId) {
-    return new Response("Unauthorized", { status: 401 });
-  }
+	const { userId } = await auth();
+	if (!userId) {
+		return new Response("Unauthorized", { status: 401 });
+	}
 
-  const folderId = (await context.params).id;
+	const folderId = (await context.params).id;
 
-  const folder = await db.query.folders.findFirst({
-    where: (folders, { eq }) => eq(folders.id, folderId),
-    with: {
-      files: true,
-    },
-  });
+	const folder = await db.query.folders.findFirst({
+		where: (folders, { eq }) => eq(folders.id, folderId),
+		with: {
+			files: true,
+		},
+	});
 
-  if (!folder) {
-    return new Response("Not found", { status: 404 });
-  }
+	if (!folder) {
+		return new Response("Not found", { status: 404 });
+	}
 
-  return NextResponse.json(folder);
+	return NextResponse.json(folder);
 }
 
 export async function DELETE(
-  req: Request,
-  context: { params: Promise<{ id: string }> }
+	req: Request,
+	context: { params: Promise<{ id: string }> },
 ) {
-  const { userId } = await auth();
-  if (!userId) return new Response("Unauthorized", { status: 401 });
+	const { userId } = await auth();
+	if (!userId) return new Response("Unauthorized", { status: 401 });
 
-  const { id } = (await context.params);
-  const utapi = new UTApi();
+	const { id } = await context.params;
+	const utapi = new UTApi();
 
-  // load all files in folder
-  const folderFiles = await db.query.files.findMany({
-    where: eq(files.folderId, id),
-  });
+	// load all files in folder
+	const folderFiles = await db.query.files.findMany({
+		where: eq(files.folderId, id),
+	});
 
-  const fileKeysToDelete = folderFiles.map((file) => file.id).filter(Boolean);
+	const fileKeysToDelete = folderFiles.map((file) => file.id).filter(Boolean);
 
-  if (fileKeysToDelete.length > 0) {
-    await utapi.deleteFiles(fileKeysToDelete);
-  }
+	if (fileKeysToDelete.length > 0) {
+		await utapi.deleteFiles(fileKeysToDelete);
+	}
 
-  await db.delete(files).where(eq(files.folderId, id));
-  await db.delete(folders).where(and(eq(folders.id, id), eq(folders.userId, userId)));
+	await db.delete(files).where(eq(files.folderId, id));
+	await db
+		.delete(folders)
+		.where(and(eq(folders.id, id), eq(folders.userId, userId)));
 
-  return NextResponse.json({ success: true });
+	return NextResponse.json({ success: true });
 }

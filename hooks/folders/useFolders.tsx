@@ -1,8 +1,7 @@
 "use client";
 
-import { BASE_URL } from "@/constants/applicationConstants";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
+import { BASE_URL } from "@/constants/applicationConstants";
 
 export function useFolders(page = 0, limit = 10) {
 	return useQuery({
@@ -42,7 +41,7 @@ export function useCreateFolder() {
 			if (!res.ok) throw new Error("Failed to create folder");
 			return res.json();
 		},
-		onSuccess: () => {
+		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: ["folders"] });
 		},
 	});

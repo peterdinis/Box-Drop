@@ -3,15 +3,18 @@ import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { files, sharedFiles } from "@/db/schema";
 
-export async function GET(req: NextRequest, props: { params: Promise<{ id: string }> }) {
-    const params = await props.params;
-    const { id } = params;
+export async function GET(
+	req: NextRequest,
+	props: { params: Promise<{ id: string }> },
+) {
+	const params = await props.params;
+	const { id } = params;
 
-    if (!id) {
+	if (!id) {
 		return NextResponse.json({ error: "Missing share id" }, { status: 400 });
 	}
 
-    try {
+	try {
 		const sharedList = await db
 			.select({
 				id: sharedFiles.id,

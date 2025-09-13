@@ -21,7 +21,7 @@ interface CreateFolderModalProps {
 const CreateFolderModal: FC<CreateFolderModalProps> = ({ onFolderCreate }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [folderName, setFolderName] = useState("");
-	const { toast } = useToast()
+	const { toast } = useToast();
 	const createFolder = useCreateFolder();
 
 	const handleSubmit = async (e: FormEvent) => {
@@ -34,7 +34,7 @@ const CreateFolderModal: FC<CreateFolderModalProps> = ({ onFolderCreate }) => {
 
 				toast({
 					title: "Folder created",
-					description: `"${folderName}" has been added to your files.`,
+					description: `"${folderName}" has been added to your folders.`,
 					className: "bg-green-800 text-white font-bold text-base",
 				});
 

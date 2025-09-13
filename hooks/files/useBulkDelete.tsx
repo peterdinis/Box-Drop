@@ -29,8 +29,6 @@ export const useBulkDeleteFiles = () => {
 		onSuccess: async (_, { fileIds }) => {
 			// invalidate the files query
 			await queryClient.invalidateQueries({ queryKey: ["files"] });
-
-			console.log(`Deleted ${fileIds.length} files successfully`);
 		},
 		onError: (err) => {
 			console.error("Bulk delete failed:", err);

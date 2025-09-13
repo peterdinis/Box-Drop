@@ -1,7 +1,7 @@
 "use client";
 
-import { SharedFile } from "@/types/SharedFileTypes";
 import { useQuery } from "@tanstack/react-query";
+import type { SharedFile } from "@/types/SharedFileTypes";
 
 export const useAllSharedFiles = () => {
 	return useQuery<SharedFile[], Error>({
