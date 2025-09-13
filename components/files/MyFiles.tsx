@@ -9,7 +9,7 @@ import {
 	List,
 } from "lucide-react";
 import prettyBytes from "pretty-bytes";
-import { type FC, useMemo, useState } from "react";
+import { type FC, useState } from "react";
 import { ITEMS_PER_PAGE } from "@/constants/applicationConstants";
 import { useBulkDeleteFiles } from "@/hooks/files/useBulkDelete";
 import { useDeleteFile } from "@/hooks/files/useDeleteFile";
@@ -72,18 +72,6 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 	const totalFiles = files.length;
 	const totalPages = Math.ceil(totalFiles / ITEMS_PER_PAGE);
 
-	const paginatedFiles = useMemo(() => {
-		const start = (currentPage - 1) * ITEMS_PER_PAGE;
-		return files.slice(start, start + ITEMS_PER_PAGE);
-	}, [currentPage, files]);
-
-	const visiblePages = useMemo(() => {
-		const delta = 2;
-		const start = Math.max(currentPage - delta, 1);
-		const end = Math.min(currentPage + delta, totalPages);
-		return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-	}, [currentPage, totalPages]);
-
 	const toggleSelectFile = (fileId: string) => {
 		setSelectedFiles((prev) =>
 			prev.includes(fileId)
@@ -133,6 +121,19 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 		});
 	};
 
+	// Paginated files
+	const start = (currentPage - 1) * ITEMS_PER_PAGE;
+	const paginatedFiles = files.slice(start, start + ITEMS_PER_PAGE);
+
+	// Visible pages for pagination
+	const delta = 2;
+	const startPage = Math.max(currentPage - delta, 1);
+	const endPage = Math.min(currentPage + delta, totalPages);
+	const visiblePages = Array.from(
+		{ length: endPage - startPage + 1 },
+		(_, i) => startPage + i,
+	);
+
 	return (
 		<Card className="p-6">
 			<div className="flex items-center justify-between mb-6">
@@ -153,7 +154,6 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 							)}
 						</Button>
 
-						{/* Bulk Delete Trigger */}
 						<AlertDialog
 							open={openBulkDeleteDialog}
 							onOpenChange={setOpenBulkDeleteDialog}
@@ -322,7 +322,9 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 								<span
 									key={page}
 									onClick={() => setCurrentPage(page)}
-									className={`cursor-pointer mt-2 px-2 ${page === currentPage ? "font-bold underline" : ""}`}
+									className={`cursor-pointer mt-2 px-2 ${
+										page === currentPage ? "font-bold underline" : ""
+									}`}
 								>
 									{page}
 								</span>

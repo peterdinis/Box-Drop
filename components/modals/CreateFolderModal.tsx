@@ -21,8 +21,7 @@ interface CreateFolderModalProps {
 const CreateFolderModal: FC<CreateFolderModalProps> = ({ onFolderCreate }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [folderName, setFolderName] = useState("");
-	const { toast } = useToast();
-
+	const { toast } = useToast()
 	const createFolder = useCreateFolder();
 
 	const handleSubmit = async (e: FormEvent) => {
