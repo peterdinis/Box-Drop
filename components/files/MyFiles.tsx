@@ -51,8 +51,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../ui/select";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
-const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
+const MyFiles: FC<MyFilesProps> = ({ files, folders }: MyFilesProps) => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
@@ -211,14 +213,14 @@ const MyFiles: FC<MyFilesProps> = ({ files, folders }) => {
 								}`}
 							>
 								<div className="flex justify-between items-center mb-2">
-									<div className="flex items-center gap-2">
-										<input
+									<div className="flex items-center gap-2 break-words">
+										<Input
 											type="checkbox"
 											checked={selectedFiles.includes(file.id)}
 											onChange={() => toggleSelectFile(file.id)}
-											className="w-4 h-4"
+											className="w-5 h-5"
 										/>
-										<span>{file.name}</span>
+										<Label className="text-base break-all">{file.name}</Label>
 									</div>
 
 									<div className="flex gap-2 items-center">
