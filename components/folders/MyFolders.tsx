@@ -22,7 +22,7 @@ import {
 	PaginationPrevious,
 } from "../ui/pagination";
 
-const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }) => {
+const MyFolders: FC<MyFoldersProps> = ({ folders, pageSize = 6 }: MyFoldersProps) => {
 	const [folderViewMode, setFolderViewMode] = useState<"grid" | "list">("grid");
 	const [openTrashForFolder, setOpenTrashForFolder] = useState(false);
 	const [selectedFolder, setSelectedFolder] = useState<FolderItem | null>(null);

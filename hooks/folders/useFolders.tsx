@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BASE_URL } from "@/constants/applicationConstants";
+import { FOLDER_URL } from "@/constants/applicationConstants";
 
 export function useFolders(page = 0, limit = 10) {
 	return useQuery({
@@ -20,7 +20,7 @@ export function useFolder(folderId: string) {
 	return useQuery({
 		queryKey: ["folderDetail", folderId],
 		queryFn: async () => {
-			const res = await fetch(`${BASE_URL}/${folderId}`);
+			const res = await fetch(`${FOLDER_URL}/${folderId}`);
 			if (!res.ok) throw new Error("Folder not found");
 			return res.json();
 		},
@@ -33,7 +33,7 @@ export function useCreateFolder() {
 	return useMutation({
 		mutationKey: ["newFolder"],
 		mutationFn: async (name: string) => {
-			const res = await fetch(BASE_URL, {
+			const res = await fetch(FOLDER_URL, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ name }),
@@ -52,7 +52,7 @@ export function useUpdateFolder() {
 	return useMutation({
 		mutationKey: ["updateFolder"],
 		mutationFn: async ({ id, name }: { id: string; name: string }) => {
-			const res = await fetch(`${BASE_URL}/${id}`, {
+			const res = await fetch(`${FOLDER_URL}/${id}`, {
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ name }),
@@ -73,7 +73,7 @@ export function useDeleteAllFolders() {
 	return useMutation({
 		mutationKey: ["deleteFolder"],
 		mutationFn: async () => {
-			const res = await fetch(`${BASE_URL}/delete`, {
+			const res = await fetch(`${FOLDER_URL}/delete`, {
 				method: "DELETE",
 			});
 			if (!res.ok) throw new Error("Failed to delete folders");

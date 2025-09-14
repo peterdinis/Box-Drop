@@ -29,8 +29,8 @@ export function useMoveFile() {
 
 			return true;
 		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["files"] });
+		onSuccess: (folderId) => {
+			queryClient.invalidateQueries({ queryKey: ["folderDetail", folderId] });
 		},
 	});
 }

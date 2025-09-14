@@ -28,24 +28,16 @@ export const metadata: Metadata = {
 		"Box-Drop",
 		"collaboration",
 	],
-	authors: [{ name: "Box-Drop Team", url: "https://box-drop.app" }],
+	authors: [{ name: "Box-Drop Team", url: "https://box-drop-etkd.vercel.app/" }],
 	creator: "Box-Drop",
-	metadataBase: new URL("https://box-drop.app"),
+	metadataBase: new URL("https://box-drop-etkd.vercel.app/"),
 
 	openGraph: {
 		title: "Box-Drop",
 		description:
 			"A secure, modern way to manage files and folders collaboratively.",
-		url: "https://box-drop.app",
+		url: "https://box-drop-etkd.vercel.app/",
 		siteName: "Box-Drop",
-		images: [
-			{
-				url: "/og-image.png",
-				width: 1200,
-				height: 630,
-				alt: "Box-Drop preview",
-			},
-		],
 		locale: "en_US",
 		type: "website",
 	},

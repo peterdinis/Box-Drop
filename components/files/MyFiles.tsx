@@ -39,6 +39,8 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import {
 	Pagination,
 	PaginationNext,
@@ -51,8 +53,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../ui/select";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 
 const MyFiles: FC<MyFilesProps> = ({ files, folders }: MyFilesProps) => {
 	const [fileViewMode, setFileViewMode] = useState<"grid" | "list">("grid");

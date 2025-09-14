@@ -29,8 +29,8 @@ const FileUploader: FC = () => {
 							queryKey: ["files"],
 						});
 						queryClient.invalidateQueries({
-							queryKey: ["storage-usage"]
-						})
+							queryKey: ["storage-usage"],
+						});
 					}}
 					onUploadError={(error: Error) => {
 						toast({

@@ -40,6 +40,7 @@ import MyFolders from "../folders/MyFolders";
 import { Button } from "../ui/button";
 import DashboardHeader from "./DashboardHeader";
 import DashboardSidebar from "./DashboardSidebar";
+import { useQueryClient } from "@tanstack/react-query";
 
 const DashboardWrapper: FC = () => {
 	const { data: folderData, isLoading: folderLoading } = useFolders();
@@ -50,7 +51,7 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
-
+	const queryClient = useQueryClient()
 	const { toast } = useToast();
 	const [, setMovingFileId] = useState<string | null>(null);
 	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
@@ -68,6 +69,9 @@ const DashboardWrapper: FC = () => {
 							duration: 2000,
 							className: "bg-green-800 text-white font-bold text-base",
 						});
+						queryClient.invalidateQueries({
+							queryKey: ["folderDetail", newFolderId]
+						})
 					},
 					onError: (error) => {
 						toast({

@@ -1,11 +1,11 @@
 "use client";
+
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { HelpCircle, LogOut } from "../shared/Icons";
 
-// Dropdown Components
 interface DropdownMenuProps {
 	children: ReactNode;
 	trigger: ReactNode;
