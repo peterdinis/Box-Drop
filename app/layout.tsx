@@ -28,7 +28,9 @@ export const metadata: Metadata = {
 		"Box-Drop",
 		"collaboration",
 	],
-	authors: [{ name: "Box-Drop Team", url: "https://box-drop-etkd.vercel.app/" }],
+	authors: [
+		{ name: "Box-Drop Team", url: "https://box-drop-etkd.vercel.app/" },
+	],
 	creator: "Box-Drop",
 	metadataBase: new URL("https://box-drop-etkd.vercel.app/"),
 

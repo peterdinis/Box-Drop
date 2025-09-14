@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FILES_URL } from "@/constants/applicationConstants";
 
 export function useMoveFile() {
 	const queryClient = useQueryClient();
@@ -14,7 +15,7 @@ export function useMoveFile() {
 			fileId: string;
 			folderId: string;
 		}) => {
-			const res = await fetch(`/api/files/${fileId}/move`, {
+			const res = await fetch(`${FILES_URL}/${fileId}/move`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FILES_URL } from "@/constants/applicationConstants";
 import type {
 	BulkDeleteFilesParams,
 	BulkDeleteFilesResponse,
@@ -12,7 +13,7 @@ export const useBulkDeleteFiles = () => {
 	return useMutation<BulkDeleteFilesResponse, Error, BulkDeleteFilesParams>({
 		mutationKey: ["bulkDeleteFiles"],
 		mutationFn: async ({ fileIds }) => {
-			const res = await fetch("/api/files/delete", {
+			const res = await fetch(`${FILES_URL}/delete`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -26,8 +27,7 @@ export const useBulkDeleteFiles = () => {
 
 			return (await res.json()) as BulkDeleteFilesResponse;
 		},
-		onSuccess: async (_, { fileIds }) => {
-			// invalidate the files query
+		onSuccess: async () => {
 			await queryClient.invalidateQueries({ queryKey: ["files"] });
 		},
 		onError: (err) => {

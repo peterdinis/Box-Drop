@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Trash2, TrashIcon } from "lucide-react";
 import prettyBytes from "pretty-bytes";
 import { type FC, useCallback, useState } from "react";
@@ -40,7 +41,6 @@ import MyFolders from "../folders/MyFolders";
 import { Button } from "../ui/button";
 import DashboardHeader from "./DashboardHeader";
 import DashboardSidebar from "./DashboardSidebar";
-import { useQueryClient } from "@tanstack/react-query";
 
 const DashboardWrapper: FC = () => {
 	const { data: folderData, isLoading: folderLoading } = useFolders();
@@ -51,7 +51,7 @@ const DashboardWrapper: FC = () => {
 	const { data: selectedFolder, isLoading: folderDetailLoading } = useFolder(
 		openFolderId ?? "",
 	);
-	const queryClient = useQueryClient()
+	const queryClient = useQueryClient();
 	const { toast } = useToast();
 	const [, setMovingFileId] = useState<string | null>(null);
 	const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
@@ -70,8 +70,8 @@ const DashboardWrapper: FC = () => {
 							className: "bg-green-800 text-white font-bold text-base",
 						});
 						queryClient.invalidateQueries({
-							queryKey: ["folderDetail", newFolderId]
-						})
+							queryKey: ["folderDetail", newFolderId],
+						});
 					},
 					onError: (error) => {
 						toast({

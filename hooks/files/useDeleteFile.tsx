@@ -1,9 +1,10 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FILES_URL } from "@/constants/applicationConstants";
 
 async function deleteFile(fileId: string): Promise<void> {
-	const res = await fetch(`/api/files/${fileId}/delete`, {
+	const res = await fetch(`${FILES_URL} /${fileId}/delete`, {
 		method: "DELETE",
 	});
 

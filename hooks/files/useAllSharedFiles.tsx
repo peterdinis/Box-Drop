@@ -1,13 +1,14 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { FILES_URL } from "@/constants/applicationConstants";
 import type { SharedFile } from "@/types/SharedFileTypes";
 
 export const useAllSharedFiles = () => {
 	return useQuery<SharedFile[], Error>({
 		queryKey: ["sharedFiles"],
 		queryFn: async () => {
-			const res = await fetch("/api/files/shared");
+			const res = await fetch(`${FILES_URL}/shared`);
 			if (!res.ok) {
 				throw new Error("Failed to fetch shared files");
 			}

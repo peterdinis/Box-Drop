@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { STORAGE_LIMIT_BYTES } from "@/constants/applicationConstants";
+import { STORAGE_LIMIT_BYTES, STORAGE_URL } from "@/constants/applicationConstants";
 import { formatBytes } from "@/utils/format-bytes";
 
 export function useStorageUsage() {
 	return useQuery({
 		queryKey: ["storage-usage"],
 		queryFn: async () => {
-			const res = await fetch(`/api/storage`);
+			const res = await fetch(STORAGE_URL);
 			if (!res.ok) throw new Error("Failed to fetch storage usage");
 			return res.json();
 		},
